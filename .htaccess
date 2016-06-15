@@ -1,0 +1,29 @@
+AddDefaultCharset UTF-8
+
+<Files "index.html">
+    Allow from all
+</Files>
+
+Options -Indexes
+Options +FollowSymLinks
+
+DirectoryIndex Off
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+
+    RewriteEngine On
+
+    RewriteBase /
+
+    # Не изменять ссылки на файлы
+    #RewriteCond %{REQUEST_URI} !\.[a-z]{1,4}[\?0-9]*/?$ [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteRule ^.*$ index.html [NC,L]
+
+</IfModule>
+
+<IfDefine !RewriteEngine>
+    DirectoryIndex index.html
+</IfDefine>
