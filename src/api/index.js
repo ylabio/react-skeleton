@@ -1,1 +1,1 @@
-export { default as Account } from './Account.js'
+export { default as Grid } from './Grid.js'

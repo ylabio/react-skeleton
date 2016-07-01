@@ -9,7 +9,7 @@ console.log(process.env.NODE_ENV);
 
 // common
 var entry = [
-    './entry.js'
+    'babel-polyfill','./entry.js'
 ];
 var jsLoaders = [
     'babel-loader'
