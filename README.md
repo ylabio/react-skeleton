@@ -1,10 +1,10 @@
-# Скелет React приложения
+# Тестовое React приложение
 
 ## Установка:
 `npm install`
 
 ## Запуск дев сервера
-`npm start // сервер запускается на htpp://localhost:6000`
+`npm start`
 
 ## Билд приложения
 `npm run build`

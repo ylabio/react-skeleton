@@ -10,10 +10,18 @@ new WebpackDevServer(webpack(config), {
     historyApiFallback: true,
     stats: {
         colors: true
+    },
+    proxy: {
+        '/api*': {
+            target: 'http://127.0.0.1:8089',
+            secure: false
+        },
     }
 }).listen(8088, 'localhost', function (err) {
     if (err) {
         console.log(err);
     }
-    console.log('Listening at localhost:8088');
+    console.log('Front-end listening at localhost:8088');
 });
+
+require('./server.js');

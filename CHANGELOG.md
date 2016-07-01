@@ -1,4 +1,4 @@
-Inside web prototype - изменения в релизах
+Изменения в релизах
 ==================
 Format:
 `type: description (issue-code)`
