@@ -13,15 +13,15 @@ new WebpackDevServer(webpack(config), {
     },
     proxy: {
         '/api*': {
-            target: 'http://127.0.0.1:8089',
+            target: 'http://127.0.0.1:8091',
             secure: false
         },
     }
-}).listen(8088, 'localhost', function (err) {
+}).listen(8090, 'localhost', function (err) {
     if (err) {
         console.log(err);
     }
-    console.log('Front-end listening at localhost:8088');
+    console.log('Front-end listening at localhost:8090');
 });
 
 require('./server.js');

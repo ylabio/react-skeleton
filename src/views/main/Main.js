@@ -7,7 +7,7 @@ import {gridActions} from 'store/actions';
 class Main extends Component {
 
     componentWillMount(){
-        this.props.dispatch(gridActions.init());
+        //this.props.dispatch(gridActions.init());
         this.animateId = this.animate();
     }
 
@@ -52,7 +52,8 @@ class Main extends Component {
                 <div className="Main__status">
                     {loading ? <div>Загрузка...</div> : null}
                     {updating ? <div>Сохранение...</div> : null}
-                </div>                
+                </div>
+                <div>Hello World!</div>
                 <Grid
                     items={items}
                     onClickCell={this.onClickCell}

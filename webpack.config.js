@@ -25,7 +25,7 @@ if (isProduction) {
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin());
 }else{
-    entry.push('webpack-dev-server/client?http://localhost:8088');
+    entry.push('webpack-dev-server/client?http://localhost:8090');
     entry.push('webpack/hot/only-dev-server');
     plugins.push(new webpack.HotModuleReplacementPlugin());
 }
