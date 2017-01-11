@@ -13,7 +13,7 @@ new WebpackDevServer(webpack(config), {
     },
     proxy: {
         '/api*': {
-            target: 'http://127.0.0.1:8091',
+            target: 'http://appinside.yiilab.com',
             secure: false
         },
     }
@@ -23,5 +23,3 @@ new WebpackDevServer(webpack(config), {
     }
     console.log('Front-end listening at localhost:8090');
 });
-
-require('./server.js');

@@ -1,4 +1,4 @@
 /**
  * reducers
  */
-export { default as grid } from './grid/reducer';
+export { default as account } from './account/reducer';
