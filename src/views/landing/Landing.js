@@ -3,19 +3,18 @@ import {connect} from 'react-redux';
 import "./style.less";
 import { Link } from 'react-router-dom';
 
-class Main extends Component {
+class Landing extends Component {
 
     componentWillMount() {
-
 
     }
 
     render() {
         return (
-            <div className="Main">
-                <h1>Main page</h1>
+            <div className="Landing">
                 <div>
-                    <Link to="/">Go to landing</Link>
+                    <h1>Landing page</h1>
+                    <Link to="/main">Go to main</Link>
                 </div>
             </div>    
         );
@@ -24,4 +23,4 @@ class Main extends Component {
 
 export default connect(state => ({
 
-}))(Main);
+}))(Landing);

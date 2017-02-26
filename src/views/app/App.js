@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {accountActions} from '../../store/actions';
+import {Switch, Route} from 'react-router-dom'
+import "./style.less";
+import Landing from '../landing/Landing.js';
+import Main from '../main/Main.js';
 
 class App extends Component {
 
     componentWillMount() {
-        console.log('fff');
         //if (this.props.account.token === null) {
             this.props.dispatch(
                 accountActions.account()
@@ -16,7 +19,10 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                {this.props.children}
+                <Switch>
+                    <Route exact={true} path="/" component={Landing}/>
+                    <Route path="/main" component={Main}/>
+                </Switch>
             </div>
         );
     }
