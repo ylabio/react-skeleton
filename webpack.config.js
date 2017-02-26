@@ -1,73 +1,92 @@
 if (typeof process.env.NODE_ENV === 'undefined')  process.env.NODE_ENV = 'production';
 
-var path = require('path');
-var webpack = require('webpack');
-
-var isProduction = process.env.NODE_ENV === 'production';
-
 console.log(process.env.NODE_ENV);
 
-// common
-var entry = [
-    'babel-polyfill','./entry.js'
-];
-var jsLoaders = [
-    'babel-loader'
-];
-var plugins = [
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    })
-];
+let path = require('path');
+let webpack = require('webpack');
 
-if (isProduction) {
-    plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
-    plugins.push(new webpack.optimize.UglifyJsPlugin());
-}else{
-    entry.push('webpack-dev-server/client?http://localhost:8090');
-    entry.push('webpack/hot/only-dev-server');
-    plugins.push(new webpack.HotModuleReplacementPlugin());
-}
-
-module.exports = {
-    devtool: "#cheap-module-inline-source-map",
+let config = {
     context: path.join(__dirname, "/src"),
-    entry: entry,
+    entry: [
+        'babel-polyfill',
+        'index.js'
+    ],
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js',
-        publicPath: '/dist/',
-        pathinfo: true
+        // publicPath: '/dist/',
+        // pathinfo: true
     },
-    plugins: plugins,
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+            }
+        })
+    ],
     resolve: {
-        alias: {},
-        extensions: ['', '.js', '.jsx'],
-        modulesDirectories: [
-            'node_modules',
-            path.resolve(__dirname, 'src')
-        ]
+        extensions: [/*'', */'.js', '.jsx'],
+        modules: [path.resolve(__dirname, 'src'), 'node_modules']
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loaders: jsLoaders
+                use: [{loader:'babel-loader'}]
             },
             {
                 test: /\.css$/,
-                loader: 'style!css?-url'
+                use:[
+                    {loader:'style-loader'},
+                    {loader:'css-loader', options:{url:true}},
+                ]
             },
             {
                 test: /\.less$/,
-                loader: 'style!css?-url!less?-url'
+                use:[
+                    {loader:'style-loader'},
+                    {loader:'css-loader', options:{url:true}},
+                    {loader:'less-loader', options:{url:true}},
+                ]
             },
             {
                 test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-                loader: 'url?limit=100000&name=assets/[hash].[ext]'
+                use:[
+                    {loader: 'url-loader', options:{limit:100000, name:'assets/[hash].[ext]'}}
+                ]
             }
         ]
     }
 };
+
+if (process.env.NODE_ENV === 'production'){
+    config.devtool = "nosources-source-map";
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+}else{
+    // config.entry.push('webpack-dev-server/client?http://localhost:8020');
+    // config.entry.push('webpack/hot/only-dev-server');
+    config.devtool = "#cheap-module-inline-source-map";
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+    config.devServer = {
+        //compress: false,
+        contentBase: path.join(__dirname, "dist"),
+        port: 8020,
+        publicPath: config.output.publicPath,
+        hot: true,
+        historyApiFallback: true,
+        stats: {
+            colors: true
+        },
+        proxy: {
+            '/api/**': {
+                target: 'http://appinside.yiilab.com',
+                secure: false,
+                changeOrigin: true
+            },
+        }
+    }
+}
+
+module.exports = config;

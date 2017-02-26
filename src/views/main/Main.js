@@ -5,10 +5,16 @@ import "./style.less";
 
 class Main extends Component {
 
+    componentWillMount() {
+
+
+    }
+
     render() {
+        console.log('00');
         return (
             <div className="Main">
-
+5
             </div>    
         );
     }
