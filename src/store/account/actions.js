@@ -17,51 +17,46 @@ export const types = {
 export default {
 
     login: (login, password, remember, onSuccess) => {
-        return dispatch => {
-            dispatch({type: types.LOGIN});
-
-            Account.login(login, password, remember)
-                .then(res => {
-                    dispatch({type: types.LOGIN_SUCCESS, user: res.data});
-                })
-                .then(onSuccess)
-                .catch((res) => {
-                    let error = 'Ошибка авторизации';
-                    if (res.response.status == 404) {
-                        error = 'Неверные логин или пароль';
-                    }
-                    dispatch({type: types.LOGIN_FAIL, error});
-                });
+        return async dispatch => {
+            dispatch({ type: types.LOGIN });
+            
+            try {
+                const res = await Account.login(login, password, remember);
+                dispatch({ type: types.LOGIN_SUCCESS, user: res.data });
+                onSuccess(res);
+            } catch (res) {
+                let error = 'Ошибка авторизации';
+                if (res.response.status == 404) {
+                    error = 'Неверные логин или пароль';
+                }
+                dispatch({type: types.LOGIN_FAIL, error});
+            }
         }
     },
 
     logout: () => {
-        return dispatch => {
+        return async dispatch => {
             dispatch({type: types.LOGOUT});
 
-            Account.logout()
-                .then(res => {
-                    dispatch({type: types.LOGOUT_SUCCESS});
-                })
-                .catch((res) => {
-                    dispatch({type: types.LOGOUT_FAIL, error: res.response.data});
-                });
+            try {
+                const res = await Account.logout();
+                dispatch({type: types.LOGOUT_SUCCESS});
+            } catch (res) {
+                dispatch({type: types.LOGOUT_FAIL, error: res.response.data});
+            }
         }
     },
 
     account: () => {
-        return dispatch => {
+        return async dispatch => {
             dispatch({type: types.ACCOUNT});
 
-            console.log('ddd');
-
-            Account.account()
-                .then(res => {
-                    dispatch({type: types.ACCOUNT_SUCCESS, data: res.data});
-                })
-                .catch((res) => {
-                    dispatch({type: types.ACCOUNT_FAIL, error: res.response.data});
-                });
+            try {
+                const res = await Account.account();
+                dispatch({type: types.ACCOUNT_SUCCESS, data: res.data});
+            } catch (res) {
+                dispatch({type: types.ACCOUNT_FAIL, error: res.response.data});
+            }
         }
     },
 
