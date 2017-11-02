@@ -6,14 +6,14 @@
  * @version 1.0
  * @created 06.03.2016
  */
-export default function createReducer(initState, handlers){
+export default function createReducer(initState, handlers) {
 
-    return (state = initState, action = {}) => {
+  return (state = initState, action = {}) => {
 
-        if (handlers[action.type]){
-            return handlers[action.type](state, action);
-        }
+    if (handlers[action.type]) {
+      return handlers[action.type](state, action);
+    }
 
-        return state;
-    };
+    return state;
+  };
 }

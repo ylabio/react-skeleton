@@ -1,9 +1,24 @@
 {
   "parser": "babel-eslint",
-  "rules": {
-    "strict": 0
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true
   },
   "plugins": [
-    "babel"
-  ]
+    "babel",
+    "react"
+  ],
+  "extends": ["plugin:react/recommended"],
+  "rules": {
+    "indent": ["error", 2, { "SwitchCase": 1 } ],
+    "semi": ["error", "always"],
+    "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+    "no-unused-vars": 1,
+    "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }]
+  }
 }
