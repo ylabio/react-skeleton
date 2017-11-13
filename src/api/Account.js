@@ -9,7 +9,7 @@ export default {
    * @returns {Promise}
    */
   login: (login, password, remember = false) => {
-    return Http.post(`/api/auth/web`, {login, password, remember});
+    return Http.post(`/api/v1/users/sign`, {login, password, remember});
   },
 
   /**
@@ -17,14 +17,13 @@ export default {
    * @returns {Promise}
    */
   logout: () => {
-    return Http.delete(`/api/auth?full=false`);
+    return Http.delete(`/api/v1/users/sign`);
   },
 
   /**
-   * Authorization
-   * @returns {Promise}
+   * @return {Promise}
    */
-  account: () => {
-    return Http.get(`/api/account`);
-  },
+  current: () => {
+    return Http.get(`/api/v1/users/self`);
+  }
 };

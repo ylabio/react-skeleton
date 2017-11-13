@@ -1,16 +1,18 @@
 import {createReducer} from "utils";
 import {types} from "./actions.js";
 
-
 const initState = {
   user: {},
-  token: null,
+  hasToken: null, // null, true, false
+
   loginWait: false,
   loginError: null,
+
   logoutWait: false,
   logoutError: null,
-  accountWait: false,
-  accountError: null,
+
+  remindWait: false,
+  remindError: null,
 };
 
 export default createReducer(initState, {
@@ -32,14 +34,14 @@ export default createReducer(initState, {
   [types.LOGIN_SUCCESS]: (state, action) => {
     return {
       ...state,
-      user: action.user,
-      token: true,
+      user: action.payload.user,
+      hasToken: true,
       loginWait: false,
-      accountError: null
+      remindError: null
     };
   },
 
-  [types.LOGIN_FAIL]: (state, action) => {
+  [types.LOGIN_FAILURE]: (state, action) => {
     return {
       ...state,
       loginWait: false,
@@ -64,38 +66,37 @@ export default createReducer(initState, {
     };
   },
 
-  [types.LOGOUT_FAIL]: (state, action) => {
+  [types.LOGOUT_FAILURE]: (state, action) => {
     return {
       ...state,
       logoutWait: false,
-      logoutError: action.error ? action.error.message : 'Ошибка сервера',
+      logoutError: action.error,
     };
   },
 
-  [types.ACCOUNT]: (state, action) => {
+  [types.REMIND]: (state, action) => {
     return {
       ...state,
-      accountWait: true,
-      accountError: null
+      remindWait: true,
+      remindError: null
     };
   },
 
-  [types.ACCOUNT_SUCCESS]: (state, action) => {
+  [types.REMIND_SUCCESS]: (state, action) => {
     return {
       ...state,
-      user: action.data.user,
-      token: action.data.token,
-      accountWait: false
+      user: action.payload.user,
+      hasToken: true,
+      remindWait: false
     };
   },
 
-  [types.ACCOUNT_FAIL]: (state, action) => {
+  [types.REMIND_FAILURE]: (state, action) => {
     return {
       ...state,
-      token: false,
-      accountWait: false,
-      accountError: action.error ? action.error.message : 'Ошибка сервера',
+      hasToken: false,
+      remindWait: false,
+      remindError: action.error,
     };
   },
-
 });

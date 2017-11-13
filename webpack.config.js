@@ -72,7 +72,7 @@ if (process.env.NODE_ENV === 'production') {
   config.devServer = {
     //compress: false,
     contentBase: path.join(__dirname, "dist"),
-    port: 8020,
+    port: 8010,
     publicPath: config.output.publicPath,
     hot: true,
     historyApiFallback: true,
@@ -81,8 +81,8 @@ if (process.env.NODE_ENV === 'production') {
     },
     proxy: {
       '/api/**': {
-        target: 'http://appinside.yiilab.com',
-        secure: false,
+        target: 'https://api.ysa.dev.cuberto.com',
+        secure: true,
         changeOrigin: true
       },
     }
