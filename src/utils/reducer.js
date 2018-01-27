@@ -1,12 +1,12 @@
 /**
- * Создание обработчиков ввиде методов объекта
+ * Создание обработчиков в виде методов объекта
  * В dispatch() необходимо указывать тип(имя) действия и ключ состояния
  * @param initState Object Начальное состояние
  * @param handlers Object Обработчики дейтсвий
  * @version 1.0
  * @created 06.03.2016
  */
-export default function createReducer(initState, handlers) {
+export default function reducer(initState, handlers) {
 
   return (state = initState, action = {}) => {
 

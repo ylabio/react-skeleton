@@ -1,4 +1,4 @@
-import {Http} from '../utils';
+import {http} from '../utils';
 
 export default {
   /**
@@ -9,7 +9,7 @@ export default {
    * @returns {Promise}
    */
   login: (login, password, remember = false) => {
-    return Http.post(`/api/v1/users/sign`, {login, password, remember});
+    return http.post(`/api/v1/users/sign`, {login, password, remember});
   },
 
   /**
@@ -17,13 +17,13 @@ export default {
    * @returns {Promise}
    */
   logout: () => {
-    return Http.delete(`/api/v1/users/sign`);
+    return http.delete(`/api/v1/users/sign`);
   },
 
   /**
    * @return {Promise}
    */
   current: () => {
-    return Http.get(`/api/v1/users/self`);
+    return http.get(`/api/v1/users/self`);
   }
 };

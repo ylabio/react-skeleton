@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 
 import "./style.less";
 
-import Main from '../main/Main.js';
-import Login from '../login/Login.js';
+import Main from '../main';
+import Login from '../login';
 
 class App extends Component {
 

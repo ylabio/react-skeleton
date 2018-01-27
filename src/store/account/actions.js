@@ -1,4 +1,4 @@
-import Account from '../../api/Account.js';
+import account from '../../api/account';
 
 export const types = {
   LOGIN: Symbol('LOGIN'),
@@ -21,7 +21,7 @@ export default {
       dispatch({type: types.LOGIN});
 
       try {
-        const response = await Account.login(email, password, remember);
+        const response = await account.login(email, password, remember);
         const {result} = response.data;
         dispatch({type: types.LOGIN_SUCCESS, payload: result});
         return result;
@@ -40,7 +40,7 @@ export default {
       dispatch({type: types.LOGOUT});
 
       try {
-        const res = await Account.logout();
+        const res = await account.logout();
         dispatch({type: types.LOGOUT_SUCCESS});
       } catch (e) {
         if (e.response && e.response.status < 500) {
@@ -57,7 +57,7 @@ export default {
     return async dispatch => {
       dispatch({type: types.REMIND});
       try {
-        const res = await Account.current();
+        const res = await account.current();
         dispatch({type: types.REMIND_SUCCESS, payload: res.data.result});
       } catch (e) {
         if (e.response && e.response.status < 500) {
