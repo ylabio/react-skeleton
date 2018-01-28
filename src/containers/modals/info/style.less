@@ -1,0 +1,47 @@
+.Info {
+  position: relative;
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 8px;
+
+  @media (min-width: 600px) {
+      max-width: 816px;
+  }
+
+  &__content {
+    padding: 20px 20px 20px;
+    background: #fff;
+    border-radius: 8px;
+
+    @media (min-width: 600px) {
+      padding: 95px 100px 70px;
+    }
+  }
+
+  &__text {
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+    text-align: left;
+    line-height: 24px;
+
+    @media (min-width: 600px) {
+      margin-bottom: 45px;
+      line-height: 26px;
+    }
+  }
+
+  &__button {
+    text-align: center;
+    .Button {
+      font-size: 17px;
+      text-transform: uppercase;
+      @media (min-width: 600px) {
+        padding: 15px;
+        min-width: 220px;
+        font-size: 20px;
+      }
+    }
+
+  }
+}
