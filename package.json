@@ -25,6 +25,7 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "@storybook/addon-info": "^3.3.11",
     "@storybook/react": "^3.3.11",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
