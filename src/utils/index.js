@@ -1,2 +1,2 @@
-export {default as createReducer} from './createReducer';
-export {default as Http} from './Http';
+export {default as reducer} from './reducer';
+export {default as http} from './http';

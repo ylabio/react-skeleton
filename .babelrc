@@ -26,6 +26,13 @@
         "syntax-class-properties",
         "transform-object-rest-spread"
       ]
+    },
+    "production": {
+      "plugins": [
+        "transform-class-properties",
+        "syntax-class-properties",
+        "transform-object-rest-spread"
+      ]
     }
   }
 }

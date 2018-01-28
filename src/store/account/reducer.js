@@ -1,4 +1,4 @@
-import {createReducer} from "utils";
+import reducer from "utils/reducer";
 import {types} from "./actions.js";
 
 const initState = {
@@ -15,7 +15,7 @@ const initState = {
   remindError: null,
 };
 
-export default createReducer(initState, {
+export default reducer(initState, {
 
   [types.INIT]: (state, action) => {
     return {
