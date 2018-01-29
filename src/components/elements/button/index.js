@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import cs from 'classnames';
+import cn from 'classnames';
 import './style.less';
 
 export default class Button extends Component {
@@ -43,7 +43,7 @@ export default class Button extends Component {
     return (
       <a
         type="button"
-        className={cs('Button', this.themeClassNames('Button_theme_', theme))}
+        className={cn('Button', this.themeClassNames('Button_theme_', theme))}
         title={title}
         href={href || '#'}
         onClick={this.onClick}
