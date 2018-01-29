@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import "./style.less";
-import {modalActions} from 'store/actions';
+import {modalActions} from '../../store/actions';
 import cn from "classnames";
 import * as modals from './config.js';
 
