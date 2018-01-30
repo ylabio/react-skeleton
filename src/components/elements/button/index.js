@@ -14,23 +14,26 @@ export default class Button extends Component {
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
   };
 
-  static defaultProps = {
-    onClick: () => {
+  onClick = (e) => {
+    if (this.props.onClick) {
+      e.preventDefault();
+      this.props.onClick();
     }
   };
 
-  onClick = (e) => {
-    e.preventDefault();
-    this.props.onClick();
-  };
-
+  // Блок Block: b
+  // Модификаторы блока Block_mod: b._()
+  // Разные значения модификаторов блока Block_mod_val
+  // Элменты блока Block__elem
+  // Модификаторы элементов Block__elem_mod
+  // Значения модификаторов элемента Block__elem_mod_val
 
   render() {
     const {theme, href, title} = this.props;
     return (
       <a
         type="button"
-        className={cn('Button', themeClasses('Button_theme_', theme))}
+        className={cn(`Button`, themeClasses('Button_theme_', theme))}
         title={title}
         href={href || '#'}
         onClick={this.onClick}
