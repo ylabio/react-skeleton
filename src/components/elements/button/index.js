@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import cs from 'classnames';
+import cn from 'classnames';
 import './style.less';
+import {themeClasses} from '../../../utils';
 
 export default class Button extends Component {
 
@@ -13,37 +14,26 @@ export default class Button extends Component {
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
   };
 
-  static defaultProps = {
-    onClick: () => {
-    }
-  };
-
   onClick = (e) => {
-    e.preventDefault();
-    this.props.onClick();
+    if (this.props.onClick) {
+      e.preventDefault();
+      this.props.onClick();
+    }
   };
 
-  themeClassNames(basename, theme) {
-    const result = {};
-    if (theme) {
-      if (typeof theme === 'string') {
-        result[basename + theme] = true;
-      }
-      if (Array.isArray(theme)) {
-        for (const item of theme) {
-          result[basename + item] = true;
-        }
-      }
-    }
-    return result;
-  }
+  // Блок Block: b
+  // Модификаторы блока Block_mod: b._()
+  // Разные значения модификаторов блока Block_mod_val
+  // Элменты блока Block__elem
+  // Модификаторы элементов Block__elem_mod
+  // Значения модификаторов элемента Block__elem_mod_val
 
   render() {
     const {theme, href, title} = this.props;
     return (
       <a
         type="button"
-        className={cs('Button', this.themeClassNames('Button_theme_', theme))}
+        className={cn(`Button`, themeClasses('Button_theme_', theme))}
         title={title}
         href={href || '#'}
         onClick={this.onClick}

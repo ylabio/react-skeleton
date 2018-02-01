@@ -1,4 +1,4 @@
-import {reducer} from 'utils';
+import reducer from '../../utils/reducer';
 import {types} from './actions.js';
 
 const initState = {

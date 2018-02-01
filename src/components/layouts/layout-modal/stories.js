@@ -7,30 +7,30 @@ import {action} from '@storybook/addon-actions';
 storiesOf('layouts/LayoutModal (модалка)', module)
   .add('Базовая', () => (
     <LayoutModal
-      header={"Заголовок"}
-      footer={"Подвал"}
+      header={"{header}"}
+      footer={"{footer}"}
       onClose={action('onClose')}>
-      Модалка
+      {"{children}"}
     </LayoutModal>
   ))
   .add('Без заголовка', () => (
     <LayoutModal
       onClose={action('onClose')}>
-      Модалка
+      {"{children}"}
     </LayoutModal>
   ))
   .add('Без кнопки закрытия', () => (
     <LayoutModal
       toolClose={false}
       onClose={action('onClose')}>
-      Модалка
+      {"{children}"}
     </LayoutModal>
   ))
   .add('Прозрачный фон', () => (
     <LayoutModal
       overflowTransparent={true}
       onClose={action('onClose')}>
-      Модалка
+      {"{children}"}
     </LayoutModal>
   ))
   .add('Не закрывать по фону', () => (
@@ -38,6 +38,6 @@ storiesOf('layouts/LayoutModal (модалка)', module)
       overflowTransparent={true}
       overflowClose={false}
       onClose={action('onClose')}>
-      Модалка
+      {"{children}"}
     </LayoutModal>
   ));

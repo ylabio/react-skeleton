@@ -1,0 +1,29 @@
+.MenuTop {
+  &__list {
+    display:flex;
+    justify-content:flex-start;
+    list-style:none;
+  }
+
+  &__item {
+    position:relative;
+
+    &:not(:last-of-type) {
+      margin-right:22px;
+    }
+
+    &_active {
+      & a {
+        font-weight:700;
+      }
+    }
+  }
+
+  &__link {
+    font-size:21px;
+    font-weight:300;
+
+    text-transform:uppercase;
+    color: #0a70ff;
+  }
+}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import "./style.less";
 import {connect} from 'react-redux';
-import {modalActions} from 'store/actions';
+import {modalActions} from '../../../store/actions';
 import {Button} from '../../../components/elements';
 import {LayoutModal} from "../../../components/layouts";
 
