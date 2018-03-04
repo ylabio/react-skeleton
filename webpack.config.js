@@ -2,8 +2,9 @@ if (typeof process.env.NODE_ENV === 'undefined') process.env.NODE_ENV = 'product
 
 console.log(process.env.NODE_ENV);
 
-let path = require('path');
-let webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 let config = {
   mode: process.env.NODE_ENV,
@@ -14,7 +15,7 @@ let config = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     // publicPath: '/dist/',
     // pathinfo: true
   },
@@ -23,6 +24,10 @@ let config = {
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       }
+    }),
+    new HtmlWebPackPlugin({
+      template: "./index.html",
+      filename: "./index.html"
     })
   ],
   resolve: {
@@ -55,6 +60,17 @@ let config = {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         use: [
           {loader: 'url-loader', options: {limit: 100000, name: 'assets/[hash].[ext]'}}
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+            options: {
+              //minimize: true
+            }
+          }
         ]
       }
     ]
