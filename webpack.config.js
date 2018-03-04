@@ -6,6 +6,7 @@ let path = require('path');
 let webpack = require('webpack');
 
 let config = {
+  mode: process.env.NODE_ENV,
   context: path.join(__dirname, "/src"),
   entry: [
     'babel-polyfill',
@@ -61,12 +62,14 @@ let config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.devtool = "nosources-source-map";
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  //config.devtool = "nosources-source-map";
+  //config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 } else {
   // config.entry.push('webpack-dev-server/client?http://localhost:8020');
   // config.entry.push('webpack/hot/only-dev-server');
-  config.devtool = "#cheap-module-inline-source-map";
+  config.devtool = 'inline-source-map';// "#cheap-module-inline-source-map";
+
+  config.plugins.push(new webpack.NamedModulesPlugin());
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
 
   config.devServer = {
