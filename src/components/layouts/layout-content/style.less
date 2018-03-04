@@ -1,0 +1,36 @@
+.LayoutContent {
+  margin: 0 auto;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  transition: width .2s linear;
+
+  @media screen and (min-width: 768px) {
+    width: 750px;
+  }
+
+  @media screen and (min-width: 800px) {
+    width: 800px;
+  }
+
+  @media screen and (min-width: 992px) {
+    width: 970px
+  }
+
+  @media screen and (min-width: 1200px) {
+    width: 1170px
+  }
+
+  @media screen and (min-width: 1400px) {
+    width: 1392px
+  }
+
+  @media screen and (max-width: 768px){
+    &_theme {
+      &_no-mobile-padding {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+}

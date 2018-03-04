@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import "./style.less";
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {accountActions} from '../../store/actions';
+import {LayoutPage} from "../../components/layouts";
+import LayoutContent from "../../components/layouts/layout-content";
+import HeaderContainer from "../header-container";
 
 class Login extends Component {
 
@@ -26,17 +27,19 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="Login">
-        <div>
-          <h1>Login page</h1>
-          <Link to="/">На главную</Link>
-        </div>
-      </div>
+      <LayoutPage header={<HeaderContainer/>}>
+        <LayoutContent>
+          <div>
+            <h1>Login page</h1>
+            <Link to="/">На главную</Link>
+          </div>
+        </LayoutContent>
+      </LayoutPage>
     );
   }
 }
 
-export default connect(state=>({
+export default connect(state => ({
   account: state.account,
   isLoading: state.account.loginWait
 }))(Login);

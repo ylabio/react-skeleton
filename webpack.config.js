@@ -2,10 +2,12 @@ if (typeof process.env.NODE_ENV === 'undefined') process.env.NODE_ENV = 'product
 
 console.log(process.env.NODE_ENV);
 
-let path = require('path');
-let webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 let config = {
+  mode: process.env.NODE_ENV,
   context: path.join(__dirname, "/src"),
   entry: [
     'babel-polyfill',
@@ -13,7 +15,7 @@ let config = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     // publicPath: '/dist/',
     // pathinfo: true
   },
@@ -22,6 +24,10 @@ let config = {
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       }
+    }),
+    new HtmlWebPackPlugin({
+      template: "./index.html",
+      filename: "./index.html"
     })
   ],
   resolve: {
@@ -55,18 +61,31 @@ let config = {
         use: [
           {loader: 'url-loader', options: {limit: 100000, name: 'assets/[hash].[ext]'}}
         ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+            options: {
+              //minimize: true
+            }
+          }
+        ]
       }
     ]
   }
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.devtool = "nosources-source-map";
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  //config.devtool = "nosources-source-map";
+  //config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 } else {
   // config.entry.push('webpack-dev-server/client?http://localhost:8020');
   // config.entry.push('webpack/hot/only-dev-server');
-  config.devtool = "#cheap-module-inline-source-map";
+  config.devtool = 'inline-source-map';// "#cheap-module-inline-source-map";
+
+  config.plugins.push(new webpack.NamedModulesPlugin());
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
 
   config.devServer = {

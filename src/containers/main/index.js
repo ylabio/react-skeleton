@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Redirect, Route, Router, Switch} from 'react-router-dom';
 
-import "./style.less";
-
 class Main extends Component {
 
   static propTypes = {
@@ -14,7 +12,7 @@ class Main extends Component {
 
   checkAccess(account){
     if (!account.hasToken) {
-      this.props.history.push('/login');
+      this.props.history.replace('/login');
     }
   }
 
