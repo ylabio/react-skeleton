@@ -1,0 +1,26 @@
+@import './variables.less';
+
+/* Mixins */
+.flat() {
+  border-color: transparent;
+}
+
+.clear() {
+  background-color: transparent;
+  border-color: transparent;
+  &:hover, &:focus {
+    border-color: transparent;
+  }
+}
+.square() {
+  position: relative;
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  border-color: @grayShale;
+}
+
+.border-3px() {
+  border: 1px solid;
+  border-radius: 3px;
+}

@@ -12,7 +12,7 @@ class Main extends Component {
 
   checkAccess(account){
     if (!account.hasToken) {
-      this.props.history.push('/login');
+      this.props.history.replace('/login');
     }
   }
 

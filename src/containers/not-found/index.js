@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import LayoutContent from "../../components/layouts/layout-content";
 
 class NotFound extends Component {
 
@@ -11,11 +12,11 @@ class NotFound extends Component {
 
   render() {
     return (
-      <div>
+      <LayoutContent>
         <h1>404</h1>
         <p>Страница не найдена</p>
         <Link to="/">На главную</Link>
-      </div>
+      </LayoutContent>
     );
   }
 }
