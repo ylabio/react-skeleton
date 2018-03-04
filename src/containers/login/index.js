@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import "./style.less";
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {accountActions} from '../../store/actions';
@@ -26,7 +25,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="Login">
+      <div>
         <div>
           <h1>Login page</h1>
           <Link to="/">На главную</Link>

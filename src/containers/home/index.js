@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {modalActions} from "../../store/actions";
-
-import "./style.less";
 import Button from "../../components/elements/button";
 import LayoutPage from "../../components/layouts/layout-page";
 
