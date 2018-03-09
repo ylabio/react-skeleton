@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 let config = {
-  mode: process.env.NODE_ENV,
+  //mode: process.env.NODE_ENV,
   context: path.join(__dirname, "/src"),
   entry: [
     'babel-polyfill',
