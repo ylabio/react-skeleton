@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 import {BrowserRouter} from 'react-router-dom';
 
-import Logo from './index';
+import Logo from './index.js';
 
 storiesOf('elements/Logo', module)
   .addDecorator(story => (
@@ -13,10 +13,10 @@ storiesOf('elements/Logo', module)
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: '#b8b8b8',
+      backgroundColor: '#111',
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      // justifyContent: 'center',
+      // alignItems: 'center'
     }}>
       {story()}
     </div>

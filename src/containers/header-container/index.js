@@ -8,7 +8,7 @@ import {detectActive} from "../../utils";
 import LayoutHeader from "../../components/layouts/layout-header";
 import MenuTop from "../../components/menus/menu-top";
 import Button from "../../components/elements/button";
-import Logo from "../../components/elements/Logo";
+import Logo from "../../components/elements/logo";
 
 
 class HeaderContainer extends Component {
