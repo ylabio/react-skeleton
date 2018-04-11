@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "test": "jest",
     "eslint": "./node_modules/.bin/eslint ./",
-    "storybook": "cross-env NODE_ENV=development start-storybook -p 9001 -c .storybook"
+    "storybook": "cross-env NODE_ENV=development start-storybook -p 9030 -c .storybook"
   },
   "private": true,
   "author": "Vladimir Shestakov boolive@yandex.ru",
