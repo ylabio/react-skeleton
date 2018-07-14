@@ -28,7 +28,7 @@ class HeaderContainer extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps){
+  componentDidUpdate(nextProps){
     if (this.props.location !== nextProps.location) {
       this.setState({
         items: detectActive(this.state.items, nextProps.location)

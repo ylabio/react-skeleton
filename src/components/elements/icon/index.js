@@ -51,7 +51,7 @@ export default class Icon extends Component {
     this.props.onClick();
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.hover) {
       this.setState({
         isHovered: false

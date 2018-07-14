@@ -19,7 +19,7 @@ class Login extends Component {
     super(props);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.account.hasToken) {
       this.props.history.replace('/main');
     }

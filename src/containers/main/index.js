@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Redirect, Route, Router, Switch} from 'react-router-dom';
@@ -16,11 +16,11 @@ class Main extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.checkAccess(this.props.account);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (this.props.account.hasToken !== nextProps.account.hasToken) {
       this.checkAccess(nextProps.account);
     }
@@ -28,13 +28,13 @@ class Main extends Component {
 
   render() {
     return (
-      <div className="Main">
+      <Fragment>
         <Switch>
           {/*<Route exact path='/main/pag1' component={Page1}/>*/}
           {/*<Route exact path='/main/pag2' component={Page2}/>*/}
           <Route component={() => <div>Not found!</div>}/>
         </Switch>
-      </div>
+      </Fragment>
     );
   }
 }

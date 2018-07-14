@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {modalActions} from '../../../store/actions';
 import {Button} from '../../../components/elements';
@@ -16,11 +16,11 @@ class Info extends Component {
 
   renderFooter(){
     return (
-      <div>
+      <Fragment>
         <Button onClick={this.onSuccess}>
           Всё понятно
         </Button>
-      </div>
+      </Fragment>
     );
   }
 

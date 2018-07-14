@@ -5,6 +5,8 @@ import store from './store/store.js';
 import App from './containers/app';
 import http from "./utils/http.js";
 
+import './theme/style.less';
+
 http.init(store);
 
 ReactDOM.render(

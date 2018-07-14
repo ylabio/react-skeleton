@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {accountActions} from '../../store/actions';
 import {Route, Router, Switch} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
 
-import "./style.less";
+import "../../theme/style.less";
 
 import Home from '../home';
 import Main from '../main';
@@ -25,7 +25,7 @@ class App extends Component {
     this.history = createBrowserHistory();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.account.hasToken === null) {
       this.props.dispatch(
         accountActions.remind()
@@ -37,14 +37,14 @@ class App extends Component {
     // If checking token
     if (this.props.account.hasToken === null) {
       return (
-        <div className="App">
+        <Fragment>
           Загрузка...
-        </div>
+        </Fragment>
       );
     }
 
     return (
-      <div className="App">
+      <Fragment>
         <Router history={this.history}>
           <Switch>
             <Route path="/" exact={true} component={Home}/>
@@ -54,7 +54,7 @@ class App extends Component {
           </Switch>
         </Router>
         <Modals history={this.history}/>
-      </div>
+      </Fragment>
     );
   }
 }
