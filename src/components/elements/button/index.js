@@ -2,16 +2,21 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import './style.less';
-import {themeClasses} from '../../../utils';
+import {themes} from '../../../utils';
 
 export default class Button extends Component {
 
   static propTypes = {
     children: PropTypes.node,
     onClick: PropTypes.func,
-    href: PropTypes.string,
+    type: PropTypes.string,
     title: PropTypes.string,
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+  };
+
+  static defaultProps = {
+    type: 'button',
+    theme: ''
   };
 
   onClick = (e) => {
@@ -21,25 +26,17 @@ export default class Button extends Component {
     }
   };
 
-  // Блок Block: b
-  // Модификаторы блока Block_mod: b._()
-  // Разные значения модификаторов блока Block_mod_val
-  // Элменты блока Block__elem
-  // Модификаторы элементов Block__elem_mod
-  // Значения модификаторов элемента Block__elem_mod_val
-
   render() {
-    const {theme, href, title} = this.props;
+    const {theme, title, type, children} = this.props;
     return (
-      <a
-        type="button"
-        className={cn(`Button`, themeClasses('Button_theme_', theme))}
+      <button
+        type={type}
+        className={cn(`Button`, themes('Button', theme))}
         title={title}
-        href={href || '#'}
         onClick={this.onClick}
       >
-        {this.props.children}
-      </a>
+        {children}
+      </button>
     );
   }
 }

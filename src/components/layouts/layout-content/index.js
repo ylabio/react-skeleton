@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import {themeClasses} from '../../../utils';
+import {themes} from '../../../utils';
 import './style.less';
 
 export default class LayoutContent extends Component {
@@ -18,7 +18,7 @@ export default class LayoutContent extends Component {
   render() {
     const {children, theme} = this.props;
     return (
-      <div className={cn(`LayoutContent`, themeClasses('LayoutContent_theme_', theme))}>
+      <div className={cn(`LayoutContent`, themes('LayoutContent', theme))}>
         {children}
       </div>
     );

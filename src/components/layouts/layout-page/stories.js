@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 
 import LayoutPage from './index';
 
-storiesOf('layouts/LayoutPage (страница)', module)
+storiesOf('layouts/LayoutPage', module)
   .addDecorator(story => (
     <div style={{position: 'absolute', top:0, bottom: 0, left:0, right:0}}>
       {story()}

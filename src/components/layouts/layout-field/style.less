@@ -1,0 +1,23 @@
+@import "../../../theme/variables.less";
+
+.LayoutField {
+
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 5px 0;
+
+  &__label{
+    text-align: left;
+    width: 200px;
+  }
+  &__input{
+    text-align: left;
+    flex-grow: 1;
+    &-inner{
+      display: block;
+    }
+  }
+  &__error{
+    display: block;
+  }
+}

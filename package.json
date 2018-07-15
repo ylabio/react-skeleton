@@ -26,10 +26,11 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.8",
-    "@storybook/addon-info": "^3.4.8",
-    "@storybook/addons": "^3.4.8",
-    "@storybook/react": "^4.0.0-alpha.2",
+    "@dump247/storybook-state": "^1.5.0",
+    "@storybook/addon-actions": "^4.0.0-alpha.14",
+    "@storybook/addon-info": "^4.0.0-alpha.14",
+    "@storybook/addons": "^4.0.0-alpha.14",
+    "@storybook/react": "^4.0.0-alpha.14",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^7.1.5",

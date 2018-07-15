@@ -4,7 +4,7 @@ import LayoutModal from './index';
 import {action} from '@storybook/addon-actions';
 
 
-storiesOf('layouts/LayoutModal (модалка)', module)
+storiesOf('layouts/LayoutModal', module)
   .add('Базовая', () => (
     <LayoutModal
       header={"{header}"}

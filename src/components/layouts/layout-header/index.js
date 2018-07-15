@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import LayoutContent from '../layout-content';
 import './style.less';
-import {themeClasses} from "../../../utils";
+import {themes} from "../../../utils";
 import cn from "classnames";
 
 export default class LayoutHeader extends Component {
@@ -22,7 +22,7 @@ export default class LayoutHeader extends Component {
   render() {
     const {left, children, right, center, theme} = this.props;
     return (
-      <div  className={cn(`LayoutHeader`, themeClasses('LayoutHeader_theme_', theme))}>
+      <div  className={cn(`LayoutHeader`, themes('LayoutHeader', theme))}>
         <LayoutContent>
           <div className="LayoutHeader__wrap">
             <div className="LayoutHeader__left">
