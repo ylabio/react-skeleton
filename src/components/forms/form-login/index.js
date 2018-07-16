@@ -12,10 +12,11 @@ export default class FormLogin extends Component {
 
   static propTypes = {
     data: PropTypes.shape({
-      login: PropTypes.string,
-      password: PropTypes.string
-    }),
+      login: PropTypes.string.isRequired,
+      password: PropTypes.string.isRequired
+    }).isRequired,
     errors: PropTypes.any,
+    wait: PropTypes.bool,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
@@ -43,7 +44,7 @@ export default class FormLogin extends Component {
   };
 
   render() {
-    const {data, errors, theme} = this.props;
+    const {data, errors, wait, theme} = this.props;
     return (
       <form className={cn(`FormLogin`, themes('FormLogin', theme))} onSubmit={this.onSubmit}>
         <LayoutField
@@ -57,7 +58,7 @@ export default class FormLogin extends Component {
           error={<Error errors={errors} path={'password'}/>}>
         </LayoutField>
         <LayoutField
-          input={<Button type="submit">Войти</Button>}
+          input={<Button type="submit" disabled={wait}>Войти{wait && '...'}</Button>}
           error={<Error errors={errors} path={''}/>}>
         </LayoutField>
       </form>

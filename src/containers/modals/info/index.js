@@ -1,17 +1,17 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {modalActions} from '../../../store/actions';
+import * as actions from '../../../store/actions';
 import {Button} from '../../../components/elements';
 import {LayoutModal} from "../../../components/layouts";
 
 class Info extends Component {
 
   onCancel = () => {
-    this.props.dispatch(modalActions.close(false));
+    this.props.dispatch(actions.modal.close(false));
   };
 
   onSuccess = () => {
-    this.props.dispatch(modalActions.close(true));
+    this.props.dispatch(actions.modal.close(true));
   };
 
   renderFooter(){

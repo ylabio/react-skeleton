@@ -11,11 +11,13 @@ export default class Button extends Component {
     onClick: PropTypes.func,
     type: PropTypes.string,
     title: PropTypes.string,
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    disabled: PropTypes.bool
   };
 
   static defaultProps = {
     type: 'button',
+    disabled: false,
     theme: ''
   };
 
@@ -27,13 +29,14 @@ export default class Button extends Component {
   };
 
   render() {
-    const {theme, title, type, children} = this.props;
+    const {theme, title, type, children, disabled} = this.props;
     return (
       <button
         type={type}
         className={cn(`Button`, themes('Button', theme))}
         title={title}
         onClick={this.onClick}
+        disabled={disabled}
       >
         {children}
       </button>

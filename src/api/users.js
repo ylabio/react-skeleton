@@ -8,7 +8,7 @@ export default {
    * @param remember
    * @returns {Promise}
    */
-  login: (login, password, remember = false) => {
+  login: ({login, password, remember = false}) => {
     return http.post(`/api/v1/users/sign`, {login, password, remember});
   },
 

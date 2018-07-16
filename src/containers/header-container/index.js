@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Link, withRouter} from 'react-router-dom';
-import {modalActions} from "../../store/actions";
+import {withRouter} from 'react-router-dom';
+import * as actions from "../../store/actions";
 import {detectActive} from "../../utils";
 
 import LayoutHeader from "../../components/layouts/layout-header";
@@ -15,20 +15,23 @@ class HeaderContainer extends Component {
 
   static propTypes = {
     location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    session: PropTypes.object.isRequired,
     dispatch: PropTypes.func
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       items: detectActive([
-        {title:'Главная', to:'/', active: false},
-        {title:'Страница', to:'/page', active: false}
+        {title: 'Главная', to: '/', active: false},
+        {title: 'О нас', to: '/about', active: false},
+        {title: '404', to: '/some-page', active: false}
       ], props.location)
     };
   }
 
-  componentDidUpdate(nextProps){
+  componentDidUpdate(nextProps) {
     if (this.props.location !== nextProps.location) {
       this.setState({
         items: detectActive(this.state.items, nextProps.location)
@@ -36,34 +39,36 @@ class HeaderContainer extends Component {
     }
   }
 
-  onClickOrder = () => {
-    this.props.dispatch(modalActions.open('OrderPhone')).then(result => {
-      console.log(result);
-    });
-  };
-
   onClickLogin = () => {
-    this.props.dispatch(modalActions.open('Login')).then(result => {
-      console.log(result);
-    });
+    this.props.history.push('/login');
   };
 
-  renderLeft(){
-    return (
-      <Logo/>
-    );
+  onClickLogout = () => {
+    this.props.dispatch(actions.session.clear());
+  };
+
+  renderRight() {
+    const items = [];
+    if (this.props.session.exists) {
+      items.push(
+        <Button
+          key={1} theme={["clear-white", "margins"]}
+          onClick={this.onClickLogout}>Выход</Button>
+      );
+    } else {
+      items.push(
+        <Button
+          key={1} theme={["clear-white", "margins"]}
+          onClick={this.onClickLogin}>Вход</Button>
+      );
+    }
+    return items;
   }
 
-  renderRight(){
-    return [
-      <Button key={1} theme={["clear-white", "margins"]} onClick={this.onClickLogin}>Вход</Button>,
-    ];
-  }
-
-  render(){
+  render() {
     return (
       <LayoutHeader
-        left={this.renderLeft()}
+        left={<Logo/>}
         right={this.renderRight()}
         center={<MenuTop items={this.state.items}/>}
       />
@@ -72,5 +77,5 @@ class HeaderContainer extends Component {
 }
 
 export default withRouter(connect(state => ({
-
+  session: state.session
 }))(HeaderContainer));

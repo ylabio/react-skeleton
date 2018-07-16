@@ -1,36 +1,25 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Link, withRouter} from 'react-router-dom';
-import * as actions from "../../store/actions";
-import Button from "../../components/elements/button";
+import {withRouter} from 'react-router-dom';
 import LayoutPage from "../../components/layouts/layout-page";
 import LayoutContent from "../../components/layouts/layout-content";
 import HeaderContainer from "../header-container";
 
-class Home extends Component {
+class About extends Component {
 
   static propTypes = {
     history: PropTypes.object.isRequired,
     dispatch: PropTypes.func
   };
 
-  showInfo = () => {
-    this.props.dispatch(actions.modal.open('info')).then(result => {
-      console.log(result);
-    });
-  };
-
   render() {
     return (
       <LayoutPage header={<HeaderContainer/>}>
         <LayoutContent>
-          <h1>Главная страница</h1>
+          <h1>О проекте</h1>
           <p>
-            <Link to="/main">Раздел для авторизованных</Link>
-          </p>
-          <p>
-            <Button onClick={this.showInfo}>Показать модалку</Button>
+            Скелет приложения на React с примерами компонент и навигацией
           </p>
         </LayoutContent>
       </LayoutPage>
@@ -41,5 +30,5 @@ class Home extends Component {
 export default withRouter(
   connect(state => ({
 
-  }))(Home)
+  }))(About)
 );

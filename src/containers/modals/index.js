@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {modalActions} from '../../store/actions';
+import * as actions from '../../store/actions';
 import * as modals from './config.js';
 
 class Modals extends Component {
@@ -11,7 +11,7 @@ class Modals extends Component {
       ...modal.params,
       history: this.props.history,
       close: (result) => {
-        dispatch(modalActions.close(result));
+        dispatch(actions.modal.close(result));
       }
     };
     if (modal.show) {

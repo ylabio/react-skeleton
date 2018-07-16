@@ -1,3 +1,4 @@
 export default {
-  baseUrl: '/api'
+  baseUrl: 'http://localhost:8040',
+  tokenHeader: 'X-Token'
 };
