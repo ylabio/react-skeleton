@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
 import * as actions from "../../store/actions";
+import Accordion from "../../components/elements/accordion";
 import Button from "../../components/elements/button";
 import LayoutPage from "../../components/layouts/layout-page";
 import LayoutContent from "../../components/layouts/layout-content";
@@ -32,6 +33,9 @@ class Home extends Component {
           <p>
             <Button onClick={this.showInfo}>Показать модалку</Button>
           </p>
+          <Accordion title={"Заголовок"}>
+            text for accordion, with other components, ex. <Button>Button</Button>
+          </Accordion>
         </LayoutContent>
       </LayoutPage>
     );
