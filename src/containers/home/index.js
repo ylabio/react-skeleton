@@ -43,7 +43,5 @@ class Home extends Component {
 }
 
 export default withRouter(
-  connect(state => ({
-
-  }))(Home)
+  connect(state => ({}))(Home)
 );
