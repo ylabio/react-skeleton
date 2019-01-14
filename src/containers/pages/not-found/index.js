@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import LayoutContent from "../../components/layouts/layout-content";
+import LayoutContent from "../../../components/layouts/layout-content";
 
 class NotFound extends Component {
 

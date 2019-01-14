@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {LayoutPage} from "../../components/layouts";
-import LayoutContent from "../../components/layouts/layout-content";
-import HeaderContainer from "../header-container";
-import FormLogin from "../../components/forms/form-login";
-import * as actions from "../../store/actions";
+import {LayoutPage} from "../../../components/layouts";
+import LayoutContent from "../../../components/layouts/layout-content";
+import HeaderContainer from "../../header-container";
+import FormLogin from "../../../components/forms/form-login";
+import * as actions from "../../../store/actions";
 
 class Login extends Component {
 
