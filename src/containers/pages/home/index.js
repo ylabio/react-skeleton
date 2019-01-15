@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
-import * as actions from "../../../store/actions";
-import Accordion from "../../../components/elements/accordion";
-import Button from "../../../components/elements/button";
-import LayoutPage from "../../../components/layouts/layout-page";
-import LayoutContent from "../../../components/layouts/layout-content";
-import HeaderContainer from "../../header-container";
+import * as actions from "@store/actions";
+import Accordion from "@components/elements/accordion";
+import Button from "@components/elements/button";
+import LayoutPage from "@components/layouts/layout-page";
+import LayoutContent from "@components/layouts/layout-content";
+import HeaderContainer from "@containers/header-container";
 
 class Home extends Component {
 

@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
-import * as actions from "../../store/actions";
-import {detectActive} from "../../utils";
+import * as actions from "@store/actions";
+import {detectActive} from "@utils";
 
-import LayoutHeader from "../../components/layouts/layout-header";
-import MenuTop from "../../components/menus/menu-top";
-import Button from "../../components/elements/button";
-import Logo from "../../components/elements/logo";
+import LayoutHeader from "@components/layouts/layout-header";
+import MenuTop from "@components/menus/menu-top";
+import Button from "@components/elements/button";
+import Logo from "@components/elements/logo";
 
 
 class HeaderContainer extends Component {

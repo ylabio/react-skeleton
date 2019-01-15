@@ -5,6 +5,9 @@ console.log(process.env.NODE_ENV);
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const webpackConfigForIde = require("./webpack-config-for-ide");
+const alias = webpackConfigForIde.resolve.alias;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let config = {
   mode: process.env.NODE_ENV,
@@ -32,7 +35,8 @@ let config = {
   ],
   resolve: {
     extensions: [/*'', */'.js', '.jsx'],
-    modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    alias,
   },
   module: {
     rules: [
@@ -106,6 +110,10 @@ if (process.env.NODE_ENV === 'production') {
       },
     }
   };
+}
+
+if (process.env.BUILD_ANALYZE) {
+  config.plugins.push(new BundleAnalyzerPlugin);
 }
 
 module.exports = config;
