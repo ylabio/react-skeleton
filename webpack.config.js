@@ -10,7 +10,7 @@ let config = {
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, "/src"),
   entry: [
-    'babel-polyfill',
+    '@babel/polyfill',
     'index.js'
   ],
   output: {

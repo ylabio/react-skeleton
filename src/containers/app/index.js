@@ -7,11 +7,11 @@ import PropTypes from 'prop-types';
 
 import "../../theme/style.less";
 
-import Home from '../home';
-import About from '../about';
-import Main from '../main';
-import Login from '../login';
-import NotFound from '../not-found';
+import Home from '../pages/home';
+import About from '../pages/about';
+import Main from '../pages/main';
+import Login from '../pages/login';
+import NotFound from '../pages/not-found';
 import Modals from '../modals';
 
 class App extends Component {
