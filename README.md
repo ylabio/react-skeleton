@@ -22,3 +22,6 @@
 `npm run storybook`
 
 [http://localhost:9030](http://localhost:9030/)
+
+## Анализ размера сборки
+`npm run build-analize`
