@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import * as actions from '../../../store/actions';
-import {Button} from '../../../components/elements';
-import {LayoutModal} from "../../../components/layouts";
+import * as actions from '@store/actions';
+import {Button} from '@components/elements';
+import {LayoutModal} from "@components/layouts";
 
 class Info extends Component {
 

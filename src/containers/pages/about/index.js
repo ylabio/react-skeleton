@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
-import LayoutPage from "../../../components/layouts/layout-page";
-import LayoutContent from "../../../components/layouts/layout-content";
-import HeaderContainer from "../../header-container";
+import LayoutPage from "@components/layouts/layout-page";
+import LayoutContent from "@components/layouts/layout-content";
+import HeaderContainer from "@containers/header-container";
 
 class About extends Component {
 
