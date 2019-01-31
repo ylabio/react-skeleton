@@ -4,14 +4,14 @@ console.log(process.env.NODE_ENV);
 
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const webpackConfigForIde = require("./webpack-config-for-ide");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const webpackConfigForIde = require('./webpack-config-for-ide');
 const alias = webpackConfigForIde.resolve.alias;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let config = {
   mode: process.env.NODE_ENV,
-  context: path.join(__dirname, "/src"),
+  context: path.join(__dirname, '/src'),
   entry: [
     '@babel/polyfill',
     'index.js'
@@ -29,8 +29,8 @@ let config = {
       }
     }),
     new HtmlWebPackPlugin({
-      template: "./index.html",
-      filename: "./index.html"
+      template: './index.html',
+      filename: './index.html'
     })
   ],
   resolve: {
@@ -70,7 +70,7 @@ let config = {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader",
+            loader: 'html-loader',
             options: {
               //minimize: true
             }
@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
 
   config.devServer = {
     //compress: false,
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(__dirname, 'dist'),
     port: 8030,
     publicPath: config.output.publicPath,
     hot: true,
