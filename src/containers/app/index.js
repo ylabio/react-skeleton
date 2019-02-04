@@ -5,7 +5,7 @@ import {Route, Router, Switch} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
 
-import "../../theme/style.less";
+import '../../theme/style.less';
 
 import Home from '../pages/home';
 import About from '../pages/about';

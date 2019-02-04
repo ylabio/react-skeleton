@@ -104,7 +104,7 @@ if (process.env.NODE_ENV === 'production') {
     },
     proxy: {
       '/api/**': {
-        target: 'https://api.ysa.dev.cuberto.com',
+        target: 'http://localhost:8090',
         secure: true,
         changeOrigin: true
       },

@@ -4,16 +4,17 @@ import React from 'react';
 import {renderToString} from 'react-dom/server';
 import {StaticRouter, matchPath} from 'react-router-dom';
 import {Provider} from 'react-redux';
-// import Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
 import routes from './routes';
-import store from './store/store';
-// import http from './utils/http.js';
+import createStore from './store/store';
+import http from './utils/http.js';
 import config from './config';
 import App from './containers/app-server';
 
-// http.init(store);
-
 const app = express();
+const store = createStore();
+http.init(store);
+
 
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
@@ -36,24 +37,25 @@ app.get('/*', (req, res) => {
     );
     const reactDom = renderToString(jsx);
     const reduxState = store.getState();
-    // const helmetData = Helmet.renderStatic();
+    const helmetData = Helmet.renderStatic();
 
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-    res.end(htmlTemplate(reactDom, reduxState));
+    res.end(htmlTemplate(reactDom, reduxState, helmetData));
   });
 });
 
 app.listen(config.server.port);
 console.log(`Server run on http://${config.server.host}:${config.server.port}`);
 
-function htmlTemplate(reactDom, reduxState) {
+function htmlTemplate(reactDom, reduxState, helmetData) {
   return `
         <!DOCTYPE html>
         <html>
         <head>
             <base href="/">
             <meta charset="utf-8">
-            <title>App SSR</title>
+            ${helmetData.title.toString()}
+            ${helmetData.meta.toString()}
         </head>
         
         <body>

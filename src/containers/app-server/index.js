@@ -1,18 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import * as actions from '../../store/actions';
-import {Route, Router, Switch} from 'react-router-dom';
-import createMemoryHistory from 'history/createMemoryHistory';
+import {Route, Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+import * as actions from '@store/actions';
+import Modals from '../modals';
+import routes from '../../routes';
 
 import '../../theme/style.less';
-
-import Home from '../pages/home';
-import About from '../pages/about';
-import Main from '../pages/main';
-import Login from '../pages/login';
-import NotFound from '../pages/not-found';
-import Modals from '../modals';
 
 class App extends Component {
 
@@ -21,36 +16,29 @@ class App extends Component {
     dispatch: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.history = createMemoryHistory();
-  }
-
-  componentDidMount() {
-    this.props.dispatch(actions.session.remind());
-  }
+  // componentDidMount() {
+  //   this.props.dispatch(actions.session.remind());
+  // }
 
   render() {
     // If checking token
-    if (this.props.session.wait) {
-      return (
-        <Fragment>
-          Загрузка...
-        </Fragment>
-      );
-    }
+    // if (this.props.session.wait) {
+    //   return (
+    //     <Fragment>
+    //       Загрузка...
+    //     </Fragment>
+    //   );
+    // }
 
     return (
       <Fragment>
-        <Router>
-          <Switch>
-            <Route path="/" exact={true} component={Home}/>
-            <Route path="/about" component={About}/>
-            <Route path="/login" component={Login}/>
-            <Route path="/main" component={Main}/>
-            <Route component={NotFound}/>
-          </Switch>
-        </Router>
+        <Helmet>
+          <title>App SSR</title>
+          <meta name="description" content="This is a proof of concept for React SSR"/>
+        </Helmet>
+        <Switch>
+          {routes.map(route => <Route key={route.path} {...route} />)}
+        </Switch>
         <Modals/>
       </Fragment>
     );

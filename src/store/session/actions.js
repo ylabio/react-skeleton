@@ -9,17 +9,17 @@ const actions = {
 
   save: (data) => {
     return async dispatch => {
-      localStorage.setItem('token', data.token);
+      typeof localStorage !== 'undefined' && localStorage.setItem('token', data.token);
       dispatch({type: types.SAVE, payload: data});
     };
   },
 
   clear: (logoutRequest = true) => {
     return async dispatch => {
-      if (logoutRequest){
+      if (logoutRequest) {
         await api.users.logout();
       }
-      localStorage.removeItem('token');
+      typeof localStorage !== 'undefined' && localStorage.removeItem('token');
       dispatch({type: types.CLEAR});
     };
   },
@@ -27,9 +27,9 @@ const actions = {
   // По токену восстановление информации об аккаунте
   remind: () => {
     return async dispatch => {
-      const token = localStorage.getItem('token');
+      const token = typeof localStorage === 'undefined' ? '' : localStorage.getItem('token');
       if (token) {
-        // Только для устоновки токена в http
+        // Только для установки токена в http
         dispatch(actions.save({token, wait: true, exists: false}));
         try {
           const res = await api.users.current();

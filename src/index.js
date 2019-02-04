@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import store from './store/store.js';
+import createStore from './store/store.js';
 import App from './containers/app';
 import http from './utils/http.js';
 
 import './theme/style.less';
 
-// http.init(store);
+const store = createStore(window.REDUX_DATA);
+http.init(store);
 
 ReactDOM.hydrate(
   <Provider store={store}>

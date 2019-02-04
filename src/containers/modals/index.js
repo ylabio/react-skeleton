@@ -29,13 +29,13 @@ class Modals extends Component {
   }
 
   hideBodyOverflow() {
-    if (document.body.style.overflow !== 'hidden') {
+    if (typeof document !== 'undefined' && document.body.style.overflow !== 'hidden') {
       //document.body.style.overflow = 'hidden';
     }
   }
 
   resetBodyOverflow() {
-    if (document.body.style.overflow === 'hidden') {
+    if (typeof document !== 'undefined' && document.body.style.overflow === 'hidden') {
       //document.body.style.overflow = '';
     }
   }

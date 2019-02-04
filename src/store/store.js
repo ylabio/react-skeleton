@@ -8,7 +8,8 @@ const composeEnhancers = composeWithDevTools({
   serialize: true
 });
 
-export default createStore(
+export default (initialState) => createStore(
   combineReducers(reducers),
+  initialState,
   composeEnhancers(applyMiddleware(thunkMiddleware/*, loggerMiddleware*/))
 );

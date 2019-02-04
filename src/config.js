@@ -1,8 +1,8 @@
 export default {
-  baseUrl: 'http://localhost:8040',
+  baseUrl: 'http://localhost:8090',
   tokenHeader: 'X-Token',
   server: {
     host: 'localhost',
-    port: 8090,
+    port: 8040,
   },
 };
