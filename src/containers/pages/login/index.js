@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import {LayoutPage} from '@components/layouts';
 import LayoutContent from '@components/layouts/layout-content';
@@ -39,6 +40,10 @@ class Login extends Component {
   render() {
     return (
       <LayoutPage header={<HeaderContainer/>}>
+        <Helmet>
+          <title>Login</title>
+          <meta name="description" content="This is a proof of concept for React SSR"/>
+        </Helmet>
         <LayoutContent>
           <div>
             <h1>Login page</h1>

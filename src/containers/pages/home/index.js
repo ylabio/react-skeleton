@@ -17,6 +17,14 @@ class Home extends Component {
     dispatch: PropTypes.func
   };
 
+  componentDidMount() {
+    // this.init();
+  }
+
+  init = async () => {
+    this.props.dispatch(actions.formLogin.submit({login: 'consult1', password: 'password'}));
+  };
+
   showInfo = () => {
     this.props.dispatch(actions.modal.open('info')).then(result => {
       console.log(result);
@@ -47,9 +55,9 @@ class Home extends Component {
   }
 }
 
-Home.serverFetch = () => {
-  return actions.formLogin.submit({login: 'consult1', password: 'password'});
-};
+// Home.init = async () => {
+//   return Home.props.dispatch(actions.formLogin.submit({login: 'consult1', password: 'password'}));
+// };
 
 export default withRouter(
   connect(state => ({}))(Home)

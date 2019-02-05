@@ -14,9 +14,9 @@ class Main extends Component {
 
   checkAccess() {
     // Проверка прав пользователя
-    // if (!this.props.session.user._id) {
-    //   this.props.history.replace('/login');
-    // }
+    if (!this.props.session.user._id) {
+      this.props.history.replace('/login');
+    }
   }
 
   componentDidMount() {

@@ -27,6 +27,7 @@ export default {
       try {
         const response = await api.users.login(data);
         const result = response.data.result;
+        console.log('result', result)
         // Установка и сохранение сессии
         await dispatch(actions.session.save({user: result.user, token: result.token}));
 
