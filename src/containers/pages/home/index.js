@@ -18,9 +18,9 @@ class Home extends Component {
   };
 
   showInfo = () => {
-    // this.props.dispatch(actions.modal.open('info')).then(result => {
-    //   console.log(result);
-    // });
+    this.props.dispatch(actions.modal.open('info')).then(result => {
+      console.log(result);
+    });
   };
 
   render() {

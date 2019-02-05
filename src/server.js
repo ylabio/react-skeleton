@@ -5,10 +5,11 @@ import {renderToString} from 'react-dom/server';
 import {StaticRouter, matchPath} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import Helmet from 'react-helmet';
-import routes from './routes';
 import createStore from './store/store';
 import http from './utils/http.js';
 import config from './config';
+import routes from './routes';
+import {objectUtils} from './utils';
 import App from './containers/app-server';
 
 const app = express();
@@ -21,7 +22,7 @@ app.use(express.static(path.resolve(__dirname, '../dist')));
 app.get('/*', (req, res) => {
   const context = {};
   const dataRequirements =
-    routes
+    objectUtils.objectToArray(routes)
       .filter(route => matchPath(req.url, route)) // filter matching paths
       .map(route => route.component) // map to components
       .filter(comp => comp.serverFetch) // check if components have data requirement

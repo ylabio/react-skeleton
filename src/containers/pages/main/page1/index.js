@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
-import LayoutPage from "@components/layouts/layout-page";
-import LayoutContent from "@components/layouts/layout-content";
-import HeaderContainer from "@containers/header-container";
+import {Link, withRouter} from 'react-router-dom';
+import LayoutPage from '@components/layouts/layout-page';
+import LayoutContent from '@components/layouts/layout-content';
+import HeaderContainer from '@containers/header-container';
 
 class Page1 extends Component {
 
@@ -28,7 +28,5 @@ class Page1 extends Component {
 }
 
 export default withRouter(
-  connect(state => ({
-
-  }))(Page1)
+  connect(state => ({}))(Page1)
 );

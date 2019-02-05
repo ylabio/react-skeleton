@@ -4,15 +4,11 @@ import * as actions from '../../store/actions';
 import {Route, Router, Switch} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
+import Modals from '../modals';
+import routes from '../../routes';
+import {objectUtils} from '../../utils';
 
 import '../../theme/style.less';
-
-import Home from '../pages/home';
-import About from '../pages/about';
-import Main from '../pages/main';
-import Login from '../pages/login';
-import NotFound from '../pages/not-found';
-import Modals from '../modals';
 
 class App extends Component {
 
@@ -44,11 +40,11 @@ class App extends Component {
       <Fragment>
         <Router history={this.history}>
           <Switch>
-            <Route path="/" exact={true} component={Home}/>
-            <Route path="/about" component={About}/>
-            <Route path="/login" component={Login}/>
-            <Route path="/main" component={Main}/>
-            <Route component={NotFound}/>
+            {objectUtils.objectToArray(routes).map(route => {
+              return (
+                <Route key={route.path} path={route.path} exact={route.exact} component={route.component}/>
+              );
+            })}
           </Switch>
         </Router>
         <Modals history={this.history}/>

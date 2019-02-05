@@ -6,6 +6,7 @@ import Helmet from 'react-helmet';
 import * as actions from '@store/actions';
 import Modals from '../modals';
 import routes from '../../routes';
+import {objectUtils} from '../../utils';
 
 import '../../theme/style.less';
 
@@ -37,7 +38,11 @@ class App extends Component {
           <meta name="description" content="This is a proof of concept for React SSR"/>
         </Helmet>
         <Switch>
-          {routes.map(route => <Route key={route.path} {...route} />)}
+          {objectUtils.objectToArray(routes).map(route => {
+            return (
+              <Route key={route.path} path={route.path} exact={route.exact} component={route.component}/>
+            );
+          })}
         </Switch>
         <Modals/>
       </Fragment>
