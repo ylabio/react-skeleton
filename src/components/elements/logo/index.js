@@ -5,6 +5,9 @@ import './style.less';
 import {Link} from 'react-router-dom';
 import themes from '../../../utils/themes';
 
+import logo from './img/logo.png';
+import logoSvg from './img/logo.svg';
+
 export default class Logo extends Component {
 
   static propTypes = {
@@ -23,7 +26,7 @@ export default class Logo extends Component {
     const {to, theme, title} = this.props;
     return (
       <Link className={cn(`Logo`, themes('Logo', theme))} to={to} title={title}>
-        Skeleton
+        <img src={logo} alt="React Skeleton"/>
       </Link>
     );
   }
