@@ -20,14 +20,11 @@ app.use(express.static(path.resolve(__dirname, '../dist')));
 
 app.get('/*', (req, res) => {
   const context = {};
-  const r = filterRoutes(req.url, routes);
-  console.log('r', req.url, r[0])
   const dataRequirements =
     filterRoutes(req.url, routes) // filter matching paths
-      .map(route => route.component) // map to components
-      .filter(comp => comp.init) // check if components have data requirement
-      .map(comp => comp.init()); // get data requirement
-  console.log('dataRequirements', dataRequirements)
+      .map(route => ({component: route.component, params: route.params})) // map to components
+      .filter(comp => comp.component.initServer) // check if components have data requirement
+      .map(comp => comp.component.initServer({dispatch: store.dispatch, params: comp.params, req})); // get data requirement
   Promise.all(dataRequirements).then(() => {
     const jsx = (
       <Provider store={store}>
@@ -72,7 +69,9 @@ function htmlTemplate(reactDom, reduxState, helmetData) {
 
 function filterRoutes(url, routes, result = []) {
   objectUtils.objectToArray(routes).forEach((route) => {
-    if (matchPath(url, route)) {
+    const match = matchPath(url, route);
+    if (match) {
+      route.params = match.params;
       result.push(route);
     }
     if (route.children) {

@@ -17,12 +17,8 @@ class Home extends Component {
     dispatch: PropTypes.func
   };
 
-  componentDidMount() {
-    // this.init();
-  }
-
-  init = async () => {
-    this.props.dispatch(actions.formLogin.submit({login: 'consult1', password: 'password'}));
+  static initServer = ({dispatch, params, req}) => {
+    return dispatch(actions.formLogin.submit({login: 'consult1', password: 'password'}));
   };
 
   showInfo = () => {
@@ -54,10 +50,6 @@ class Home extends Component {
     );
   }
 }
-
-// Home.init = async () => {
-//   return Home.props.dispatch(actions.formLogin.submit({login: 'consult1', password: 'password'}));
-// };
 
 export default withRouter(
   connect(state => ({}))(Home)

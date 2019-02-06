@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import * as actions from '@store/actions';
 import Modals from '../modals';
 import routes from '../../routes';
 import {objectUtils} from '../../utils';
@@ -13,24 +12,10 @@ import '../../theme/style.less';
 class App extends Component {
 
   static propTypes = {
-    session: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
-  // componentDidMount() {
-  //   this.props.dispatch(actions.session.remind());
-  // }
-
   render() {
-    // If checking token
-    // if (this.props.session.wait) {
-    //   return (
-    //     <Fragment>
-    //       Загрузка...
-    //     </Fragment>
-    //   );
-    // }
-
     return (
       <Fragment>
         <Helmet>
@@ -50,6 +35,4 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({
-  session: state.session
-}))(App);
+export default connect(state => ({}))(App);
