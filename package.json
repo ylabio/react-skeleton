@@ -38,6 +38,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.3.1",
     "@babel/plugin-syntax-class-properties": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@dump247/storybook-state": "^1.5.2",
     "@storybook/addon-actions": "^4.1.11",
@@ -69,7 +70,8 @@
     "webpack": "^4.29.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-dev-server": "^3.1.14",
+    "webpack-isomorphic-tools": "^3.0.6"
   },
   "_moduleAliases": {
     "@components": "./src/components/",
