@@ -10,9 +10,6 @@ const alias = webpackConfigForIde.resolve.alias;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 
-const webpackIsomorphicToolsPlugin =
-  new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config')).development();
-
 let config = {
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, '/src'),
@@ -32,10 +29,10 @@ let config = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       }
     }),
-    new HtmlWebPackPlugin({
-      template: './index.html',
-      filename: './index.html'
-    })
+    // new HtmlWebPackPlugin({
+    //   template: './index.html',
+    //   filename: './index.html'
+    // })
   ],
   resolve: {
     extensions: [/*'', */'.js', '.jsx'],
@@ -65,10 +62,10 @@ let config = {
         ]
       },
       {
-        /* /\.(svg|png|swf|jpg|jpeg|gif|ico|otf|eot|ttf|woff|woff2)(\?.*)?$/, */
-        test: webpackIsomorphicToolsPlugin.regularExpression('images'),
+        /* webpackIsomorphicToolsPlugin.regularExpression('images'), */
+        test: /\.(svg|png|swf|jpg|jpeg|gif|ico|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         use: [
-          {loader: 'url-loader', options: {limit: 100000, name: 'assets/[hash].[ext]'}}
+          {loader: 'url-loader', options: {limit: 1000, name: 'assets/[hash].[ext]'}}
         ]
       },
       {
@@ -89,6 +86,12 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   //config.devtool = "nosources-source-map";
   //config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  if (!process.env.REACT_SSR) {
+    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
+  }
+  if (process.env.REACT_SSR) {
+    config.plugins.push(new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config.js')));
+  }
 } else {
   // config.entry.push('webpack-dev-server/client?http://localhost:8030');
   // config.entry.push('webpack/hot/only-dev-server');
@@ -96,6 +99,12 @@ if (process.env.NODE_ENV === 'production') {
 
   config.plugins.push(new webpack.NamedModulesPlugin());
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  if (!process.env.REACT_SSR) {
+    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
+  }
+  if (process.env.REACT_SSR) {
+    config.plugins.push(new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config.js')).development());
+  }
 
   config.devServer = {
     //compress: false,

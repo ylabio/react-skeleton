@@ -19,6 +19,9 @@ http.init(store);
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 app.get('/*', (req, res) => {
+  if (process.env.NODE_ENV !== 'production') {
+    webpackIsomorphicTools.refresh();
+  }
   const context = {};
   const dataRequirements =
     filterRoutes(req.url, routes) // filter matching paths
