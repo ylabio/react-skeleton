@@ -8,6 +8,10 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const webpackConfigForIde = require('./webpack-config-for-ide');
 const alias = webpackConfigForIde.resolve.alias;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
+
+const webpackIsomorphicToolsPlugin =
+  new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config')).development();
 
 let config = {
   mode: process.env.NODE_ENV,
@@ -61,7 +65,8 @@ let config = {
         ]
       },
       {
-        test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
+        /* /\.(svg|png|swf|jpg|jpeg|gif|ico|otf|eot|ttf|woff|woff2)(\?.*)?$/, */
+        test: webpackIsomorphicToolsPlugin.regularExpression('images'),
         use: [
           {loader: 'url-loader', options: {limit: 100000, name: 'assets/[hash].[ext]'}}
         ]
