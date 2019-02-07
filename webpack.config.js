@@ -62,7 +62,6 @@ let config = {
         ]
       },
       {
-        /* webpackIsomorphicToolsPlugin.regularExpression('images'), */
         test: /\.(svg|png|swf|jpg|jpeg|gif|ico|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         use: [
           {loader: 'url-loader', options: {limit: 1000, name: 'assets/[hash].[ext]'}}

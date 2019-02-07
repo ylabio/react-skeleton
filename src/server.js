@@ -22,13 +22,16 @@ app.get('/*', (req, res) => {
   if (process.env.NODE_ENV !== 'production') {
     webpackIsomorphicTools.refresh();
   }
+
   const context = {};
   const dataRequirements =
     filterRoutes(req.url, routes) // filter matching paths
       .map(route => ({component: route.component, params: route.params})) // map to components
       .filter(comp => comp.component.initServer) // check if components have data requirement
       .map(comp => comp.component.initServer({dispatch: store.dispatch, params: comp.params, req})); // get data requirement
-  Promise.all(dataRequirements).then(() => {
+
+  // render page anyway - successful or failure
+  Promise.all(dataRequirements).finally(() => {
     const jsx = (
       <Provider store={store}>
         <StaticRouter context={context} location={req.url}>
@@ -49,6 +52,14 @@ app.listen(config.server.port);
 console.log(`Server run on http://${config.server.host}:${config.server.port}`);
 
 function htmlTemplate(reactDom, reduxState, helmetData) {
+  const {assets} = webpackIsomorphicTools.assets();
+  let styles = '';
+  Object.keys(assets).forEach((key) => {
+    if (key.indexOf('.less') > 0 || key.indexOf('.scss') > 0 || key.indexOf('.css') > 0) {
+      styles += assets[key];
+    }
+  });
+
   return `
         <!DOCTYPE html>
         <html>
@@ -57,6 +68,7 @@ function htmlTemplate(reactDom, reduxState, helmetData) {
             <meta charset="utf-8">
             ${helmetData.title.toString()}
             ${helmetData.meta.toString()}
+            ${styles ? '<style type="text/css">' + styles + '</style>' : ''}
         </head>
         
         <body>

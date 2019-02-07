@@ -22,8 +22,8 @@ export default reducer(initState, {
   [types.SUBMIT]: (state) => {
     return {
       ...state,
+      wait: true,
       errors: null,
-      wait: true
     };
   },
 
@@ -31,6 +31,7 @@ export default reducer(initState, {
     return {
       ...state,
       data: {...initState.data},
+      wait: false,
       errors: null,
     };
   },
@@ -39,8 +40,8 @@ export default reducer(initState, {
     console.log(action.errors);
     return {
       ...state,
-      errors: action.errors,
       wait: false,
+      errors: action.errors,
     };
   },
 
