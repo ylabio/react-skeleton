@@ -9,7 +9,7 @@ import {objectUtils} from '../../utils';
 
 import '../../theme/style.less';
 
-class App extends Component {
+class AppServer extends Component {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -35,4 +35,4 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({}))(App);
+export default connect(state => ({}))(AppServer);

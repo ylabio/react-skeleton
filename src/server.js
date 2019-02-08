@@ -11,7 +11,7 @@ import http from './utils/http.js';
 import config from './config';
 import routes from './routes';
 import {objectUtils} from './utils';
-import App from './containers/app-server';
+import AppServer from './containers/app-server';
 
 const app = express();
 const store = createStore();
@@ -43,7 +43,7 @@ app.get('/*', (req, res) => {
     const jsx = (
       <Provider store={store}>
         <StaticRouter context={context} location={req.url}>
-          <App/>
+          <AppServer/>
         </StaticRouter>
       </Provider>
     );
