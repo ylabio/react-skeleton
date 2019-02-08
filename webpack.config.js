@@ -85,11 +85,10 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   //config.devtool = "nosources-source-map";
   //config.plugins.push(new webpack.optimize.UglifyJsPlugin());
-  if (!process.env.REACT_SSR) {
-    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
-  }
   if (process.env.REACT_SSR) {
     config.plugins.push(new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config.js')));
+  } else {
+    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
   }
 } else {
   // config.entry.push('webpack-dev-server/client?http://localhost:8030');
@@ -98,11 +97,10 @@ if (process.env.NODE_ENV === 'production') {
 
   config.plugins.push(new webpack.NamedModulesPlugin());
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
-  if (!process.env.REACT_SSR) {
-    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
-  }
   if (process.env.REACT_SSR) {
     config.plugins.push(new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools-config.js')).development());
+  } else {
+    config.plugins.push(new HtmlWebPackPlugin({template: './index.html', filename: './index.html'}));
   }
 
   config.devServer = {
