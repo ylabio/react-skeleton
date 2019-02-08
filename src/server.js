@@ -5,6 +5,7 @@ import {renderToString} from 'react-dom/server';
 import {StaticRouter, matchPath} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import Helmet from 'react-helmet';
+import CleanCSS from 'clean-css';
 import createStore from './store/store';
 import http from './utils/http.js';
 import config from './config';
@@ -25,7 +26,7 @@ app.get('/*', (req, res) => {
     res.end();
     return;
   }
-
+  // clear require() cache if in development mode
   if (process.env.NODE_ENV !== 'production') {
     webpackIsomorphicTools.refresh();
   }
@@ -61,11 +62,16 @@ console.log(`Server run on http://${config.server.host}:${config.server.port}`);
 function htmlTemplate(reactDom, reduxState, helmetData) {
   const {assets} = webpackIsomorphicTools.assets();
   let styles = '';
+  // find style assets
   Object.keys(assets).forEach((key) => {
     if (key.indexOf('.less') > 0 || key.indexOf('.scss') > 0 || key.indexOf('.css') > 0) {
       styles += assets[key];
     }
   });
+  // minify css if in production mode
+  if (process.env.NODE_ENV === 'production') {
+    styles = (new CleanCSS({}).minify(styles)).styles;
+  }
 
   return `
         <!DOCTYPE html>

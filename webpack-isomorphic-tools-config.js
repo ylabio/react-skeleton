@@ -17,12 +17,7 @@ module.exports = {
     },
     styles: {
       extensions: ['less', 'scss'],
-      filter(module, regularExpression, options, log) {
-        if (options.development) {
-          return WebpackIsomorphicToolsPlugin.styleLoaderFilter(module, regularExpression, options, log);
-        }
-        return regularExpression.test(module.name);
-      },
+      filter: WebpackIsomorphicToolsPlugin.styleLoaderFilter,
       path: WebpackIsomorphicToolsPlugin.styleLoaderPathExtractor,
       parser: WebpackIsomorphicToolsPlugin.cssLoaderParser
     }
