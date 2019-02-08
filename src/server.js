@@ -19,6 +19,13 @@ http.init(store);
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 app.get('/*', (req, res) => {
+  // request icons (ex. favicon.ico)
+  if (req.url.indexOf('.ico') > 0) {
+    res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
+    res.end();
+    return;
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     webpackIsomorphicTools.refresh();
   }
