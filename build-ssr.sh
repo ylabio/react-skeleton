@@ -7,4 +7,4 @@ rm -r dist/assets
 rm dist/*.js
 rm dist/*.json
 npm install
-npm run build-ssr
+npm run build-prod-ssr

@@ -60,17 +60,24 @@ app.listen(config.server.port);
 console.log(`Server run on http://${config.server.host}:${config.server.port}`);
 
 function htmlTemplate(reactDom, reduxState, helmetData) {
-  const {assets} = webpackIsomorphicTools.assets();
-  let styles = '';
-  // find style assets
+  const {assets, styles} = webpackIsomorphicTools.assets();
+  // find inline styles assets
+  let inlineStyles = '';
   Object.keys(assets).forEach((key) => {
     if (key.indexOf('.less') > 0 || key.indexOf('.scss') > 0 || key.indexOf('.css') > 0) {
-      styles += assets[key];
+      inlineStyles += assets[key];
     }
+  });
+  // find style assets
+  let assetsStyles = [];
+  Object.keys(styles).forEach((key) => {
+    assetsStyles.push(
+      `<link href="/${styles[key]}" media="screen, projection" rel="stylesheet" type="text/css"/>`
+    );
   });
   // minify css if in production mode
   if (process.env.NODE_ENV === 'production') {
-    styles = (new CleanCSS({}).minify(styles)).styles;
+    inlineStyles = (new CleanCSS({}).minify(inlineStyles)).styles;
   }
 
   return `
@@ -81,7 +88,8 @@ function htmlTemplate(reactDom, reduxState, helmetData) {
             <meta charset="utf-8">
             ${helmetData.title.toString()}
             ${helmetData.meta.toString()}
-            ${styles ? '<style type="text/css">' + styles + '</style>' : ''}
+            ${assetsStyles.map((style) => style)}
+            ${inlineStyles ? '<style type="text/css">' + inlineStyles + '</style>' : ''}
         </head>
         
         <body>
