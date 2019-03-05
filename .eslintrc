@@ -1,4 +1,5 @@
 {
+  "extends": ["plugin:react/recommended", "prettier"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
@@ -6,15 +7,12 @@
       "jsx": true
     }
   },
+  "plugins": ["babel", "react", "prettier"],
   "env": {
     "browser": true
   },
-  "plugins": [
-    "babel",
-    "react"
-  ],
-  "extends": ["plugin:react/recommended"],
   "rules": {
+    "prettier/prettier": "error",
     "indent": ["error", 2, { "SwitchCase": 1 } ],
     "semi": ["error", "always"],
     "no-trailing-spaces": ["error", { "skipBlankLines": true }],
