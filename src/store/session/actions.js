@@ -6,21 +6,20 @@ export const types = {
 };
 
 const actions = {
-
-  save: (data) => {
+  save: data => {
     return async dispatch => {
       localStorage.setItem('token', data.token);
-      dispatch({type: types.SAVE, payload: data});
+      dispatch({ type: types.SAVE, payload: data });
     };
   },
 
   clear: (logoutRequest = true) => {
     return async dispatch => {
-      if (logoutRequest){
+      if (logoutRequest) {
         await api.users.logout();
       }
       localStorage.removeItem('token');
-      dispatch({type: types.CLEAR});
+      dispatch({ type: types.CLEAR });
     };
   },
 
@@ -30,10 +29,10 @@ const actions = {
       const token = localStorage.getItem('token');
       if (token) {
         // Только для устоновки токена в http
-        dispatch(actions.save({token, wait: true, exists: false}));
+        dispatch(actions.save({ token, wait: true, exists: false }));
         try {
           const res = await api.users.current();
-          dispatch(actions.save({token, user: res.data.result, wait: false, exists: true}));
+          dispatch(actions.save({ token, user: res.data.result, wait: false, exists: true }));
         } catch (e) {
           dispatch(actions.clear(false));
           //throw e;
@@ -42,7 +41,7 @@ const actions = {
         dispatch(actions.clear(false));
       }
     };
-  }
+  },
 };
 
 export default actions;

@@ -1,15 +1,14 @@
 import reducer from '../../utils/reducer';
-import {types} from './actions.js';
+import { types } from './actions.js';
 
 const initState = {
   show: false,
   name: null,
   params: null,
-  result: null
+  result: null,
 };
 
 export default reducer(initState, {
-
   [types.OPEN]: (state, action) => {
     return {
       ...state,
@@ -17,7 +16,7 @@ export default reducer(initState, {
       name: action.payload.name,
       params: action.payload.params,
       resolve: action.payload.resolve,
-      result: null
+      result: null,
     };
   },
 
@@ -27,10 +26,10 @@ export default reducer(initState, {
         ...state,
         show: false,
         result: action.payload.result,
-        resolve: null
+        resolve: null,
       };
     } else {
       return state;
     }
-  }
+  },
 });

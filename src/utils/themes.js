@@ -6,7 +6,7 @@ import cn from 'classnames';
  * @param classes optionals Классы в формате допустимым для библиотеки classnames
  * @returns {function(...[*]=)|String} Функция для вызова только с classes или строка классов, если было передано более одного аргумента
  */
-export default function (block, ...classes) {
+export default function(block, ...classes) {
   /**
    * @param classes Классы в формате допустимым для библиотеки classnames
    * @returns {String}

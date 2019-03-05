@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const http = axios.create({
   baseURL: CONFIG.baseUrl,
-  headers: {}
+  headers: {},
 });
 
 http.init = async function(store) {
