@@ -1,19 +1,18 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {Link, withRouter} from 'react-router-dom';
-import * as actions from "@store/actions";
-import Accordion from "@components/elements/accordion";
-import Button from "@components/elements/button";
-import LayoutPage from "@components/layouts/layout-page";
-import LayoutContent from "@components/layouts/layout-content";
-import HeaderContainer from "@containers/header-container";
+import { Link, withRouter } from 'react-router-dom';
+import * as actions from '@store/actions';
+import Accordion from '@components/elements/accordion';
+import Button from '@components/elements/button';
+import LayoutPage from '@components/layouts/layout-page';
+import LayoutContent from '@components/layouts/layout-content';
+import HeaderContainer from '@containers/header-container';
 
 class Home extends Component {
-
   static propTypes = {
     history: PropTypes.object.isRequired,
-    dispatch: PropTypes.func
+    dispatch: PropTypes.func,
   };
 
   showInfo = () => {
@@ -24,7 +23,7 @@ class Home extends Component {
 
   render() {
     return (
-      <LayoutPage header={<HeaderContainer/>}>
+      <LayoutPage header={<HeaderContainer />}>
         <LayoutContent>
           <h1>Главная страница</h1>
           <p>
@@ -33,7 +32,7 @@ class Home extends Component {
           <p>
             <Button onClick={this.showInfo}>Показать модалку</Button>
           </p>
-          <Accordion title={"Заголовок"}>
+          <Accordion title={'Заголовок'}>
             text for accordion, with other components, ex. <Button>Button</Button>
           </Accordion>
         </LayoutContent>
@@ -42,6 +41,4 @@ class Home extends Component {
   }
 }
 
-export default withRouter(
-  connect(state => ({}))(Home)
-);
+export default withRouter(connect(state => ({}))(Home));

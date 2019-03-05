@@ -1,18 +1,17 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import * as actions from '@store/actions';
 import * as modals from './config.js';
 
 class Modals extends Component {
-
   getModal() {
-    const {modal, dispatch} = this.props;
+    const { modal, dispatch } = this.props;
     const props = {
       ...modal.params,
       history: this.props.history,
-      close: (result) => {
+      close: result => {
         dispatch(actions.modal.close(result));
-      }
+      },
     };
     if (modal.show) {
       if (!(modal.params && modal.params.noOverflow)) {
@@ -20,7 +19,7 @@ class Modals extends Component {
       }
       if (modals[modal.name]) {
         const Component = modals[modal.name];
-        return <Component {...props}/>;
+        return <Component {...props} />;
       }
     } else {
       this.resetBodyOverflow();
@@ -46,5 +45,5 @@ class Modals extends Component {
 }
 
 export default connect(state => ({
-  modal: state.modal
+  modal: state.modal,
 }))(Modals);

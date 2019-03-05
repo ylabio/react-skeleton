@@ -5,7 +5,6 @@ import themes from '../../../utils/themes';
 import './style.less';
 
 class Input extends React.Component {
-
   static propTypes = {
     value: PropTypes.node.isRequired,
     type: PropTypes.string,
@@ -22,32 +21,39 @@ class Input extends React.Component {
   };
 
   static defaultProps = {
-    onBlur: () => {
-    },
-    onChange: () => {
-    },
-    onFocus: () => {
-    },
+    onBlur: () => {},
+    onChange: () => {},
+    onFocus: () => {},
     disabled: false,
-    type: 'text'
+    type: 'text',
   };
 
-  onChange = (e) => {
+  onChange = e => {
     const value = e.target.value;
     return this.props.onChange(value);
   };
 
-  onFocus = (e) => {
+  onFocus = e => {
     this.props.onFocus(e);
   };
 
   onBlur = () => this.props.onBlur();
 
   render() {
-    const {type, placeholder, required, focused, value, theme, disabled, tabIndex, autocomplete} = this.props;
+    const {
+      type,
+      placeholder,
+      required,
+      focused,
+      value,
+      theme,
+      disabled,
+      tabIndex,
+      autocomplete,
+    } = this.props;
 
     return (
-      <div className={cn("Input", themes('Input', theme))}>
+      <div className={cn('Input', themes('Input', theme))}>
         <input
           className="Input__input"
           value={value}
@@ -66,6 +72,5 @@ class Input extends React.Component {
     );
   }
 }
-
 
 export default Input;

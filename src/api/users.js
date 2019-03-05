@@ -8,8 +8,8 @@ export default {
    * @param remember
    * @returns {Promise}
    */
-  login: ({login, password, remember = false}) => {
-    return http.post(`/api/v1/users/sign`, {login, password, remember});
+  login: ({ login, password, remember = false }) => {
+    return http.post(`/api/v1/users/sign`, { login, password, remember });
   },
 
   /**
@@ -25,5 +25,5 @@ export default {
    */
   current: () => {
     return http.get(`/api/v1/users/self`);
-  }
+  },
 };

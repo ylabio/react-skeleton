@@ -1,19 +1,18 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {LayoutPage} from "@components/layouts";
-import LayoutContent from "@components/layouts/layout-content";
-import HeaderContainer from "@containers/header-container";
-import FormLogin from "@components/forms/form-login";
-import * as actions from "@store/actions";
+import { LayoutPage } from '@components/layouts';
+import LayoutContent from '@components/layouts/layout-content';
+import HeaderContainer from '@containers/header-container';
+import FormLogin from '@components/forms/form-login';
+import * as actions from '@store/actions';
 
 class Login extends Component {
-
   static propTypes = {
     history: PropTypes.object.isRequired,
     session: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    formLogin: PropTypes.object
+    formLogin: PropTypes.object,
   };
 
   constructor(props) {
@@ -26,11 +25,11 @@ class Login extends Component {
     // }
   }
 
-  onChangeForm = (data) => {
+  onChangeForm = data => {
     this.props.dispatch(actions.formLogin.change(data));
   };
 
-  onSubmitForm = (data) => {
+  onSubmitForm = data => {
     this.props.dispatch(actions.formLogin.submit(data)).then(() => {
       this.props.history.replace('/main');
     });
@@ -38,7 +37,7 @@ class Login extends Component {
 
   render() {
     return (
-      <LayoutPage header={<HeaderContainer/>}>
+      <LayoutPage header={<HeaderContainer />}>
         <LayoutContent>
           <div>
             <h1>Login page</h1>
@@ -47,7 +46,8 @@ class Login extends Component {
               errors={this.props.formLogin.errors}
               wait={this.props.formLogin.wait}
               onChange={this.onChangeForm}
-              onSubmit={this.onSubmitForm}/>
+              onSubmit={this.onSubmitForm}
+            />
           </div>
         </LayoutContent>
       </LayoutPage>
@@ -57,5 +57,5 @@ class Login extends Component {
 
 export default connect(state => ({
   formLogin: state.formLogin,
-  session: state.session
+  session: state.session,
 }))(Login);

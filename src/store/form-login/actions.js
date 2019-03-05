@@ -10,8 +10,7 @@ export const types = {
 };
 
 export default {
-
-  change: (data) => {
+  change: data => {
     return dispatch => {
       dispatch({
         type: types.CHANGE,
@@ -20,26 +19,25 @@ export default {
     };
   },
 
-  submit: (data) => {
+  submit: data => {
     return async dispatch => {
-      dispatch({type: types.SUBMIT});
+      dispatch({ type: types.SUBMIT });
 
       try {
         const response = await api.users.login(data);
         const result = response.data.result;
         // Установка и сохранение сессии
-        await dispatch(actions.session.save({user: result.user, token: result.token}));
+        await dispatch(actions.session.save({ user: result.user, token: result.token }));
 
-        dispatch({type: types.SUBMIT_SUCCESS, payload: result.user});
+        dispatch({ type: types.SUBMIT_SUCCESS, payload: result.user });
         return result;
       } catch (e) {
         if (e.response && e.response.data && e.response.data.error) {
-          dispatch({type: types.SUBMIT_FAILURE, errors: e.response.data.error.data.issues});
+          dispatch({ type: types.SUBMIT_FAILURE, errors: e.response.data.error.data.issues });
         } else {
           throw e;
         }
       }
     };
   },
-
 };

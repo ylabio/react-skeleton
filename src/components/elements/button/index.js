@@ -1,27 +1,26 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import './style.less';
-import {themes} from '../../../utils';
+import { themes } from '../../../utils';
 
 export default class Button extends Component {
-
   static propTypes = {
     children: PropTypes.node,
     onClick: PropTypes.func,
     type: PropTypes.string,
     title: PropTypes.string,
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     type: 'button',
     disabled: false,
-    theme: ''
+    theme: '',
   };
 
-  onClick = (e) => {
+  onClick = e => {
     if (this.props.onClick) {
       e.preventDefault();
       this.props.onClick();
@@ -29,7 +28,7 @@ export default class Button extends Component {
   };
 
   render() {
-    const {theme, title, type, children, disabled} = this.props;
+    const { theme, title, type, children, disabled } = this.props;
     return (
       <button
         type={type}
