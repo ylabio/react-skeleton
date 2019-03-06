@@ -32,8 +32,7 @@ class FormLogin extends Component {
   onChange = name => value => {
     const { data, onChange } = this.props;
 
-    const data = { ...data, [name]: value };
-    onChange(data);
+    onChange({ ...data, [name]: value });
   };
 
   onSubmit = e => {

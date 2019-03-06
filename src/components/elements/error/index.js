@@ -21,10 +21,10 @@ class Error extends Component {
     if (!errors && !(errors instanceof Array) && !(errors instanceof Object)) {
       return null;
     }
-    let errors = errors instanceof Array ? errors : [errors];
+    const errorItems = errors instanceof Array ? errors : [errors];
     const items = [];
 
-    errors.map(item => {
+    errorItems.map(item => {
       if (!item || !item.message) {
         return;
       }
