@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import './style.less';
 import { themes } from '../../../utils';
 
-export default class Button extends Component {
+import './style.less';
+
+class Button extends Component {
   static propTypes = {
     children: PropTypes.node,
     onClick: PropTypes.func,
@@ -21,14 +22,17 @@ export default class Button extends Component {
   };
 
   onClick = e => {
-    if (this.props.onClick) {
+    const { onClick } = this.props;
+
+    if (onClick) {
       e.preventDefault();
-      this.props.onClick();
+      onClick();
     }
   };
 
   render() {
     const { theme, title, type, children, disabled } = this.props;
+
     return (
       <button
         type={type}
@@ -42,3 +46,5 @@ export default class Button extends Component {
     );
   }
 }
+
+export default Button;

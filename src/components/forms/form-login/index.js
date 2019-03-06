@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { themes } from '../../../utils';
-import './style.less';
 import LayoutField from '../../layouts/layout-field';
 import Input from '../../elements/input';
 import Error from '../../elements/error';
 import Button from '../../elements/button';
 
-export default class FormLogin extends Component {
+import './style.less';
+
+class FormLogin extends Component {
   static propTypes = {
     data: PropTypes.shape({
       login: PropTypes.string.isRequired,
@@ -28,20 +29,23 @@ export default class FormLogin extends Component {
     onSubmit: () => {},
   };
 
-  onChange = name => {
-    return value => {
-      const data = { ...this.props.data, [name]: value };
-      this.props.onChange(data);
-    };
+  onChange = name => value => {
+    const { data, onChange } = this.props;
+
+    const data = { ...data, [name]: value };
+    onChange(data);
   };
 
   onSubmit = e => {
+    const { data, onSubmit } = this.props;
+
     e.preventDefault();
-    this.props.onSubmit({ ...this.props.data });
+    onSubmit({ ...data });
   };
 
   render() {
     const { data, errors, wait, theme } = this.props;
+
     return (
       <form className={cn(`FormLogin`, themes('FormLogin', theme))} onSubmit={this.onSubmit}>
         <LayoutField
@@ -68,3 +72,5 @@ export default class FormLogin extends Component {
     );
   }
 }
+
+export default FormLogin;

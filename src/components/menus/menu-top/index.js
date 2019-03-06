@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
+
 import './style.less';
 
-export default class MenuTop extends Component {
+class MenuTop extends Component {
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -21,6 +22,7 @@ export default class MenuTop extends Component {
 
   render() {
     const { items } = this.props;
+
     return (
       <div className="MenuTop">
         <ul className="MenuTop__list">
@@ -36,3 +38,5 @@ export default class MenuTop extends Component {
     );
   }
 }
+
+export default MenuTop;

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './style.less';
-import { themes } from '../../../utils';
 import cn from 'classnames';
+import { themes } from '../../../utils';
 
-export default class LayoutField extends Component {
+import './style.less';
+
+class LayoutField extends Component {
   static propTypes = {
     label: PropTypes.node,
     input: PropTypes.node,
@@ -18,6 +19,7 @@ export default class LayoutField extends Component {
 
   render() {
     const { label, input, error, theme } = this.props;
+
     return (
       <div className={cn(`LayoutField`, themes('LayoutField', theme))}>
         <div className="LayoutField__label">{label}</div>
@@ -29,3 +31,5 @@ export default class LayoutField extends Component {
     );
   }
 }
+
+export default LayoutField;

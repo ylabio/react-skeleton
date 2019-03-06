@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
+
 import './style.less';
 
-export default class Icon extends Component {
+class Icon extends Component {
   static propTypes = {
     onClick: PropTypes.func,
     name: PropTypes.string,
@@ -20,9 +21,18 @@ export default class Icon extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       isHovered: null,
     };
+  }
+
+  componentDidMount() {
+    if (this.props.hover) {
+      this.setState({
+        isHovered: false,
+      });
+    }
   }
 
   shouldComponentUpdate(nextState) {
@@ -46,23 +56,20 @@ export default class Icon extends Component {
   };
 
   onClick = e => {
+    const { onClick } = this.props;
+
     e.preventDefault();
-    this.props.onClick();
+    onClick();
   };
 
-  componentDidMount() {
-    if (this.props.hover) {
-      this.setState({
-        isHovered: false,
-      });
-    }
-  }
-
   render() {
+    const { isHovered } = this.state;
     const { name, style, hoverText, isActive } = this.props;
+
     let iconClickedClass = cn({
-      '-active': this.state.isHovered || isActive,
+      '-active': isHovered || isActive,
     });
+
     return (
       <i
         style={style}
@@ -71,15 +78,13 @@ export default class Icon extends Component {
         onClick={this.onClick}
         className={`Icon Icon_margin`}
       >
-        <div className={` Icon_${name}${iconClickedClass} Icon_size`} />
+        <div className={`Icon_${name}${iconClickedClass} Icon_size`} />
         <div
           className={
             'Icon__tip-text_font-style Icon__tip-text_bg-color Icon__tip-text_position Icon__tip_text-size Icon__tip_text_color-gray Icon__tip-text_theme-arrowCenter'
           }
           style={
-            this.state.isHovered !== null && this.state.isHovered
-              ? { visibility: 'visible' }
-              : { visibility: 'hidden' }
+            isHovered !== null && isHovered ? { visibility: 'visible' } : { visibility: 'hidden' }
           }
         >
           {hoverText}
@@ -88,3 +93,5 @@ export default class Icon extends Component {
     );
   }
 }
+
+export default Icon;

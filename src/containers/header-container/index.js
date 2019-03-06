@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from '@store/actions';
 import { detectActive } from '@utils';
-
 import LayoutHeader from '@components/layouts/layout-header';
 import MenuTop from '@components/menus/menu-top';
 import Button from '@components/elements/button';
@@ -12,14 +12,15 @@ import Logo from '@components/elements/logo';
 
 class HeaderContainer extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     session: PropTypes.object.isRequired,
-    dispatch: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
+
     this.state = {
       items: detectActive(
         [
@@ -33,9 +34,12 @@ class HeaderContainer extends Component {
   }
 
   componentDidUpdate(nextProps) {
-    if (this.props.location !== nextProps.location) {
+    const { items } = this.state;
+    const { location } = this.props;
+
+    if (location !== nextProps.location) {
       this.setState({
-        items: detectActive(this.state.items, nextProps.location),
+        items: detectActive(items, nextProps.location),
       });
     }
   }
@@ -49,8 +53,10 @@ class HeaderContainer extends Component {
   };
 
   renderRight() {
+    const { session } = this.props;
     const items = [];
-    if (this.props.session.exists) {
+
+    if (session.exists) {
       items.push(
         <Button key={1} theme={['clear-white', 'margins']} onClick={this.onClickLogout}>
           Выход
@@ -67,18 +73,17 @@ class HeaderContainer extends Component {
   }
 
   render() {
+    const { items } = this.state;
+
     return (
-      <LayoutHeader
-        left={<Logo />}
-        right={this.renderRight()}
-        center={<MenuTop items={this.state.items} />}
-      />
+      <LayoutHeader left={<Logo />} right={this.renderRight()} center={<MenuTop items={items} />} />
     );
   }
 }
 
-export default withRouter(
+export default compose(
+  withRouter,
   connect(state => ({
     session: state.session,
-  }))(HeaderContainer),
-);
+  })),
+)(HeaderContainer);

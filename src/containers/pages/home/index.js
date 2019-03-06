@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import * as actions from '@store/actions';
 import Accordion from '@components/elements/accordion';
 import Button from '@components/elements/button';
@@ -11,8 +11,8 @@ import HeaderContainer from '@containers/header-container';
 
 class Home extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    dispatch: PropTypes.func,
   };
 
   showInfo = () => {
@@ -41,4 +41,4 @@ class Home extends Component {
   }
 }
 
-export default withRouter(connect(state => ({}))(Home));
+export default connect()(Home);

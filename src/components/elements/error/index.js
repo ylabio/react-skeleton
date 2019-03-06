@@ -6,24 +6,22 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import './style.less';
 
-export default class Error extends Component {
+class Error extends Component {
   static propTypes = {
-    errors: PropTypes.any,
     path: PropTypes.string,
+    errors: PropTypes.any,
   };
 
   renderItems() {
-    const path = this.props.path;
-    if (
-      !this.props.errors &&
-      !(this.props.errors instanceof Array) &&
-      !(this.props.errors instanceof Object)
-    ) {
+    const { path, errors } = this.props;
+
+    if (!errors && !(errors instanceof Array) && !(errors instanceof Object)) {
       return null;
     }
-    let errors = this.props.errors instanceof Array ? this.props.errors : [this.props.errors];
+    let errors = errors instanceof Array ? errors : [errors];
     const items = [];
 
     errors.map(item => {
@@ -50,3 +48,5 @@ export default class Error extends Component {
     return <div className="Error">{React.Children.toArray(this.renderItems())}</div>;
   }
 }
+
+export default Error;
