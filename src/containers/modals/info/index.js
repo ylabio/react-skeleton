@@ -30,4 +30,4 @@ class Info extends Component {
   }
 }
 
-export default connect(state => ({}))(Info);
+export default connect()(Info);

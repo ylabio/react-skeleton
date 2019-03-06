@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import themes from '../../../utils/themes';
+
 import './style.less';
 
-class Input extends React.Component {
+class Input extends Component {
   static propTypes = {
     value: PropTypes.node.isRequired,
     type: PropTypes.string,
@@ -29,13 +30,13 @@ class Input extends React.Component {
   };
 
   onChange = e => {
+    const { onChange } = this.props;
+
     const value = e.target.value;
-    return this.props.onChange(value);
+    return onChange(value);
   };
 
-  onFocus = e => {
-    this.props.onFocus(e);
-  };
+  onFocus = e => this.props.onFocus(e);
 
   onBlur = () => this.props.onBlur();
 

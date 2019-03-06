@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import './style.less';
 
 class LayoutPage extends Component {
@@ -12,6 +13,7 @@ class LayoutPage extends Component {
 
   render() {
     const { header, content, footer, children } = this.props;
+
     return (
       <div className="LayoutPage">
         <div className="LayoutPage__header">{header}</div>

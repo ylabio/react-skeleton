@@ -1,20 +1,21 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Redirect, Route, Router, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 
 import Page1 from './page1';
 
 class Main extends Component {
   static propTypes = {
-    session: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    session: PropTypes.object.isRequired,
   };
 
   checkAccess() {
+    const { history, session } = this.props;
     // Проверка прав пользователя
-    if (!this.props.session.user._id) {
-      this.props.history.replace('/login');
+    if (!session.user._id) {
+      history.replace('/login');
     }
   }
 
@@ -33,7 +34,6 @@ class Main extends Component {
       <Fragment>
         <Switch>
           <Route exact path="/main" component={Page1} />
-          {/*<Route exact path='/main/pag2' component={Page2}/>*/}
           <Route component={() => <div>Not found!</div>} />
         </Switch>
       </Fragment>

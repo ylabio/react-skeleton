@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import './style.less';
 import { themes } from '../../../utils';
 
-export default class Accordion extends Component {
+import './style.less';
+
+class Accordion extends Component {
   static propTypes = {
     children: PropTypes.node,
     onClick: PropTypes.func,
@@ -18,18 +19,23 @@ export default class Accordion extends Component {
     theme: 'default',
   };
 
-  handleClick = () => {
-    this.setState({
-      isOpen: this.props.disabled ? this.state.isOpen : !this.state.isOpen,
-    });
-  };
-
   state = {
     isOpen: true,
   };
 
+  handleClick = () => {
+    const { isOpen } = this.state;
+    const { disabled } = this.props;
+
+    this.setState({
+      isOpen: disabled ? isOpen : !isOpen,
+    });
+  };
+
   render() {
+    const { isOpen } = this.state;
     const { theme, title, children, disabled } = this.props;
+
     return (
       <div
         className={cn(`Accordion`, themes('Accordion', theme))}
@@ -43,10 +49,12 @@ export default class Accordion extends Component {
           <div className={'Accordion__title'}>{title}</div>
         </div>
 
-        <div className={cn('Accordion__collapse', { Accordion__collapse_open: this.state.isOpen })}>
+        <div className={cn('Accordion__collapse', { Accordion__collapse_open: isOpen })}>
           <div className={'Accordion__body'}>{children}</div>
         </div>
       </div>
     );
   }
 }
+
+export default Accordion;

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import './style.less';
 import { Link } from 'react-router-dom';
 import themes from '../../../utils/themes';
 
-export default class Logo extends Component {
+import './style.less';
+
+class Logo extends Component {
   static propTypes = {
     to: PropTypes.string,
     title: PropTypes.string,
@@ -20,6 +21,7 @@ export default class Logo extends Component {
 
   render() {
     const { to, theme, title } = this.props;
+
     return (
       <Link className={cn(`Logo`, themes('Logo', theme))} to={to} title={title}>
         Skeleton
@@ -27,3 +29,5 @@ export default class Logo extends Component {
     );
   }
 }
+
+export default Logo;

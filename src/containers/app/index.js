@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as actions from '../../store/actions';
 import { Route, Router, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
-import PropTypes from 'prop-types';
+import * as actions from '@store/actions';
 
 import '../../theme/style.less';
 
@@ -16,12 +16,13 @@ import Modals from '../modals';
 
 class App extends Component {
   static propTypes = {
-    session: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    session: PropTypes.object.isRequired,
   };
 
   constructor(props) {
     super(props);
+
     this.history = createBrowserHistory();
   }
 
@@ -30,8 +31,9 @@ class App extends Component {
   }
 
   render() {
+    const { session } = this.props;
     // If checking token
-    if (this.props.session.wait) {
+    if (session.wait) {
       return <Fragment>Загрузка...</Fragment>;
     }
 

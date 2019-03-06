@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import LayoutContent from '../layout-content';
-import './style.less';
-import { themes } from '../../../utils';
 import cn from 'classnames';
+import LayoutContent from '../layout-content';
+import { themes } from '../../../utils';
 
-export default class LayoutHeader extends Component {
+import './style.less';
+
+class LayoutHeader extends Component {
   static propTypes = {
     children: PropTypes.node,
     left: PropTypes.node,
@@ -20,6 +21,7 @@ export default class LayoutHeader extends Component {
 
   render() {
     const { left, children, right, center, theme } = this.props;
+
     return (
       <div className={cn(`LayoutHeader`, themes('LayoutHeader', theme))}>
         <LayoutContent>
@@ -33,3 +35,5 @@ export default class LayoutHeader extends Component {
     );
   }
 }
+
+export default LayoutHeader;

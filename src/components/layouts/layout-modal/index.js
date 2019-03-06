@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './style.less';
 import cn from 'classnames';
 
-export default class LayoutModal extends Component {
+import './style.less';
+
+class LayoutModal extends Component {
   static propTypes = {
     children: PropTypes.node,
     header: PropTypes.node,
@@ -84,3 +85,5 @@ export default class LayoutModal extends Component {
     );
   }
 }
+
+export default LayoutModal;

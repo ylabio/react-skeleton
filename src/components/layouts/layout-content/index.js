@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { themes } from '../../../utils';
+
 import './style.less';
 
-export default class LayoutContent extends Component {
+class LayoutContent extends Component {
   static propTypes = {
     children: PropTypes.node,
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -16,6 +17,9 @@ export default class LayoutContent extends Component {
 
   render() {
     const { children, theme } = this.props;
+
     return <div className={cn(`LayoutContent`, themes('LayoutContent', theme))}>{children}</div>;
   }
 }
+
+export default LayoutContent;

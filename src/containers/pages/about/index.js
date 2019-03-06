@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import LayoutPage from '@components/layouts/layout-page';
 import LayoutContent from '@components/layouts/layout-content';
 import HeaderContainer from '@containers/header-container';
 
 class About extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    dispatch: PropTypes.func,
   };
 
   render() {
@@ -24,4 +23,4 @@ class About extends Component {
   }
 }
 
-export default withRouter(connect(state => ({}))(About));
+export default connect()(About);
