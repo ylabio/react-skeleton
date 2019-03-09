@@ -9,6 +9,9 @@ export default {
    * @returns {Promise}
    */
   login: ({ login, password, remember = false }) => {
+    // Mock request
+    // return Promise.resolve({ data: { result: { user: { _id: 123 }, token: '123456' } } });
+
     return http.post(`/api/v1/users/sign`, { login, password, remember });
   },
 
