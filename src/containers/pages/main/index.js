@@ -1,46 +1,20 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-
-import Page1 from './page1';
+import LayoutPage from '@components/layouts/layout-page';
+import LayoutContent from '@components/layouts/layout-content';
+import HeaderContainer from '@containers/header-container';
 
 class Main extends Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-    session: PropTypes.object.isRequired,
-  };
-
-  checkAccess() {
-    const { history, session } = this.props;
-    // Проверка прав пользователя
-    if (!session.user._id) {
-      history.replace('/login');
-    }
-  }
-
-  componentDidMount() {
-    this.checkAccess();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.session.user !== prevProps.session.user) {
-      this.checkAccess();
-    }
-  }
-
   render() {
     return (
-      <Fragment>
-        <Switch>
-          <Route exact path="/main" component={Page1} />
-          <Route component={() => <div>Not found!</div>} />
-        </Switch>
-      </Fragment>
+      <LayoutPage header={<HeaderContainer />}>
+        <LayoutContent>
+          <h1>Page 1</h1>
+          <p>Внутренняя страница для авторизованных</p>
+        </LayoutContent>
+      </LayoutPage>
     );
   }
 }
 
-export default connect(state => ({
-  session: state.session,
-}))(Main);
+export default connect()(Main);

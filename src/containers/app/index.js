@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Router, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
+import PrivateRoute from '@containers/private-route';
 import * as actions from '@store/actions';
 
 import '../../theme/style.less';
@@ -44,7 +45,7 @@ class App extends Component {
             <Route path="/" exact={true} component={Home} />
             <Route path="/about" component={About} />
             <Route path="/login" component={Login} />
-            <Route path="/main" component={Main} />
+            <PrivateRoute path="/main" component={Main} />
             <Route component={NotFound} />
           </Switch>
         </Router>
