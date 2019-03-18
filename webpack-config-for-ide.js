@@ -10,6 +10,6 @@ module.exports = {
       '@utils': path.resolve(__dirname, './src/utils/'),
       '@api': path.resolve(__dirname, './src/api/'),
       '@hoc-components': path.resolve(__dirname, './src/hoc-components/'),
-    }
-  }
+    },
+  },
 };
