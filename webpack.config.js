@@ -55,13 +55,11 @@ let config = {
         ],
       },
       {
-        test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        exclude: /icon-new/,
+        test: /\.(png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         use: [{ loader: 'url-loader', options: { limit: 100000, name: 'assets/[hash].[ext]' } }],
       },
       {
         test: /\.svg$/,
-        include: /icon-new/,
         use: [
           {
             loader: 'babel-loader',
