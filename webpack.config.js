@@ -50,7 +50,10 @@ let config = {
         test: /\.less$/,
         use: [
           { loader: 'style-loader' },
-          { loader: 'css-loader', options: { url: true } },
+          {
+            loader: 'css-loader',
+            options: { modules: true, localIdentName: '[local]_[hash]' },
+          },
           { loader: 'less-loader', options: { url: true } },
         ],
       },

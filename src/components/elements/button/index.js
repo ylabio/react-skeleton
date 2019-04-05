@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { themes } from '../../../utils';
 
-import './style.less';
+import styles from './style.less';
 
 class Button extends Component {
   static propTypes = {
@@ -36,7 +36,7 @@ class Button extends Component {
     return (
       <button
         type={type}
-        className={cn(`Button`, themes('Button', theme))}
+        className={cn(styles.Button, styles[themes('Button', theme)])}
         title={title}
         onClick={this.onClick}
         disabled={disabled}

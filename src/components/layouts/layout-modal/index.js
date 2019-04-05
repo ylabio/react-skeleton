@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import './style.less';
+import styles from './style.less';
 
 class LayoutModal extends Component {
   static propTypes = {
@@ -68,17 +68,20 @@ class LayoutModal extends Component {
     return (
       <div
         data-modal="overflow"
-        className={cn('LayoutModalOverflow', {
-          LayoutModalOverflow_transparent: overflowTransparent,
-        })}
+        className={cn(
+          styles.LayoutModalOverflow,
+          overflowTransparent && styles.LayoutModalOverflow_transparent,
+        )}
         onClick={this.onCloseOverflow}
       >
-        <div className="LayoutModal" ref={ref => (this.modalNode = ref)}>
-          {toolClose ? <a className="LayoutModal__close" href="#" onClick={this.onClose} /> : null}
-          <div className="LayoutModal__inner">
-            {header ? <div className="LayoutModal__header">{header}</div> : null}
-            <div className="LayoutModal__content">{children}</div>
-            {footer ? <div className="LayoutModal__footer">{footer}</div> : null}
+        <div className={styles.LayoutModal} ref={ref => (this.modalNode = ref)}>
+          {toolClose ? (
+            <a className={styles.LayoutModal__close} href="#" onClick={this.onClose} />
+          ) : null}
+          <div className={styles.LayoutModal__inner}>
+            {header ? <div className={styles.LayoutModal__header}>{header}</div> : null}
+            <div className={styles.LayoutModal__content}>{children}</div>
+            {footer ? <div className={styles.LayoutModal__footer}>{footer}</div> : null}
           </div>
         </div>
       </div>

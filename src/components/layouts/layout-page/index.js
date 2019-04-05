@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './style.less';
+import styles from './style.less';
 
 class LayoutPage extends Component {
   static propTypes = {
@@ -15,10 +15,10 @@ class LayoutPage extends Component {
     const { header, content, footer, children } = this.props;
 
     return (
-      <div className="LayoutPage">
-        <div className="LayoutPage__header">{header}</div>
-        <div className="LayoutPage__content">{children || content}</div>
-        <div className="LayoutPage__footer">{footer}</div>
+      <div className={styles.LayoutPage}>
+        <div className={styles.LayoutPage__header}>{header}</div>
+        <div className={styles.LayoutPage__content}>{children || content}</div>
+        <div className={styles.LayoutPage__footer}>{footer}</div>
       </div>
     );
   }

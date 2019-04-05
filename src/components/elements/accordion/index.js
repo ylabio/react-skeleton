@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { themes } from '../../../utils';
 
-import './style.less';
+import styles from './style.less';
 
 class Accordion extends Component {
   static propTypes = {
@@ -38,19 +38,19 @@ class Accordion extends Component {
 
     return (
       <div
-        className={cn(`Accordion`, themes('Accordion', theme))}
+        className={cn(styles.Accordion, styles[themes('Accordion', theme)])}
         onClick={this.onClick}
         disabled={disabled}
       >
         <div
-          className={cn('Accordion__header', themes('Accordion__header', theme))}
+          className={cn(styles.Accordion__header, styles[themes('Accordion__header', theme)])}
           onClick={this.handleClick}
         >
-          <div className={'Accordion__title'}>{title}</div>
+          <div className={styles.Accordion__title}>{title}</div>
         </div>
 
-        <div className={cn('Accordion__collapse', { Accordion__collapse_open: isOpen })}>
-          <div className={'Accordion__body'}>{children}</div>
+        <div className={cn(styles.Accordion__collapse, isOpen && styles.Accordion__collapse_open)}>
+          <div className={styles.Accordion__body}>{children}</div>
         </div>
       </div>
     );

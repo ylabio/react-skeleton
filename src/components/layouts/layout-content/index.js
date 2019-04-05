@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { themes } from '../../../utils';
 
-import './style.less';
+import styles from './style.less';
 
 class LayoutContent extends Component {
   static propTypes = {
@@ -18,7 +18,11 @@ class LayoutContent extends Component {
   render() {
     const { children, theme } = this.props;
 
-    return <div className={cn(`LayoutContent`, themes('LayoutContent', theme))}>{children}</div>;
+    return (
+      <div className={cn(styles.LayoutContent, styles[themes('LayoutContent', theme)])}>
+        {children}
+      </div>
+    );
   }
 }
 

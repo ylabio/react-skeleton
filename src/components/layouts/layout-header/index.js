@@ -2,33 +2,28 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import LayoutContent from '../layout-content';
-import { themes } from '../../../utils';
 
-import './style.less';
+import styles from './style.less';
 
 class LayoutHeader extends Component {
   static propTypes = {
+    className: PropTypes.string,
     children: PropTypes.node,
     left: PropTypes.node,
     right: PropTypes.node,
     center: PropTypes.node,
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  };
-
-  static defaultProps = {
-    theme: '',
   };
 
   render() {
-    const { left, children, right, center, theme } = this.props;
+    const { className, left, children, right, center } = this.props;
 
     return (
-      <div className={cn(`LayoutHeader`, themes('LayoutHeader', theme))}>
+      <div className={cn(styles.LayoutHeader, className)}>
         <LayoutContent>
-          <div className="LayoutHeader__wrap">
-            <div className="LayoutHeader__left">{left}</div>
-            <div className="LayoutHeader__center">{children || center}</div>
-            <div className="LayoutHeader__right">{right}</div>
+          <div className={styles.LayoutHeader__wrap}>
+            <div className={styles.LayoutHeader__left}>{left}</div>
+            <div className={styles.LayoutHeader__center}>{children || center}</div>
+            <div className={styles.LayoutHeader__right}>{right}</div>
           </div>
         </LayoutContent>
       </div>

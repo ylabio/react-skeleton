@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './style.less';
+import styles from './style.less';
 
 class Error extends Component {
   static propTypes = {
@@ -35,7 +35,7 @@ class Error extends Component {
         (!item.path && !path)
       ) {
         items.push(
-          <div key={item.code} className="Error__item">
+          <div key={item.code} className={styles.Error__item}>
             {item.message}
           </div>,
         );
@@ -45,7 +45,7 @@ class Error extends Component {
   }
 
   render() {
-    return <div className="Error">{React.Children.toArray(this.renderItems())}</div>;
+    return <div className={styles.Error}>{React.Children.toArray(this.renderItems())}</div>;
   }
 }
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
-import './style.less';
+import styles from './style.less';
 
 class MenuTop extends Component {
   static propTypes = {
@@ -24,11 +24,14 @@ class MenuTop extends Component {
     const { items } = this.props;
 
     return (
-      <div className="MenuTop">
-        <ul className="MenuTop__list">
+      <div className={styles.MenuTop}>
+        <ul className={styles.MenuTop__list}>
           {items.map((item, index) => (
-            <li key={index} className={cn('MenuTop__item ', { MenuTop__item_active: item.active })}>
-              <Link to={item.to} className="MenuTop__link">
+            <li
+              key={index}
+              className={cn(styles.MenuTop__item, item.active && styles.MenuTop__item_active)}
+            >
+              <Link to={item.to} className={styles.MenuTop__link}>
                 {item.title}
               </Link>
             </li>

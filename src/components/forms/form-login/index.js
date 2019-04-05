@@ -7,7 +7,7 @@ import Input from '../../elements/input';
 import Error from '../../elements/error';
 import Button from '../../elements/button';
 
-import './style.less';
+import styles from './style.less';
 
 class FormLogin extends Component {
   static propTypes = {
@@ -46,7 +46,10 @@ class FormLogin extends Component {
     const { data, errors, wait, theme } = this.props;
 
     return (
-      <form className={cn(`FormLogin`, themes('FormLogin', theme))} onSubmit={this.onSubmit}>
+      <form
+        className={cn(styles.FormLogin, styles[themes('FormLogin', theme)])}
+        onSubmit={this.onSubmit}
+      >
         <LayoutField
           label={'Логин'}
           input={<Input type="text" value={data.login} onChange={this.onChange('login')} />}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import themes from '../../../utils/themes';
 
-import './style.less';
+import styles from './style.less';
 
 class Input extends Component {
   static propTypes = {
@@ -54,9 +54,9 @@ class Input extends Component {
     } = this.props;
 
     return (
-      <div className={cn('Input', themes('Input', theme))}>
+      <div className={cn(styles.Input, styles[themes('Input', theme)])}>
         <input
-          className="Input__input"
+          className={styles.Input__input}
           value={value}
           type={type}
           placeholder={placeholder}
