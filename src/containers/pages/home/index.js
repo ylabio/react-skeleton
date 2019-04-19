@@ -8,6 +8,7 @@ import Button from '@components/elements/button';
 import LayoutPage from '@components/layouts/layout-page';
 import LayoutContent from '@components/layouts/layout-content';
 import HeaderContainer from '@containers/header-container';
+import ContentEditor from '@components/elements/contenteditor';
 
 class Home extends Component {
   static propTypes = {
@@ -15,10 +16,18 @@ class Home extends Component {
     history: PropTypes.object.isRequired,
   };
 
+  state = {
+    editText: 'Текст для редактирования',
+  };
+
   showInfo = () => {
     this.props.dispatch(actions.modal.open('info')).then(result => {
       console.log(result);
     });
+  };
+
+  handleChange = value => {
+    this.setState({ editText: value });
   };
 
   render() {
@@ -35,6 +44,7 @@ class Home extends Component {
           <Accordion title={'Заголовок'}>
             text for accordion, with other components, ex. <Button>Button</Button>
           </Accordion>
+          <ContentEditor onChange={this.handleChange} data={this.state.editText} />
         </LayoutContent>
       </LayoutPage>
     );
