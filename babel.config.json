@@ -1,0 +1,45 @@
+{
+  "presets": [
+    "@babel/env",
+    "@babel/react"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
+        [
+          "@babel/plugin-transform-react-jsx",
+          {
+            "transforms": [
+              {
+                "transform": "react-transform-hmr",
+                "imports": [
+                  "react"
+                ],
+                "locals": [
+                  "module"
+                ]
+              }
+            ]
+          }
+        ],
+        "@babel/plugin-transform-runtime",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-syntax-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@loadable/babel-plugin"
+      ]
+    },
+    "production": {
+      "plugins": [
+        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
+        "@babel/plugin-transform-runtime",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-react-jsx",
+        "@babel/plugin-syntax-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@loadable/babel-plugin"
+      ]
+    }
+  }
+}

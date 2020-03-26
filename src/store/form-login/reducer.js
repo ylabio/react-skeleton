@@ -1,24 +1,24 @@
-import reducer from '../../utils/reducer';
+import reducer from '@utils/reducer';
 import { types } from './actions.js';
 
 const initState = {
   data: {
-    login: 'user1@example.com',
-    password: 'string',
+    login: 'test',
+    password: '123456',
   },
   wait: false,
   errors: null,
 };
 
 export default reducer(initState, {
-  [types.CHANGE]: (state, action) => {
+  [types.CHANGE]: (state, {payload}) => {
     return {
       ...state,
-      data: action.payload,
+      data: payload,
     };
   },
 
-  [types.SUBMIT]: state => {
+  [types.SUBMIT_START]: (state) => {
     return {
       ...state,
       errors: null,
@@ -31,14 +31,14 @@ export default reducer(initState, {
       ...state,
       data: { ...initState.data },
       errors: null,
+      wait: false,
     };
   },
 
-  [types.SUBMIT_FAILURE]: (state, action) => {
-    console.log(action.errors);
+  [types.SUBMIT_FAILURE]: (state, {errors}) => {
     return {
       ...state,
-      errors: action.errors,
+      errors: errors,
       wait: false,
     };
   },

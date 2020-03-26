@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from '@store/actions';
-import { detectActive } from '@utils';
+import detectActive from '@utils/detect-active';
 import LayoutHeader from '@components/layouts/layout-header';
 import MenuTop from '@components/menus/menu-top';
 import Button from '@components/elements/button';
@@ -26,7 +26,7 @@ class HeaderContainer extends Component {
         [
           { title: 'Главная', to: '/', active: false },
           { title: 'О нас', to: '/about', active: false },
-          { title: '404', to: '/some-page', active: false },
+          { title: 'Каталог', to: '/catalog', active: false },
         ],
         props.location,
       ),
@@ -49,7 +49,7 @@ class HeaderContainer extends Component {
   };
 
   onClickLogout = () => {
-    this.props.dispatch(actions.session.clear());
+    actions.session.clear();
   };
 
   renderRight() {

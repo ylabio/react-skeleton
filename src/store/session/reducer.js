@@ -1,4 +1,4 @@
-import reducer from '../../utils/reducer';
+import reducer from '@utils/reducer';
 import { types } from './actions.js';
 
 const initState = {
@@ -9,12 +9,11 @@ const initState = {
 };
 
 export default reducer(initState, {
-  [types.SAVE]: (state, action) => {
+  [types.SAVE]: (state, {payload}) => {
     return {
       ...state,
       exists: true,
-      wait: false,
-      ...action.payload,
+      ...payload,
     };
   },
 
@@ -27,4 +26,9 @@ export default reducer(initState, {
       exists: false,
     };
   },
+
+  [types.REMIND]: state => {
+    console.log('REMIND');
+    return state;
+  }
 });

@@ -1,4 +1,4 @@
-import reducer from '../../utils/reducer';
+import reducer from '@utils/reducer';
 import { types } from './actions.js';
 
 const initState = {
@@ -9,23 +9,23 @@ const initState = {
 };
 
 export default reducer(initState, {
-  [types.OPEN]: (state, action) => {
+  [types.OPEN]: (state, {payload}) => {
     return {
       ...state,
       show: true,
-      name: action.payload.name,
-      params: action.payload.params,
-      resolve: action.payload.resolve,
+      name: payload.name,
+      params: payload.params,
+      resolve: payload.resolve,
       result: null,
     };
   },
 
-  [types.CLOSE]: (state, action) => {
+  [types.CLOSE]: (state, {payload}) => {
     if (state.name) {
       return {
         ...state,
         show: false,
-        result: action.payload.result,
+        result: payload.result,
         resolve: null,
       };
     } else {

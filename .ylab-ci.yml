@@ -1,0 +1,29 @@
+stages:
+- build
+- staging
+
+build:
+  stage: build
+  tags:
+    - front.ylab.io
+  only:
+    - develop
+  script:
+  - npm install
+  - npm run build
+  artifacts:
+    paths:
+    - dist
+    expire_in: 1 hour
+  cache:
+    paths:
+    - node_modules
+
+staging:
+  stage: staging
+  tags:
+    - front.ylab.io
+  only:
+    - develop
+  script:
+  - rsync -rlv ./dist/ /home/user/example/front/dist

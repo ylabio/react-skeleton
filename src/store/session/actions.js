@@ -1,46 +1,48 @@
-import * as api from '../../api';
+import store from '@store';
+import apiService, * as api from '@api';
 
 export const types = {
   SAVE: Symbol('SAVE'),
   CLEAR: Symbol('CLEAR'),
+  REMIND: Symbol('REMIND')
 };
 
 const actions = {
-  save: data => {
-    return async dispatch => {
+  save: async data => {
+    if (process.env.IS_WEB) {
       localStorage.setItem('token', data.token);
-      dispatch({ type: types.SAVE, payload: data });
-    };
+    }
+    store.dispatch({type: types.SAVE, payload: data});
+    apiService.setToken(data.token);
   },
 
-  clear: (logoutRequest = true) => {
-    return async dispatch => {
-      if (logoutRequest) {
-        await api.users.logout();
-      }
+  clear: async (logoutRequest = true) => {
+    if (logoutRequest) {
+      await api.users.logout();
+    }
+    if (process.env.IS_WEB) {
       localStorage.removeItem('token');
-      dispatch({ type: types.CLEAR });
-    };
+    }
+    store.dispatch({type: types.CLEAR});
+    apiService.setToken(undefined);
   },
 
   // По токену восстановление информации об аккаунте
-  remind: () => {
-    return async dispatch => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        // Только для устоновки токена в http
-        dispatch(actions.save({ token, wait: true, exists: false }));
-        try {
-          const res = await api.users.current();
-          dispatch(actions.save({ token, user: res.data.result, wait: false, exists: true }));
-        } catch (e) {
-          dispatch(actions.clear(false));
-          //throw e;
-        }
-      } else {
-        dispatch(actions.clear(false));
+  remind: async () => {
+    const token = process.env.IS_WEB ? localStorage.getItem('token') : undefined;
+    if (token) {
+      // Только для устоновки токена в http
+      await actions.save({token, wait: true, exists: false});
+      try {
+        const response = await api.users.current();
+        await actions.save({token, user: response.data.result, wait: false, exists: true});
+      } catch (e) {
+        await actions.clear(false);
+        //throw e;
       }
-    };
+    } else {
+      await actions.clear(false);
+    }
   },
 };
 

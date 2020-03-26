@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { themes } from '../../../utils';
+import themes from '@utils/themes';
 
 import './style.less';
 
