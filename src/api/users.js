@@ -1,9 +1,33 @@
 import api from '@api';
-import queryParams from "@utils/query-params";
+import params from "@utils/query-params";
 
 export default {
   /**
-   * Signin
+   * Выбор списка
+   * @param search Параметры поиска
+   * @param fields Какие поля выбирать
+   * @param limit Количество
+   * @param skip Сдвиг выборки от 0
+   * @param other Другие параметры апи
+   * @returns {Promise}
+   */
+  getList: ({search, fields = '*', limit = 20, skip = 0, ...other}) => {
+    return api.get(`/api/v1/users`, {params: params({search, fields, limit, skip, ...other})});
+  },
+
+  /**
+   * Выбор одного
+   * @param id Идентификатор
+   * @param fields Какие поля выбирать
+   * @param other Другие параметры апи
+   * @returns {Promise}
+   */
+  getOne: ({id, fields = '*', ...other}) => {
+    return api.get(`/api/v1/users/${id}`, {params: params({fields, ...other})});
+  },
+
+  /**
+   * Авторизация
    * @param login
    * @param password
    * @param remember
@@ -16,7 +40,7 @@ export default {
   },
 
   /**
-   * Signout
+   * Выход
    * @returns {Promise}
    */
   logout: () => {
@@ -24,33 +48,10 @@ export default {
   },
 
   /**
+   * Выбор одного юзера по токену (текущего авторизованного)
    * @return {Promise}
    */
   current: () => {
     return api.get(`/api/v1/users/self`);
-  },
-
-  /**
-   * Выбор списка
-   * @param search
-   * @param fields
-   * @param limit
-   * @param skip
-   * @returns {Promise}
-   */
-  getList: ({search, fields = '*', limit = 20, skip = 0}) => {
-    return api.get(`/api/v1/articles`, {params: queryParams({search, fields, limit, skip})});
-  },
-
-  /**
-   * Выбор одного
-   * @param id
-   * @param fields
-   * @param limit
-   * @param skip
-   * @returns {Promise}
-   */
-  getOne: ({id, fields = '*', limit = 20, skip = 0}) => {
-    return api.get(`/api/v1/articles/${id}`, {params: queryParams({fields, limit, skip})});
   },
 };

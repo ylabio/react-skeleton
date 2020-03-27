@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env webpack-dev-server",
-    "start:ssr": "npm run build:ssr & cross-env node ./server.js",
+    "start:ssr": "npm run build:all & cross-env node ./server.js",
     "build": "cross-env NODE_ENV=production webpack",
     "build:ssr": "cross-env NODE_ENV=production TARGET=node webpack",
     "build:all": "npm run build & npm run build:ssr",
@@ -24,6 +24,8 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "express": "^4.17.1",
+    "http-proxy": "^1.18.0",
+    "js-base64": "^2.5.2",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "module-alias": "^2.2.2",

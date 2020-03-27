@@ -50,18 +50,12 @@ let config = {
   plugins: [
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify({
-        NODE_ENV: process.env.NODE_ENV,
-        TARGET: process.env.TARGET,
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        TARGET: JSON.stringify(process.env.TARGET),
         IS_WEB: process.env.TARGET === 'web',
         IS_NODE: process.env.TARGET === 'node'
-      }),
-    }),
-    new HtmlWebPackPlugin({
-      template: './index.html',
-      filename: './index.html',
-      title: 'App',
-      base: appConfig.routing.basename
+      },
     }),
     new LoadablePlugin(),
     new MiniCssExtractPlugin()
@@ -132,6 +126,15 @@ let config = {
   },
 };
 
+if (isWeb) {
+  config.plugins.push(new HtmlWebPackPlugin({
+      template: './index.html',
+      filename: './index.html',
+      title: 'App',
+      base: appConfig.routing.basename
+    })
+  );
+}
 if (isNode) {
   config.externals = ['react-helmet', '@loadable/component', nodeExternals()];
 }
@@ -154,13 +157,7 @@ if (isDevelopment && isWeb) {
     publicPath: config.output.publicPath,
     hot: true,
     historyApiFallback: true,
-    proxy: {
-      '/api/**': {
-        target: 'http://example.front.ylab.io',
-        secure: true,
-        changeOrigin: true,
-      },
-    },
+    proxy: appConfig.api.proxy
   };
 }
 

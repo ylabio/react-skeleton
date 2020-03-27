@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import useFlow from "@utils/use-flow";
 import * as actions from "@store/actions";
 import LayoutContent from '@components/layouts/layout-content';
 import HeaderContainer from "@containers/header-container";
 import LayoutPage from "@components/layouts/layout-page";
 import ArticleList from "@containers/article-list";
 import CategoryTree from "@containers/category-tree";
+import useActions from "@utils/use-actions";
+
 
 const Catalog = React.memo((props) => {
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 const Tree = React.memo((props) => {
-  if (props.items?.length) {
+  if (props.items && props.items.length) {
     return (
       <ul className={"Tree"}>
         {props.items.map(item => (
@@ -13,6 +13,7 @@ const Tree = React.memo((props) => {
       </ul>
     )
   }
+  return null;
 });
 
 export default Tree;

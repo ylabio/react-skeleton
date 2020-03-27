@@ -1,27 +1,39 @@
 /**
  * HTTP server for render
  */
-
 process.env.TARGET = process.env.TARGET || 'node';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const path = require("path");
 const { Worker } = require('worker_threads');
 const express= require('express');
+const httpProxy = require('http-proxy');
 const config = require('./src/config.js');
 
+const proxy = httpProxy.createProxyServer({});
 const app = express();
-app.use(express.static(path.resolve(__dirname, '../dist/web')));
+
+// Отдача файлов кроме index.html
+app.use(express.static(path.resolve('./dist/web'), {index: false}));
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+// Запросы на файлы, которых нет. Отдача 404, чтобы не рендерить страницу
 app.get(/\.[a-z0-9]+$/, (req, res) => {
     res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
     res.end('404');
 });
 
+// Прокси на внешний сервер по конфигу
+for (const path of Object.keys(config.api.proxy)) {
+  console.log(`Proxy ${path} => ${config.api.proxy[path].target}`);
+  app.all(path, async (req, res) => {
+    proxy.web(req, res, config.api.proxy[path]);
+  });
+}
+
+// Все остальные запросы - рендер страницы
 app.get('/*', async (req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
   try {
     const result = await render({
       method: req.method,
@@ -29,9 +41,11 @@ app.get('/*', async (req, res) => {
       headers: req.headers,
       body: req.body
     });
-    res.end(JSON.stringify(result));
+    res.writeHead(result.status, {'Content-Type': 'text/html; charset=utf-8'});
+    res.end(result.out);
   } catch (e) {
-    console.log(e);
+    console.error(e);
+    res.writeHead(500, {'Content-Type': 'text/html; charset=utf-8'});
     res.end('ERROR');
   }
 });
@@ -39,6 +53,7 @@ app.listen(config.ssr.port, config.ssr.host);
 
 /**
  * Рендер приложения в отдельном потоке
+ * Запускается сборка приложения специально сделанная для node.js
  * @param params
  * @returns {Promise<Object>}
  */
