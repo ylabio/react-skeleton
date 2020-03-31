@@ -8,26 +8,39 @@ import ArticleList from "@containers/article-list";
 import CategoryTree from "@containers/category-tree";
 import useActions from "@utils/use-actions";
 
-
 const Catalog = React.memo((props) => {
 
-  const {categoryId} = useParams();
+  console.log(props);
 
+  //const {categoryId} = useParams();
+
+  const categoryId = props.match.params.categoryId;
   // Загрузка и обновление списка товаров при выборе категории
-  useEffect(()=>{
-    actions.articles.load({
+  // useEffect(()=>{
+  //   actions.articles.load({
+  //     fields: '*,category(title),maidIn(title)',
+  //     search: {category: categoryId}
+  //   });
+  //   return () => {
+  //     actions.articles.reset();
+  //   }
+  // }, [categoryId]);
+  //
+  // // Загрузка категорий
+  // useEffect(()=>{
+  //   actions.categories.load({fields: '*', limit: 1000});
+  // }, []);
+
+  useActions(async () => {
+    await actions.articles.load({
       fields: '*,category(title),maidIn(title)',
       search: {category: categoryId}
     });
-    return () => {
-      actions.articles.reset();
-    }
   }, [categoryId]);
 
-  // Загрузка категорий
-  useEffect(()=>{
-    actions.categories.load({fields: '*', limit: 1000});
-  }, []);
+  useActions(async () => {
+    await actions.categories.load({fields: '*', limit: 1000});
+  });
 
   return (
     <LayoutPage header={<HeaderContainer/>}>

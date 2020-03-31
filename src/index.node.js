@@ -36,22 +36,22 @@ const jsx = (
 
 
 let initPromises = [];
-global.pushInitPromise = (promise) => {
+global.pushInitPromise = promise => {
   initPromises.push(promise);
 };
 
 (async () => {
   // Первичный рендер для инициализации состояния
   global.SSR_FIRST_RENDER = true;
-  renderToString(jsx);
+  const result = renderToString(jsx);
   await Promise.all(initPromises);
-
+  //
   // Обработка рендера с учётом параметров сборки, деления на чанки, динамические подгурзки
   const statsFile = path.resolve('./dist/node/loadable-stats.json');
   const extractor = new ChunkExtractor({statsFile});
   const jsxExtractor = extractor.collectChunks(jsx);
-
-  // Итоговый рендер с инициализированным состоянием
+  //
+  // // Итоговый рендер с инициализированным состоянием
   global.SSR_FIRST_RENDER = false;
   const html = renderToString(jsxExtractor);
 
@@ -69,7 +69,7 @@ global.pushInitPromise = (promise) => {
   const metaTag = helmetData.meta.toString();
   const linkTags = helmetData.link.toString();
 
-// Скрипты, ссылки, стили с учётом параметров сборки
+  // Скрипты, ссылки, стили с учётом параметров сборки
   const scriptTags = extractor.getScriptTags();
   const linkTags2 = extractor.getLinkTags();
   const styleTags = extractor.getStyleTags();

@@ -7,6 +7,7 @@ import useSelectorMap from "@utils/use-selector-map";
 import useCallbackMap from "@utils/use-callback-map";
 import * as actions from "@store/actions";
 import history from '@app/history';
+import {useDispatch} from "react-redux";
 
 const Login = React.memo((props) => {
 
@@ -15,8 +16,8 @@ const Login = React.memo((props) => {
   }));
 
   const callbacks = useCallbackMap({
-    onChangeForm: data => {
-      actions.formLogin.change(data);
+    onChangeForm: async data => {
+      await actions.formLogin.change(data);
     },
     onSubmitForm: data => {
       const login = async (data) => {

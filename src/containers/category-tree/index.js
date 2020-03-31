@@ -28,7 +28,7 @@ const CategoryTree = React.memo(ssrPlaceholder(
   // SSR
   (props) => {
     return (
-      <div>Здесь будет меню</div>
+      <div>Здесь будет меню!!!</div>
     )
   }
 ));

@@ -27,6 +27,7 @@ class HeaderContainer extends Component {
           { title: 'Главная', to: '/', active: false },
           { title: 'О нас', to: '/about', active: false },
           { title: 'Каталог', to: '/catalog', active: false },
+          { title: 'Админка', to: '/private', active: false },
         ],
         props.location,
       ),

@@ -11,6 +11,7 @@ export default function useActions(callback, inputs = []) {
   if (process.env.IS_NODE && global.SSR_FIRST_RENDER) {
     const promise = callback(true);
     global.pushInitPromise(promise);
+    return promise;
   } else {
     useEffect(() => {
       if (!window.SSR_FIRST_RENDER){

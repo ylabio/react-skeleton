@@ -17,10 +17,12 @@ import config from 'config.js';
 
 let reactRender;
 let preloadedState;
-
+const ssrFirstRender = (set) => {
+  window.SSR_FIRST_RENDER = set;
+};
 // Если есть PRELOAD_DATA, то включен режим серверного рендера
 if (window['preloadedState']) {
-  window.SSR_FIRST_RENDER = true;
+  ssrFirstRender(true);
   preloadedState = JSON.parse(Base64.decode(window['preloadedState']));
   reactRender = ReactDOM.hydrate;
 } else {
@@ -36,7 +38,7 @@ reactRender(
     <Router history={history}>
       <App/>
     </Router>
-    {() => window.SSR_FIRST_RENDER = false}
+    {ssrFirstRender()}
   </Provider>,
   document.getElementById('app'),
 );

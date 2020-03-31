@@ -36,7 +36,7 @@ const history = {
    */
   goPrivate: () => {
     history.push('/private')
-  }
+  },
 };
 
 export default history;

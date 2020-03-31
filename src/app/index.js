@@ -11,21 +11,10 @@ import Modals from "@app/modals";
 import useSelectorMap from "@utils/use-selector-map";
 import Catalog from "@app/catalog";
 import useActions from "@utils/use-actions";
+import RoutePrivate from "@containers/private-route";
 
 const App = React.memo((props) => {
 
-  const select = useSelectorMap(state => ({
-    session: state.session,
-    user: state.user
-  }));
-
-  useEffect(()=>{
-    actions.session.remind();
-  },[]);
-
-  if (select.session.wait) {
-    return <Fragment><span>Загрузка...</span></Fragment>;
-  }
   return (
     <Fragment>
       <Helmet>
@@ -36,7 +25,7 @@ const App = React.memo((props) => {
         <Route path="/catalog/:categoryId?" component={Catalog}/>
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
-        <Route path="/private" component={Private}/>
+        <RoutePrivate path="/private" failpath="/login" component={Private}/>
         <Route component={NotFound}/>
       </Switch>
       <Modals/>
