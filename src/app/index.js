@@ -12,6 +12,7 @@ import useSelectorMap from "@utils/use-selector-map";
 import Catalog from "@app/catalog";
 import useActions from "@utils/use-actions";
 import RoutePrivate from "@containers/private-route";
+import Categories from '@app/categories';
 
 const App = React.memo((props) => {
 
@@ -25,6 +26,7 @@ const App = React.memo((props) => {
         <Route path="/catalog/:categoryId?" component={Catalog}/>
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
+        <RoutePrivate path="/categories" component={Categories}/>
         <RoutePrivate path="/private" failpath="/login" component={Private}/>
         <Route component={NotFound}/>
       </Switch>

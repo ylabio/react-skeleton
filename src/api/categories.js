@@ -25,4 +25,16 @@ export default {
   getOne: ({id, fields = '*', ...other}) => {
     return api.get(`/api/v1/categories/${id}`, {params: params({fields, ...other})});
   },
+
+  /**
+   * Редактирование одного title
+   * @param id Идентификатор
+   * @param title Новое значение title
+   * @param
+   * @return {Promise}
+   */
+  putOneTitle: ({id, title}) => {
+    const fields = 'title';
+    return api.put(`/api/v1/categories/${id}`, {title}, {params: params({fields})});
+  },
 };

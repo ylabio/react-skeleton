@@ -6,6 +6,8 @@ const initState = {
   roots: [],
   wait: false,
   errors: null,
+  changing: false,
+  changingErrors: null,
 };
 
 export default reducer(initState, {
@@ -17,6 +19,23 @@ export default reducer(initState, {
     return {
       ...state,
       ...payload,
+    };
+  },
+
+  [types.CHANGE_TITLE]: (state, {payload}) => {
+    const {id, title, wait, errors} = payload;
+
+    if(!wait) {
+      const item = state.items.find((item) => item._id === id);
+      if (item) {
+        item.title = title;
+      }
+    }
+
+    return {
+      ...state,
+      changing: wait,
+      changingErrors: errors,
     };
   },
 });

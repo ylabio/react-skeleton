@@ -25,6 +25,7 @@ class HeaderContainer extends Component {
       items: detectActive(
         [
           { title: 'Главная', to: '/', active: false },
+          { title: 'Категории', to: '/categories', active: false },
           { title: 'О нас', to: '/about', active: false },
           { title: 'Каталог', to: '/catalog', active: false },
           { title: 'Админка', to: '/private', active: false },
