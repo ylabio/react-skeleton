@@ -36,7 +36,7 @@
 npm i -g hygen
 
 hygen component help
-hygen component new --name Pizza --path components/elements
+hygen component new --name Pizza --path components/elements/pizza
 hygen component store pizzas
 hygen component api pizzas
 ```
