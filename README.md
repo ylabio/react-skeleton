@@ -25,3 +25,21 @@
 
 ## Анализ размера сборки
 `npm run build-analize`
+
+
+## Code generator
+
+Для автоматического создания типовых файлов
+можно использовать [hygen.io](http://www.hygen.io/)
+
+```
+npm i -g hygen
+
+hygen component help
+hygen component new --name Pizza --path components/elements/pizza
+hygen component store pizzas
+hygen component api pizzas
+```
+
+Шаблоны и пути к файлам можно редактировать в папке `_templates`
+
