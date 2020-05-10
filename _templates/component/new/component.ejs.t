@@ -7,10 +7,10 @@ import cn from 'classnames';
 import themes from '@utils/themes';
 import './style.less';
 
-const <%= h.inflection.camelize(name) %> = React.memo(props => {
+function <%= h.inflection.camelize(name) %>(props) {
   const { theme } = props;
-  return <div className={cn('<%= h.inflection.camelize(name) %>', themes('<%= h.inflection.camelize(name) %>', theme))} />;
-});
+  return <div className={cn('<%= h.inflection.camelize(name) %>', themes('<%= h.inflection.camelize(name) %>', theme))}></div>;
+}
 
 <%= h.inflection.camelize(name) %>.propTypes = {
   theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -20,4 +20,4 @@ const <%= h.inflection.camelize(name) %> = React.memo(props => {
   theme: '',
 };
 
-export default <%= h.inflection.camelize(name) %>;
+export default React.memo(<%= h.inflection.camelize(name) %>);
