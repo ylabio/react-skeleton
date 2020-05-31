@@ -9,32 +9,11 @@ import CategoryTree from '@containers/category-tree';
 import useInit from '@utils/hooks/use-init';
 
 function Catalog(props) {
-  console.log(props);
-
-  //const {categoryId} = useParams();
 
   const categoryId = props.match.params.categoryId;
-  // Загрузка и обновление списка товаров при выборе категории
-  // useEffect(()=>{
-  //   actions.articles.load({
-  //     fields: '*,category(title),maidIn(title)',
-  //     search: {category: categoryId}
-  //   });
-  //   return () => {
-  //     actions.articles.reset();
-  //   }
-  // }, [categoryId]);
-  //
-  // // Загрузка категорий
-  // useEffect(()=>{
-  //   actions.categories.load({fields: '*', limit: 1000});
-  // }, []);
 
   useInit(async () => {
-    await actions.articles.load({
-      fields: '*,category(title),maidIn(title)',
-      search: { category: categoryId },
-    });
+    await actions.articles.init({ categoryId });
   }, [categoryId]);
 
   useInit(async () => {

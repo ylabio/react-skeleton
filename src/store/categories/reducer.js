@@ -1,22 +1,9 @@
 import reducer from '@utils/reducer';
-import {types} from './actions.js';
-
-const initState = {
-  items: [],
-  roots: [],
-  wait: false,
-  errors: null,
-};
+import mc from 'merge-change';
+import { types, initState } from './actions.js';
 
 export default reducer(initState, {
-  [types.RESET]: (state) => {
-    return {...initState};
-  },
-
-  [types.LOAD]: (state, {payload}) => {
-    return {
-      ...state,
-      ...payload,
-    };
+  [types.SET]: (state, action) => {
+    return mc.update(state, action.payload);
   },
 });
