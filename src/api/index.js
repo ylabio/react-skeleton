@@ -5,7 +5,7 @@ const http = axios.create({
   headers: {},
 });
 
-http.configure = function({ baseURL, tokenHeader }) {
+http.configure = function ({ baseURL, tokenHeader }) {
   if (typeof baseURL !== 'undefined') {
     http.defaults.baseURL = baseURL;
   }
@@ -14,7 +14,7 @@ http.configure = function({ baseURL, tokenHeader }) {
   }
 };
 
-http.setToken = function(token) {
+http.setToken = function (token) {
   if (http.defaults.tokenHeader) {
     if (token) {
       console.log('SET TOKEN', token);
@@ -30,9 +30,9 @@ export default http;
 /**
  * Reexport API modules
  */
-import Base from '@api/base';
+import Common from '@api/common';
 import Users from '@api/users';
 
 export const users = new Users(http);
-export const articles = new Base(http, 'articles');
-export const categories = new Base(http, 'categories');
+export const articles = new Common(http, 'articles');
+export const categories = new Common(http, 'categories');

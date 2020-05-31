@@ -1,5 +1,6 @@
 import store from '@store';
 import apiService, * as api from '@api';
+import mc from 'merge-change';
 
 export const types = {
   SET: Symbol('SET'),
@@ -20,7 +21,7 @@ const actions = {
     if (process.env.IS_WEB) {
       localStorage.removeItem('token');
     }
-    store.dispatch({ type: types.SET, payload: { ...initState, wait: false } });
+    store.dispatch({ type: types.SET, payload: mc.update(initState, { wait: false }) });
     apiService.setToken(undefined);
   },
 
@@ -47,7 +48,7 @@ const actions = {
     if (process.env.IS_WEB) {
       localStorage.setItem('token', data.token);
     }
-    store.dispatch({ type: types.SET, payload: { exists: true, ...data } });
+    store.dispatch({ type: types.SET, payload: mc.update({ exists: true }, data) });
     apiService.setToken(data.token);
   },
 };

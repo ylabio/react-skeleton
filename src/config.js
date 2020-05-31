@@ -1,6 +1,9 @@
 const isWeb = process.env.TARGET === 'web';
 
 let config = {
+  dev: {
+    port: 8031,
+  },
   api: {
     // Обычно хост на апи относительный и используется прокси для устранения CORS
     baseURL: isWeb ? '' : 'http://localhost:8102',

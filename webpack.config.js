@@ -37,7 +37,7 @@ if (packageConfig._moduleAliases) {
 let config = {
   name: target,
   target: target,
-  mode: process.env.NODE_ENV,
+  mode: process.env.NODE_ENV, // https://webpack.js.org/configuration/mode/
   context: path.join(__dirname, '/src'),
   entry: [`index.${target}.js`],
   output: {
@@ -146,20 +146,15 @@ if (isNode) {
 }
 
 if (isProduction) {
-  config.optimization = {
-    minimize: true,
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-  };
 }
 
 if (isDevelopment && isWeb) {
   config.devtool = 'inline-source-map'; // "#cheap-module-inline-source-map";
-  config.plugins.push(new webpack.NamedModulesPlugin());
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.devServer = {
     //compress: false,
     contentBase: path.join(__dirname, 'dist', target),
-    port: 8031,
+    port: appConfig.dev.port,
     publicPath: config.output.publicPath,
     hot: true,
     historyApiFallback: true,

@@ -1,15 +1,15 @@
 import store from '@store';
 import * as api from '@api';
 import * as actions from '../actions';
+import mc from 'merge-change';
 
 export const types = {
   SET: Symbol('SET'),
-  CHANGE: Symbol('CHANGE'),
 };
 
 export const initState = {
   data: {
-    login: 'test',
+    login: '',
     password: '123456',
   },
   wait: false,
@@ -23,8 +23,8 @@ export default {
    */
   change: data => {
     store.dispatch({
-      type: types.CHANGE,
-      payload: { ...store.getState().formLogin.data, ...data },
+      type: types.SET,
+      payload: { data },
     });
   },
 
@@ -41,7 +41,7 @@ export default {
       // Установка и сохранение сессии
       await actions.session.save({ user: result.user, token: result.token });
 
-      store.dispatch({ type: types.SET, payload: { ...initState } });
+      store.dispatch({ type: types.SET, payload: initState });
       return result;
     } catch (e) {
       if (e.response && e.response.data && e.response.data.error) {
