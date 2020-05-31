@@ -1,45 +1,21 @@
 import reducer from '@utils/reducer';
-import { types } from './actions.js';
-
-const initState = {
-  data: {
-    login: 'test',
-    password: '123456',
-  },
-  wait: false,
-  errors: null,
-};
+import { types, initState } from './actions.js';
 
 export default reducer(initState, {
-  [types.CHANGE]: (state, {payload}) => {
+  [types.SET]: (state, { payload }) => {
     return {
       ...state,
-      data: payload,
+      ...payload,
     };
   },
 
-  [types.SUBMIT_START]: (state) => {
+  [types.CHANGE]: (state, { payload }) => {
     return {
       ...state,
-      errors: null,
-      wait: true,
-    };
-  },
-
-  [types.SUBMIT_SUCCESS]: state => {
-    return {
-      ...state,
-      data: { ...initState.data },
-      errors: null,
-      wait: false,
-    };
-  },
-
-  [types.SUBMIT_FAILURE]: (state, {errors}) => {
-    return {
-      ...state,
-      errors: errors,
-      wait: false,
+      data: {
+        ...initState.data,
+        ...payload,
+      },
     };
   },
 });

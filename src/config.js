@@ -18,15 +18,15 @@ let config = {
 
   routing: {
     basename: '/', // если фронт доступен по вложенному пути
-    type: isWeb ? 'browser' : 'memory'
+    type: isWeb ? 'browser' : 'memory',
   },
 
   //  Параметры запуска сервера для рендера
   ssr: {
     host: 'localhost',
     port: 8102,
-    preloadState: true
-  }
+    preloadState: true,
+  },
 };
 
 module.exports = config;

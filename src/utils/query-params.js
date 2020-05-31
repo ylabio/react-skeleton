@@ -3,7 +3,7 @@
  * @param params
  */
 export default function queryParams(params) {
-  let result = {...params};
+  let result = { ...params };
   // result.search[key] => result["search[key]"]
   if (result.search) {
     delete result.search;
@@ -18,7 +18,7 @@ export default function queryParams(params) {
   }
   const keys = Object.keys(result);
   for (const key of keys) {
-    if (typeof result[key] === 'undefined'){
+    if (typeof result[key] === 'undefined') {
       delete result[key];
     }
   }

@@ -1,16 +1,15 @@
-import React, {useCallback} from 'react';
-import useSelectorMap from "@utils/use-selector-map";
+import React, { useCallback } from 'react';
+import useSelectorMap from '@utils/hooks/use-selector-map';
 // import { DatePicker } from 'antd';
 
-const ArticleList = React.memo((props) => {
-
+function ArticleList() {
   const select = useSelectorMap(state => ({
     items: state.articles.items,
-    wait: state.articles.wait
+    wait: state.articles.wait,
   }));
 
   if (select.wait) {
-    return <div>{select.wait && (<i>Загрузка...</i>)}</div>
+    return <div>{select.wait && <i>Загрузка...</i>}</div>;
   } else {
     return (
       <ul>
@@ -22,6 +21,6 @@ const ArticleList = React.memo((props) => {
       </ul>
     );
   }
-});
+}
 
-export default ArticleList;
+export default React.memo(ArticleList);

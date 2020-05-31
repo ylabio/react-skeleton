@@ -1,35 +1,11 @@
 import reducer from '@utils/reducer';
-import { types } from './actions.js';
-
-const initState = {
-  show: false,
-  name: null,
-  params: null,
-  result: null,
-};
+import { types, initState } from './actions.js';
 
 export default reducer(initState, {
-  [types.OPEN]: (state, {payload}) => {
+  [types.SET]: (state, { payload }) => {
     return {
       ...state,
-      show: true,
-      name: payload.name,
-      params: payload.params,
-      resolve: payload.resolve,
-      result: null,
+      ...payload,
     };
-  },
-
-  [types.CLOSE]: (state, {payload}) => {
-    if (state.name) {
-      return {
-        ...state,
-        show: false,
-        result: payload.result,
-        resolve: null,
-      };
-    } else {
-      return state;
-    }
   },
 });

@@ -1,10 +1,9 @@
 import React from 'react';
 import LayoutContent from '@components/layouts/layout-content';
-import HeaderContainer from "@containers/header-container";
-import LayoutPage from "@components/layouts/layout-page";
+import HeaderContainer from '@containers/header-container';
+import LayoutPage from '@components/layouts/layout-page';
 
-const NotFound = React.memo((props) => {
-
+function NotFound(props) {
   return (
     <LayoutPage header={<HeaderContainer />}>
       <LayoutContent>
@@ -13,6 +12,6 @@ const NotFound = React.memo((props) => {
       </LayoutContent>
     </LayoutPage>
   );
-});
+}
 
-export default NotFound;
+export default React.memo(NotFound);

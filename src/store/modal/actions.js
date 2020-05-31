@@ -1,26 +1,44 @@
 import store from '@store';
 
 export const types = {
-  OPEN: Symbol('OPEN'),
-  CLOSE: Symbol('CLOSE')
+  SET: Symbol('SET'),
+};
+
+export const initState = {
+  show: false,
+  name: null,
+  params: null,
+  result: null,
 };
 
 export default {
   open: async (name, params) => {
     return new Promise(resolve => {
       store.dispatch({
-        type: types.OPEN,
-        payload: {name, params, resolve},
+        type: types.SET,
+        payload: {
+          name,
+          params,
+          resolve,
+          show: true,
+          result: null,
+        },
       });
     });
   },
 
   close: async result => {
-    const {modal} = store.getState();
-    modal.resolve(result);
+    const state = store.getState().modal;
+    if (state.resolve) {
+      state.resolve(result);
+    }
     store.dispatch({
-      type: types.CLOSE,
-      payload: {result},
+      type: types.SET,
+      payload: {
+        show: false,
+        result: result,
+        resolve: null,
+      },
     });
   },
 };

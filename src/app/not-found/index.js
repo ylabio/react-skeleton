@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import LayoutContent from '@components/layouts/layout-content';
-import {Helmet} from "react-helmet";
+import { Helmet } from 'react-helmet';
 
-const NotFound = React.memo((props) => {
-
+function NotFound() {
   return (
     <Fragment>
       <Helmet>
@@ -17,8 +16,7 @@ const NotFound = React.memo((props) => {
         <Link to="/">На главную</Link>
       </LayoutContent>
     </Fragment>
-
   );
-});
+}
 
-export default NotFound;
+export default React.memo(NotFound);

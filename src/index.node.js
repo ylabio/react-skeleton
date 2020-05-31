@@ -6,17 +6,17 @@
  */
 import React from 'react';
 import path from 'path';
-import {parentPort, workerData} from 'worker_threads';
-import {renderToString} from 'react-dom/server';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router-dom';
-import {Helmet} from "react-helmet";
+import { parentPort, workerData } from 'worker_threads';
+import { renderToString } from 'react-dom/server';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { Base64 } from 'js-base64';
-import {ChunkExtractor} from '@loadable/server';
+import { ChunkExtractor } from '@loadable/server';
 import insertText from '@utils/insert-text';
 import store from '@store';
 import history from '@app/history';
-import api from "@api";
+import api from '@api';
 import App from '@app';
 import config from 'config.js';
 import template from './index.html';
@@ -24,16 +24,15 @@ import template from './index.html';
 store.configure();
 api.configure(config.api);
 // @todo возможно токен передаётся в куке, нужно его взять для использования в апи
-history.configure({...config.routing, initialEntries: [workerData.url]}); // with request url
+history.configure({ ...config.routing, initialEntries: [workerData.url] }); // with request url
 
 const jsx = (
   <Provider store={store}>
     <Router history={history}>
-      <App/>
+      <App />
     </Router>
   </Provider>
 );
-
 
 let initPromises = [];
 global.pushInitPromise = promise => {
@@ -48,7 +47,7 @@ global.pushInitPromise = promise => {
   //
   // Обработка рендера с учётом параметров сборки, деления на чанки, динамические подгурзки
   const statsFile = path.resolve('./dist/node/loadable-stats.json');
-  const extractor = new ChunkExtractor({statsFile});
+  const extractor = new ChunkExtractor({ statsFile });
   const jsxExtractor = extractor.collectChunks(jsx);
   //
   // // Итоговый рендер с инициализированным состоянием
@@ -80,12 +79,11 @@ global.pushInitPromise = promise => {
   out = insertText.before(out, '<div id="app">', html);
   out = insertText.after(out, '</body>', preloadDataScript + scriptTags);
 
-  parentPort.postMessage({out, status: 200});
+  parentPort.postMessage({ out, status: 200 });
 })();
 
-process.on('unhandledRejection', function (reason/*, p*/) {
-  parentPort.postMessage({out: 'ERROR', status: 500});
+process.on('unhandledRejection', function (reason /*, p*/) {
+  parentPort.postMessage({ out: 'ERROR', status: 500 });
   console.error(reason);
   process.exit(1);
 });
-

@@ -42,7 +42,7 @@ let config = {
   entry: [`index.${target}.js`],
   output: {
     path: path.join(__dirname, 'dist', target),
-    filename: '[name].js',  //'[name]-bundle-[chunkhash:8].js'
+    filename: '[name].js', //'[name]-bundle-[chunkhash:8].js'
     // publicPath: `/dist/${target}/`,
     // pathinfo: true
     libraryTarget: isNode ? 'commonjs2' : undefined,
@@ -54,11 +54,11 @@ let config = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         TARGET: JSON.stringify(process.env.TARGET),
         IS_WEB: process.env.TARGET === 'web',
-        IS_NODE: process.env.TARGET === 'node'
+        IS_NODE: process.env.TARGET === 'node',
       },
     }),
     new LoadablePlugin(),
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -70,40 +70,45 @@ let config = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: [{loader: 'babel-loader'}],
+        use: [{ loader: 'babel-loader' }],
       },
       {
         test: /\.css$/,
         use: [
-          {loader: MiniCssExtractPlugin.loader, options: {hmr: isDevelopment, reloadAll: true}},
+          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDevelopment, reloadAll: true } },
           //{ loader: 'style-loader' },
-          {loader: 'css-loader', options: {url: true, import: true}}
+          { loader: 'css-loader', options: { url: true, import: true } },
         ],
       },
       {
         test: /\.less$/,
         use: [
-          {loader: MiniCssExtractPlugin.loader, options: {hmr: isDevelopment, reloadAll: true}},
+          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDevelopment, reloadAll: true } },
           //{ loader: 'style-loader' },
-          {loader: 'css-loader', options: {url: true, import: true}},
-          {loader: 'less-loader', options: {url: true, import: true}},
+          { loader: 'css-loader', options: { url: true, import: true } },
+          { loader: 'less-loader', options: { lessOptions: {} } },
         ],
       },
       {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        use: [{loader: 'url-loader', options: {limit: 1000, name: 'assets/[hash].[ext]'}}],
+        use: [{ loader: 'url-loader', options: { limit: 1000, name: 'assets/[hash].[ext]' } }],
       },
       {
         test: /\.jsx\.svg$/,
         use: [
-          {loader: 'babel-loader'},
-          {loader: 'react-svg-loader', options: {jsx: true, /*true outputs JSX tags*/}},
+          { loader: 'babel-loader' },
+          { loader: 'react-svg-loader', options: { jsx: true /*true outputs JSX tags*/ } },
         ],
       },
       {
         test: /\.html$/,
         use: [
-          {loader: 'html-loader', options: { /*minimize: isProduction*/}},
+          {
+            loader: 'html-loader',
+            options: {
+              /*minimize: isProduction*/
+            },
+          },
         ],
       },
     ],
@@ -122,17 +127,18 @@ let config = {
     errors: true,
     errorDetails: true,
     warnings: true,
-    publicPath: false
+    publicPath: false,
   },
 };
 
 if (isWeb) {
-  config.plugins.push(new HtmlWebPackPlugin({
+  config.plugins.push(
+    new HtmlWebPackPlugin({
       template: './index.html',
       filename: './index.html',
       title: 'App',
-      base: appConfig.routing.basename
-    })
+      base: appConfig.routing.basename,
+    }),
   );
 }
 if (isNode) {
@@ -157,7 +163,7 @@ if (isDevelopment && isWeb) {
     publicPath: config.output.publicPath,
     hot: true,
     historyApiFallback: true,
-    proxy: appConfig.api.proxy
+    proxy: appConfig.api.proxy,
   };
 }
 
@@ -166,4 +172,3 @@ if (process.env.BUILD_ANALYZE) {
 }
 
 module.exports = config;
-

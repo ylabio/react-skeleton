@@ -30,6 +30,5 @@ export default {
     } else {
       return source;
     }
-  }
+  },
 };
-

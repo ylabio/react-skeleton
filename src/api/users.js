@@ -1,57 +1,66 @@
-import api from '@api';
-import params from "@utils/query-params";
+import params from '@utils/query-params';
+import Base from '@api/base';
 
-export default {
+export default class Users extends Base{
+
+  /**
+   * @param api {AxiosInstance} Экземпляр библиотеки axios
+   * @param path {String} Путь в url по умолчанию
+   */
+  constructor(api, path = 'users') {
+    super(api ,path);
+  }
+
   /**
    * Выбор списка
-   * @param search Параметры поиска
-   * @param fields Какие поля выбирать
-   * @param limit Количество
-   * @param skip Сдвиг выборки от 0
-   * @param other Другие параметры апи
+   * @param search {Object} Параметры поиска
+   * @param fields {String} Какие поля выбирать
+   * @param limit {Number} Количество
+   * @param skip {Number} Сдвиг выборки от 0
+   * @param path {String} Путь в url
+   * @param other {Object} Другие параметры апи
    * @returns {Promise}
    */
-  getList: ({search, fields = '*', limit = 20, skip = 0, ...other}) => {
-    return api.get(`/api/v1/users`, {params: params({search, fields, limit, skip, ...other})});
-  },
-
+  getList({ search, fields = 'items(*), count, allCount, newCount, confirmCount, rejectCount', limit = 20, skip = 0, path, ...other }){
+    return super.getList({search, fields, limit, skip, path, ...other});
+  }
+  
   /**
-   * Выбор одного
-   * @param id Идентификатор
-   * @param fields Какие поля выбирать
-   * @param other Другие параметры апи
-   * @returns {Promise}
+   * Выбор одного юзера по токену (текущего авторизованного)
+   * @return {Promise}
    */
-  getOne: ({id, fields = '*', ...other}) => {
-    return api.get(`/api/v1/users/${id}`, {params: params({fields, ...other})});
-  },
+  current({fields = '*', ...other}){
+    return this.http.get(`/api/v1/${this.path}/self`, { params: params({ fields, ...other })});
+  }
 
   /**
    * Авторизация
    * @param login
    * @param password
    * @param remember
+   * @param fields
+   * @param other
    * @returns {Promise}
    */
-  login: ({ login, password, remember = false }) => {
+  login({ login, password, remember = false, fields = '*', ...other }){
     // Mock request
     // return Promise.resolve({ data: { result: { user: { _id: 123 }, token: '123456' } } });
-    return api.post(`/api/v1/users/sign`, { login, password, remember });
-  },
+    return this.http.post(`/api/v1/users/sign`, { login, password, remember }, { params: params({ fields, ...other })});
+  }
 
   /**
    * Выход
    * @returns {Promise}
    */
-  logout: () => {
-    return api.delete(`/api/v1/users/sign`);
-  },
+  logout(){
+    return this.http.delete(`/api/v1/users/sign`);
+  }
 
-  /**
-   * Выбор одного юзера по токену (текущего авторизованного)
-   * @return {Promise}
-   */
-  current: () => {
-    return api.get(`/api/v1/users/self`);
-  },
+  registration({ profile = {}, ...rest }){
+    return this.http.post(`/api/v1/users`, { profile, ...rest });
+  }
+
+  resetPassword({ login }){
+    return this.http.post(`/api/v1/users/password`, { login });
+  }
 };

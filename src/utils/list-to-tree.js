@@ -8,7 +8,12 @@ import _get from 'lodash.get';
  * @param childrenKey {String} Свойство-массив, куда добавить отношения на подчиенные объекты
  * @returns {Array} Корневые узлы
  */
-export default function listToTree(list, privateKey = '_id', parentKey = 'parent._id', childrenKey = 'children') {
+export default function listToTree(
+  list,
+  privateKey = '_id',
+  parentKey = 'parent._id',
+  childrenKey = 'children',
+) {
   let trees = {};
   let roots = {};
   for (const item of list) {
@@ -24,7 +29,7 @@ export default function listToTree(list, privateKey = '_id', parentKey = 'parent
     // В подчиненные родительского узла
     if (_get(item, parentKey)) {
       if (!trees[_get(item, parentKey)]) {
-        trees[_get(item, parentKey)] = {[childrenKey]: []}
+        trees[_get(item, parentKey)] = { [childrenKey]: [] };
       }
       trees[_get(item, parentKey)][childrenKey].push(trees[item[privateKey]]);
       if (roots[item[privateKey]]) {

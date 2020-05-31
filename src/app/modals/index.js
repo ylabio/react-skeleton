@@ -1,21 +1,19 @@
-import React, {Component} from 'react';
+import React, { useCallback } from 'react';
 import * as actions from '@store/actions';
 import * as modals from './config.js';
-import useSelectorMap from "@utils/use-selector-map";
-import useCallbackMap from "@utils/use-callback-map";
+import useSelectorMap from '@utils/hooks/use-selector-map';
 
-const Modals = React.memo((props) => {
-
+function Modals() {
   const select = useSelectorMap(state => ({
-    modal: state.modal
+    modal: state.modal,
   }));
 
-  const callbacks = useCallbackMap({
+  const callbacks = {
     /**
      * Выбор компонента окна, если нужно показывать
      * @returns {null|*}
      */
-    getModal: () => {
+    getModal: useCallback(() => {
       const props = {
         ...select.modal.params,
         close: result => {
@@ -30,11 +28,10 @@ const Modals = React.memo((props) => {
       } else {
         return null;
       }
-    },
-
-  }, [select]);
+    }, [select]),
+  };
 
   return callbacks.getModal();
-});
+}
 
-export default Modals;
+export default React.memo(Modals);

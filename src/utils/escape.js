@@ -4,7 +4,7 @@ export default {
    * @param s
    * @returns {*}
    */
-  regex: function(s) {
+  regex: function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
   },
 };

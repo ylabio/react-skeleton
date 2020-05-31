@@ -1,26 +1,24 @@
-import React, {Fragment} from 'react';
+import React, { Fragment, useCallback } from 'react';
 import * as actions from '@store/actions';
 import Button from '@components/elements/button';
 import LayoutModal from '@components/layouts/layout-modal';
-import useCallbackMap from "@utils/use-callback-map";
 
-const Info = React.memo((props) => {
-
-  const callbacks = useCallbackMap({
-    onCancel: async () => {
+function Info(props) {
+  const callbacks = {
+    onCancel: useCallback(async () => {
       await actions.modal.close('Cancel value');
-    },
-    onSuccess: async () => {
+    }, []),
+    onSuccess: useCallback(async () => {
       await actions.modal.close('Success value');
-    },
-    renderFooter: () => {
+    }, []),
+    renderFooter: useCallback(() => {
       return (
         <Fragment>
           <Button onClick={callbacks.onSuccess}>Всё понятно</Button>
         </Fragment>
       );
-    }
-  });
+    }, []),
+  };
 
   return (
     <LayoutModal
@@ -32,6 +30,6 @@ const Info = React.memo((props) => {
       Модальное окно
     </LayoutModal>
   );
-});
+}
 
-export default Info;
+export default React.memo(Info);

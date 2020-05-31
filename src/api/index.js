@@ -1,36 +1,38 @@
 import axios from 'axios';
 
-const api = axios.create({
+const http = axios.create({
   baseURL: '',
   headers: {},
 });
 
-api.configure = function({baseURL, tokenHeader}) {
+http.configure = function({ baseURL, tokenHeader }) {
   if (typeof baseURL !== 'undefined') {
-    api.defaults.baseURL = baseURL;
+    http.defaults.baseURL = baseURL;
   }
   if (typeof tokenHeader !== 'undefined') {
-    api.defaults.tokenHeader = tokenHeader;
+    http.defaults.tokenHeader = tokenHeader;
   }
 };
 
-api.setToken = function(token){
-  if (api.defaults.tokenHeader){
-    if (token){
+http.setToken = function(token) {
+  if (http.defaults.tokenHeader) {
+    if (token) {
       console.log('SET TOKEN', token);
-      this.defaults.headers[api.defaults.tokenHeader] = token;
+      this.defaults.headers[http.defaults.tokenHeader] = token;
     } else {
-      delete this.defaults.headers[api.defaults.tokenHeader];
+      delete this.defaults.headers[http.defaults.tokenHeader];
     }
   }
 };
 
-export default api;
+export default http;
 
 /**
  * Reexport API modules
  */
+import Base from '@api/base';
+import Users from '@api/users';
 
-export { default as users } from './users.js';
-export { default as articles } from './articles.js';
-export { default as categories } from './categories.js';
+export const users = new Users(http);
+export const articles = new Base(http, 'articles');
+export const categories = new Base(http, 'categories');

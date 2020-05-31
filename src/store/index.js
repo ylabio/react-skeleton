@@ -1,11 +1,11 @@
-import {combineReducers, createStore} from 'redux';
+import { combineReducers, createStore } from 'redux';
 // import thunkMiddleware from 'redux-thunk';
 import * as reducers from './reducers';
 //import createLogger from 'redux-logger';
-import {composeWithDevTools} from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 const store = {
-  configure: (preloadedState) => {
+  configure: preloadedState => {
     const composeEnhancers = composeWithDevTools({
       serialize: true,
     });
@@ -15,15 +15,15 @@ const store = {
         combineReducers(reducers),
         preloadedState,
         //composeEnhancers(applyMiddleware(/*thunkMiddleware /*, loggerMiddleware*/)),
-      )
+      ),
     );
   },
   /**
    * Assign from store instance after init()
    */
-  dispatch: (action) => {  },
-  subscribe: (listener) => {  },
-  getState: () => {  },
+  dispatch: action => {},
+  subscribe: listener => {},
+  getState: () => {},
   /**
    * Custom methods
    */
@@ -39,4 +39,3 @@ const store = {
 };
 
 export default store;
-

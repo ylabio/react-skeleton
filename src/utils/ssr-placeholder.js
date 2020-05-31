@@ -1,5 +1,5 @@
 const defaultServerRender = () => {
-  return null
+  return null;
 };
 
 /**
@@ -9,8 +9,8 @@ const defaultServerRender = () => {
  * @param serverRender
  * @returns {(function(): *)|*}
  */
-export default function ssrPlaceholder(webRender, serverRender = defaultServerRender){
-  if (process.env.IS_NODE){
+export default function ssrPlaceholder(webRender, serverRender = defaultServerRender) {
+  if (process.env.IS_NODE) {
     return serverRender;
   } else {
     return webRender;

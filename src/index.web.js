@@ -6,9 +6,9 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router-dom';
-import {Base64} from 'js-base64';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { Base64 } from 'js-base64';
 import store from '@store';
 import api from '@api';
 import history from '@app/history';
@@ -17,7 +17,7 @@ import config from 'config.js';
 
 let reactRender;
 let preloadedState;
-const ssrFirstRender = (set) => {
+const ssrFirstRender = set => {
   window.SSR_FIRST_RENDER = set;
 };
 // Если есть PRELOAD_DATA, то включен режим серверного рендера
@@ -36,7 +36,7 @@ history.configure(config.routing);
 reactRender(
   <Provider store={store}>
     <Router history={history}>
-      <App/>
+      <App />
     </Router>
     {ssrFirstRender()}
   </Provider>,
