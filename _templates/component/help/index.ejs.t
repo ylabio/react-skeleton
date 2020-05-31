@@ -1,6 +1,6 @@
 ---
 message: |
-  hygen {bold component new} --name Pizza --path components/elements
-  hygen {bold component store} pizzas
-  hygen {bold component api} pizzas
+  hygen {bold component} {green new } {red --name} Pizza {red --path} components/elements/pizza
+  hygen {bold component} {green store} pizzas
+  hygen {bold component} {green api} pizzas
 ---
