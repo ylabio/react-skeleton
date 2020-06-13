@@ -3,28 +3,7 @@ import * as api from '@api';
 import history from '@app/history';
 import qs from 'qs';
 import mc from 'merge-change';
-
-export const types = {
-  SET: Symbol('SET'),
-};
-
-/**
- * Начальное состояние
- * @type {Object}
- */
-export const initState = {
-  items: [],
-  count: 0,
-  params: {
-    limit: 20,
-    page: 1,
-    sort: '-date',
-    fields: `items(*,category(title),maidIn(title)), count`,
-    categoryId: null,
-  },
-  wait: false,
-  errors: null,
-};
+import initState, { types } from './state.js';
 
 const actions = {
   /**
@@ -67,7 +46,10 @@ const actions = {
    * @returns {Promise}
    */
   reset: async (params = {}, options = {}) => {
-    options = Object.assign({ saveParams: 'replace', loadData: false, clearData: true, mergeParams: false }, options);
+    options = Object.assign(
+      { saveParams: 'replace', loadData: false, clearData: true, mergeParams: false },
+      options,
+    );
     // Сливаем начальные и новые параметры
     let newParams = objectUtils.merge(initState.params, params);
     return actions.set(newParams, options);
@@ -84,7 +66,10 @@ const actions = {
    * @returns {Promise}
    */
   set: async (params = {}, options = {}) => {
-    options = Object.assign({ saveParams: 'replace', mergeParams: true, loadData: true, clearData: false }, options);
+    options = Object.assign(
+      { saveParams: 'replace', mergeParams: true, loadData: true, clearData: false },
+      options,
+    );
     try {
       // Учитывая текущие параметры, установить новые.
       let prevState = store.getState().article;
@@ -99,7 +84,10 @@ const actions = {
         });
       } else {
         // Пока загружаются данные, чтобы показывались текущие
-        store.dispatch({ type: types.SET, payload: { wait: options.loadData, params: newParams, errors: null } });
+        store.dispatch({
+          type: types.SET,
+          payload: { wait: options.loadData, params: newParams, errors: null },
+        });
       }
 
       // Загрузка данные по новым параметрам
@@ -121,7 +109,7 @@ const actions = {
         const result = response.data.result;
         store.dispatch({
           type: types.SET,
-          payload: mc.patch(result, {wait: false, errors: null }),
+          payload: mc.patch(result, { wait: false, errors: null }),
         });
       }
 

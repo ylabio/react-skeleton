@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as actions from '@store/actions';
+import articles from '@store/articles/actions';
+import categories from '@store/categories/actions';
 import LayoutContent from '@components/layouts/layout-content';
 import HeaderContainer from '@containers/header-container';
 import LayoutPage from '@components/layouts/layout-page';
@@ -13,11 +14,11 @@ function Catalog(props) {
   const categoryId = props.match.params.categoryId;
 
   useInit(async () => {
-    await actions.articles.init({ categoryId });
+    await articles.init({ categoryId });
   }, [categoryId]);
 
   useInit(async () => {
-    await actions.categories.load({ fields: '*', limit: 1000 });
+    await categories.load({ fields: '*', limit: 1000 });
   });
 
   return (

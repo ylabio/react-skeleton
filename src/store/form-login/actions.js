@@ -1,6 +1,6 @@
 import store from '@store';
 import * as api from '@api';
-import * as actions from '../actions';
+import session from '../actions';
 import mc from 'merge-change';
 
 export const types = {
@@ -39,7 +39,7 @@ export default {
       const response = await api.users.login(data);
       const result = response.data.result;
       // Установка и сохранение сессии
-      await actions.session.save({ user: result.user, token: result.token });
+      await session.save({ user: result.user, token: result.token });
 
       store.dispatch({ type: types.SET, payload: initState });
       return result;

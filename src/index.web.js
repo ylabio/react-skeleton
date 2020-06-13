@@ -20,7 +20,7 @@ let preloadedState;
 const ssrFirstRender = set => {
   window.SSR_FIRST_RENDER = set;
 };
-// Если есть PRELOAD_DATA, то включен режим серверного рендера
+// Если есть PRELOAD_DATA, то считается включенным режим серверного рендера - используются разные методы рендера
 if (window['preloadedState']) {
   ssrFirstRender(true);
   preloadedState = JSON.parse(Base64.decode(window['preloadedState']));

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import * as actions from '@store/actions';
+import modal from '@store/modal/actions';
 import LayoutPage from '@components/layouts/layout-page';
 import HeaderContainer from '@containers/header-container';
 import LayoutContent from '@components/layouts/layout-content';
@@ -10,7 +10,7 @@ import Accordion from '@components/elements/accordion';
 function Main() {
   const callbacks = {
     showInfo: useCallback(async () => {
-      const result = await actions.modal.open('info', {
+      const result = await modal.open('info', {
         overflowTransparent: false,
         overflowClose: true,
       });

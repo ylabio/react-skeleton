@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import * as actions from '@store/actions';
+import modal from '@store/modal/actions';
 import * as modals from './config.js';
 import useSelectorMap from '@utils/hooks/use-selector-map';
 
@@ -17,7 +17,7 @@ function Modals() {
       const props = {
         ...select.modal.params,
         close: result => {
-          actions.modal.close(result);
+          return modal.close(result);
         },
       };
       if (select.modal.show) {

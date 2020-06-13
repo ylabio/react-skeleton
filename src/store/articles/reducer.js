@@ -1,6 +1,6 @@
 import reducer from '@utils/reducer';
 import mc from 'merge-change';
-import { types, initState } from './actions.js';
+import initState, { types } from './state.js';
 
 export default reducer(initState, {
   [types.SET]: (state, action) => {
