@@ -3,7 +3,7 @@ import LayoutContent from '@components/layouts/layout-content';
 import HeaderContainer from '@containers/header-container';
 import LayoutPage from '@components/layouts/layout-page';
 
-function NotFound(props) {
+function About(props) {
   return (
     <LayoutPage header={<HeaderContainer />}>
       <LayoutContent>
@@ -14,4 +14,4 @@ function NotFound(props) {
   );
 }
 
-export default React.memo(NotFound);
+export default React.memo(About);
