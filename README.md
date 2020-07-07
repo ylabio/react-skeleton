@@ -119,8 +119,9 @@ server {
 
 ## Алиасы путей
 
-В файле `package.js` кроме типовых свойств проекта прописаны алиасы на директории, чтобы импортировать их из любого файла через @ вместо указания относительных путей. Алиасы также поймет IDE WebStorm.
+В файле `package.js` кроме типовых свойств проекта прописаны алиасы на директории, чтобы импортировать их из любого файла через `@` вместо указания относительных путей. Алиасы также поймет IDE WebStorm.
 ```
+// package.js
 "_moduleAliases": {
     "@api": "./src/api/",
     "@app": "./src/app/",
@@ -131,6 +132,7 @@ server {
     "@utils": "./src/utils/"
 }
 
+// some-file.js
 import Button from "@components/button"
 ```
 
@@ -143,3 +145,18 @@ import Button from "@components/button"
 ## Анализ размера сборки
 
 `npm run build-analize`
+
+## Code generator
+
+Для автоматического создания типовых файлов можно использовать hygen.io
+
+`npm i -g hygen`
+
+```
+hygen component help
+hygen component new --name Pizza --path components/elements/pizza
+hygen component store pizzas
+hygen component api pizzas
+```
+
+Шаблоны и пути к файлам можно редактировать в папке `_templates`
