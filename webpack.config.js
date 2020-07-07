@@ -142,7 +142,7 @@ if (isWeb) {
   );
 }
 if (isNode) {
-  config.externals = ['react-helmet', '@loadable/component', nodeExternals()];
+  config.externals = ['react-helmet', '@loadable/component'/*, nodeExternals()*/];
 }
 
 if (isProduction) {
