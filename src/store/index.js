@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 // import thunkMiddleware from 'redux-thunk';
 import * as reducers from './reducers';
 //import createLogger from 'redux-logger';
@@ -6,9 +6,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 const store = {
   configure: preloadedState => {
-    const composeEnhancers = composeWithDevTools({
-      serialize: true,
-    });
+    // const composeEnhancers = composeWithDevTools({
+    //   serialize: true,
+    // });
     Object.assign(
       store,
       createStore(

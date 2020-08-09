@@ -10,35 +10,40 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { Base64 } from 'js-base64';
 import store from '@store';
-import api from '@api';
-import history from '@app/history';
+import api, { ssr as ssrApi } from '@api';
+import navigation from '@app/navigation';
 import App from '@app';
 import config from 'config.js';
 
-let reactRender;
-let preloadedState;
-const ssrFirstRender = set => {
-  window.SSR_FIRST_RENDER = set;
+window.SSR = {
+  active: false,
+  firstRender: false,
 };
-// Если есть PRELOAD_DATA, то считается включенным режим серверного рендера - используются разные методы рендера
-if (window['preloadedState']) {
-  ssrFirstRender(true);
-  preloadedState = JSON.parse(Base64.decode(window['preloadedState']));
-  reactRender = ReactDOM.hydrate;
-} else {
-  reactRender = ReactDOM.render;
-}
 
-store.configure(preloadedState);
-api.configure(config.api);
-history.configure(config.routing);
+(async () => {
+  api.configure(config.api);
+  navigation.configure(config.navigation);
 
-reactRender(
-  <Provider store={store}>
-    <Router history={history}>
-      <App />
-    </Router>
-    {ssrFirstRender()}
-  </Provider>,
-  document.getElementById('app'),
-);
+  let reactRender;
+  let preloadedState = {};
+  // Если есть stateKey, то включен режим серверного рендера
+  if (window.stateKey) {
+    SSR.active = true;
+    SSR.firstRender = true;
+    // Получаем всё состояние, с которым рендерился html по stateKey, для безопасности ещё используется stateSecret в куках
+    preloadedState = (await ssrApi.getInitState({ key: window.stateKey })).data;
+    reactRender = ReactDOM.hydrate;
+  } else {
+    reactRender = ReactDOM.render;
+  }
+  store.configure(preloadedState);
+
+  reactRender(
+    <Provider store={store}>
+      <Router history={navigation.history}>
+        <App />
+      </Router>
+    </Provider>,
+    document.getElementById('app'),
+  );
+})();

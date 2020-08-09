@@ -7,18 +7,19 @@ import { useEffect } from 'react';
  * @param callback {Function}
  * @param inputs {Array}
  * @param onBackForward {Boolean}
+ * @param force {Boolean} В любом случаи исполнять
  */
-export default function useInit(callback, inputs = [], onBackForward = false) {
-  if (process.env.IS_NODE && global.SSR_FIRST_RENDER) {
-    // При серверном рендере исполняем рдин раз
+export default function useInit(callback, inputs = [], onBackForward = false, force = false) {
+  if (process.env.IS_NODE && SSR.firstRender) {
+    // При серверном рендере исполняем один раз
     const promise = callback(true);
-    global.pushInitPromise(promise);
+    SSR.initPromises.push(promise);
     return promise;
   } else {
     // На фронте используется хук эффекта по умолчанию один раз, если не переданы зависимости inputs
     useEffect(() => {
       // Не вызывать, если есть начальные данные от рендера на сервере
-      if (!window.SSR_FIRST_RENDER) {
+      if (!SSR.firstRender || force) {
         callback(false);
       }
       if (onBackForward) {

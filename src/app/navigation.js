@@ -2,36 +2,75 @@ import { createBrowserHistory, createMemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
 
-/**
- * Объект истории для роутинга
- * @type {{init, length, action, location, createHref, push, replace, go, goBack, goForward, block, listen}}
- */
-const history = {
-  configure: options => {
+class Navigation {
+  constructor() {
+    this._options = {};
+    this._history = {};
+    this._configured = false;
+  }
+
+  configure(options) {
+    this._options = mc.merge(options, {});
     switch (options.type) {
       case 'memory':
-        Object.assign(history, createMemoryHistory(options));
+        this._history = createMemoryHistory(options);
+        this._configured = true;
         break;
       case 'browser':
       default:
-        Object.assign(history, createBrowserHistory(options));
+        this._history = createBrowserHistory(options);
+        this._configured = true;
         break;
     }
-  },
-  /**
-   * Assign from history instance after configure
-   */
-  length: 0,
-  action: 'POP',
-  location: {},
-  createHref: location => {},
-  push: (path, state) => {},
-  replace: (path, state) => {},
-  go: n => {},
-  goBack: () => {},
-  goForward: () => {},
-  block: prompt => {},
-  listen: listener => {},
+  }
+
+  get history() {
+    return this._history;
+  }
+
+  get location() {
+    return this._history.location;
+  }
+
+  // get length() {
+  //   return this._history.length;
+  // }
+  //
+  // get action() {
+  //   return this._history.action;
+  // }
+
+  // createHref(location) {
+  //   return this._history.createHref(location);
+  // }
+
+  push(path, state) {
+    return this._history.push(path, state);
+  }
+
+  replace(path, state) {
+    return this._history.replace(path, state);
+  }
+
+  go(n) {
+    return this._history.go(n);
+  }
+
+  goBack() {
+    return this._history.goBack();
+  }
+
+  goForward() {
+    return this._history.goForward();
+  }
+
+  block(prompt) {
+    return this._history.block(prompt);
+  }
+
+  listen(listener) {
+    return this._history.listen(listener);
+  }
 
   /**
    * Создание ссылки с учётом текущего пути и search (query) параметров
@@ -41,7 +80,7 @@ const history = {
    * @returns {string} Итоговая строка для href ссылки
    */
   makeHref(path, searchParams = {}, clearSearch = false) {
-    const currentParams = history.getSearchParams();
+    const currentParams = this.getSearchParams();
     const newParams = clearSearch ? searchParams : mc.update(currentParams, searchParams);
     let search = qs.stringify(newParams, {
       addQueryPrefix: true,
@@ -49,26 +88,26 @@ const history = {
       encode: false,
     });
     if (!path) {
-      path = history.getPath();
+      path = this.getPath();
     }
     return path + search;
-  },
+  }
 
   /**
    * Текуший путь в адресе
    * @returns {*}
    */
-  getPath: () => {
-    return history.location.pathname;
-  },
+  getPath() {
+    return this._history.location.pathname;
+  }
 
   /**
    * Текущие search параметры, распарсенные из строки
    * @returns {*}
    */
-  getSearchParams: () => {
-    return qs.parse(window.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
-  },
+  getSearchParams() {
+    return qs.parse(this._history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
+  }
 
   /**
    * Установка search параметров
@@ -77,40 +116,42 @@ const history = {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams: (params, push = true, clear = false, path) => {
-    const currentParams = history.getSearchParams();
+  setSearchParams(params, push = true, clear = false, path) {
+    const currentParams = this.getSearchParams();
     const newParams = clear ? params : mc.update(currentParams, params);
     let newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
     });
+    const url = (path || window.location.pathname) + newSearch + window.location.hash;
     if (push) {
-      history.push((path || window.location.pathname) + newSearch + window.location.hash);
+      window.history.pushState({}, '', url);
     } else {
-      history.replace((path || window.location.pathname) + newSearch + window.location.hash);
+      window.history.replaceState({}, '', url);
     }
-  },
+  }
 
   /**
    * Удаление всех search параметров
-   * @param push Способ обновления Location.search. Если false, то используется history.replace()
+   * @param push Способ обновления Location.search. Если false, то используется window.history.replaceState()
    */
-  clearSearchParams: (push = true) => {
+  clearSearchParams(push = true) {
+    const url = window.location.pathname + window.location.hash;
     if (push) {
-      history.push(window.location.pathname + window.location.hash);
+      window.history.pushState({}, '', url);
     } else {
-      history.replace(window.location.pathname + window.location.hash);
+      window.history.replaceState({}, '', url);
     }
-  },
+  }
 
   /**
    * Custom navigations
    * @param push Способ обновления истории роутера. Если false, то используется history.replace()
    */
-  goPrivate: (push = true) => {
-    push ? history.push('/private') : history.replace('/private');
-  },
-};
+  goPrivate(push = true) {
+    push ? this._history.push('/private') : this._history.replace('/private');
+  }
+}
 
-export default history;
+export default new Navigation();

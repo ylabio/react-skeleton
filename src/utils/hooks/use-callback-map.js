@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react';
+import {useMemo} from 'react';
 
 /**
  * Хук для определения множества функций (обычно колбэков)

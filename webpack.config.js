@@ -20,6 +20,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 // For SSR
 const LoadablePlugin = require('@loadable/webpack-plugin');
@@ -106,7 +107,9 @@ let config = {
           {
             loader: 'html-loader',
             options: {
-              /*minimize: isProduction*/
+              minimize: {
+                removeComments: false,
+              },
             },
           },
         ],
@@ -137,7 +140,7 @@ if (isWeb) {
       template: './index.html',
       filename: './index.html',
       title: 'App',
-      base: appConfig.routing.basename,
+      base: appConfig.navigation.basename,
     }),
   );
 }

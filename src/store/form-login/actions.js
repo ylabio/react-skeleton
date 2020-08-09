@@ -1,6 +1,6 @@
 import store from '@store';
 import * as api from '@api';
-import session from '../actions';
+import session from '@store/session/actions';
 import mc from 'merge-change';
 
 export const types = {

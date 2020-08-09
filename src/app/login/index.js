@@ -5,7 +5,7 @@ import LayoutContent from '@components/layouts/layout-content';
 import FormLogin from '@components/forms/form-login';
 import useSelectorMap from '@utils/hooks/use-selector-map';
 import formLogin from '@store/form-login/actions';
-import history from '@app/history';
+import navigation from '@app/navigation';
 
 function Login(props) {
   const select = useSelectorMap(state => ({
@@ -19,7 +19,7 @@ function Login(props) {
     onSubmitForm: useCallback(async data => {
       await formLogin.submit(data);
       // @todo перейти на страницу, с которой был редирект или по умочланию в приватный раздел
-      history.goPrivate();
+      navigation.goPrivate();
     }, []),
   };
 

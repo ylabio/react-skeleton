@@ -1,6 +1,6 @@
 import store from '@store';
 import * as api from '@api';
-import history from '@app/history';
+import navigation from '@app/navigation.js';
 import qs from 'qs';
 import mc from 'merge-change';
 import initState, { types } from './state.js';
@@ -17,7 +17,7 @@ const actions = {
     let newParams = { ...initState.params };
 
     // Сливаем параметры из location.search, нормализуя их
-    const searchParams = history.getSearchParams();
+    const searchParams = navigation.getSearchParams();
     if (searchParams.limit) {
       newParams.limit = Math.max(1, Math.min(1000, parseInt(searchParams.limit)));
     }
@@ -134,7 +134,7 @@ const actions = {
    * Запомнить текущие параметры состояния в Location.search
    * Используется в actions.apply(). Напрямую нет смысла вызывать.
    * @param params {Object} Параметры для сохранения
-   * @param push Способ обновления Location.search. Если false, то используется history.replace()
+   * @param push Способ обновления Location.search. Если false, то используется navigation.replace()
    * @returns {Boolean}
    */
   saveParams: (params, push = true) => {
@@ -158,19 +158,14 @@ const actions = {
       change.$set.sort = params.sort;
     }
     // Установка URL
-    const currentParams = history.getSearchParams();
+    const currentParams = navigation.getSearchParams();
     const newParams = mc.merge(currentParams, change);
     let newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
     });
-    if (push) {
-      window.history.pushState({}, '', window.location.pathname + newSearch);
-    } else {
-      window.history.replaceState({}, '', window.location.pathname + newSearch);
-    }
-    //history.setSearchParams(change, push);
+    navigation.setSearchParams(change, push);
     return true;
   },
 };

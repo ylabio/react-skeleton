@@ -11,59 +11,56 @@ import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Base64 } from 'js-base64';
 import { ChunkExtractor } from '@loadable/server';
 import insertText from '@utils/insert-text';
 import store from '@store';
-import history from '@app/history';
+import navigation from '@app/navigation';
 import api from '@api';
 import App from '@app';
 import config from 'config.js';
 import template from './index.html';
 
-store.configure();
-api.configure(config.api);
-// @todo возможно токен передаётся в куке, нужно его взять для использования в апи
-history.configure({ ...config.routing, initialEntries: [workerData.url] }); // with request url
-
-const jsx = (
-  <Provider store={store}>
-    <Router history={history}>
-      <App />
-    </Router>
-  </Provider>
-);
-
-let initPromises = [];
-global.pushInitPromise = promise => {
-  initPromises.push(promise);
+global.SSR = {
+  ...workerData,
+  active: true,
+  firstRender: false,
+  initPromises: [],
 };
 
 (async () => {
+  api.configure(config.api);
+  navigation.configure({ ...config.navigation, initialEntries: [workerData.url] }); // with request url
+  store.configure();
+
+  const jsx = (
+    <Provider store={store}>
+      <Router history={navigation.history}>
+        <App />
+      </Router>
+    </Provider>
+  );
+
   // Первичный рендер для инициализации состояния
-  global.SSR_FIRST_RENDER = true;
-  const result = renderToString(jsx);
-  await Promise.all(initPromises);
-  //
+  SSR.firstRender = true;
+  renderToString(jsx);
+  await Promise.all(SSR.initPromises);
+
   // Обработка рендера с учётом параметров сборки, деления на чанки, динамические подгурзки
   const statsFile = path.resolve('./dist/node/loadable-stats.json');
   const extractor = new ChunkExtractor({ statsFile });
   const jsxExtractor = extractor.collectChunks(jsx);
   //
   // // Итоговый рендер с инициализированным состоянием
-  global.SSR_FIRST_RENDER = false;
+  SSR.firstRender = false; // чтобы не работал хук useInit
   const html = renderToString(jsxExtractor);
 
   // Состояние
-  let preloadDataScript = '';
-  if (config.ssr.preloadState) {
-    const storeState = Base64.encode(JSON.stringify(store.getState()));
-    preloadDataScript = `<script>window.preloadedState = '${storeState}'</script>`;
-  }
+  let state = store.getState();
+  let scriptState = `<script>window.stateKey="${SSR.stateKey}"</script>`;
 
   // Метаданные рендера
   const helmetData = Helmet.renderStatic();
-  const baseTag = `<base href="${config.routing.basename}">`;
+  const baseTag = `<base href="${config.navigation.basename}">`;
   const titleTag = helmetData.title.toString();
   const metaTag = helmetData.meta.toString();
   const linkTags = helmetData.link.toString();
@@ -77,13 +74,13 @@ global.pushInitPromise = promise => {
   out = insertText.before(out, '<head>', baseTag + titleTag + metaTag);
   out = insertText.after(out, '</head>', styleTags + linkTags + linkTags2);
   out = insertText.before(out, '<div id="app">', html);
-  out = insertText.after(out, '</body>', preloadDataScript + scriptTags);
+  out = insertText.after(out, '</body>', scriptState + scriptTags);
 
-  parentPort.postMessage({ out, status: 200 });
+  parentPort.postMessage({ out, state, status: 200, html, pc: SSR.initPromises.length });
 })();
 
 process.on('unhandledRejection', function (reason /*, p*/) {
-  parentPort.postMessage({ out: 'ERROR', status: 500 });
+  parentPort.postMessage({ out: `ERROR: ${reason.toString()}`, status: 500 });
   console.error(reason);
   process.exit(1);
 });
