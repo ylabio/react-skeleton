@@ -4,12 +4,11 @@ to: src/<%= path %>/index.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import themes from '@utils/themes';
+import themes from '@utils/theme';
 import './style.less';
 
 function <%= h.inflection.camelize(name) %>(props) {
-  const { theme } = props;
-  return <div className={cn('<%= h.inflection.camelize(name) %>', themes('<%= h.inflection.camelize(name) %>', theme))}></div>;
+  return <div className={themes('<%= h.inflection.camelize(name) %>', props.theme)}></div>;
 }
 
 <%= h.inflection.camelize(name) %>.propTypes = {

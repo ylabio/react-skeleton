@@ -55,6 +55,7 @@ app.get('/ssr/state/:key', async (req, res) => {
 
 // Все остальные запросы - рендер страницы
 app.get('/*', async (req, res) => {
+  console.time('render');
   try {
     const stateKey = uniqid();
     const stateSecret = uniqid(stateKey);
@@ -73,7 +74,8 @@ app.get('/*', async (req, res) => {
         delete stateStorage[stateKey];
       }
     }, 15000);
-    res.cookie('stateSecret', stateSecret, { expires: false, httpOnly: true });
+    // По куке клиент получит своё состояние
+    res.cookie('stateSecret', stateSecret, { expires: false, httpOnly: true/*, secure: true*/ });
     res.writeHead(result.status, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(result.out);
   } catch (e) {
@@ -81,6 +83,7 @@ app.get('/*', async (req, res) => {
     res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(`ERROR ${e.toString()}`);
   }
+  console.timeEnd('render');
 });
 app.listen(config.ssr.port, config.ssr.host);
 

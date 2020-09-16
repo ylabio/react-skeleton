@@ -21,7 +21,7 @@ class LayoutField extends Component {
     const { label, input, error, theme } = this.props;
 
     return (
-      <div className={cn(`LayoutField`, themes('LayoutField', theme))}>
+      <div className={themes('LayoutField', theme)}>
         <div className="LayoutField__label">{label}</div>
         <div className="LayoutField__input">
           <div className="LayoutField__input-inner">{input}</div>

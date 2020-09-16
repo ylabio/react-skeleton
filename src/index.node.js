@@ -11,7 +11,7 @@ import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ChunkExtractor } from '@loadable/server';
+import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import insertText from '@utils/insert-text';
 import store from '@store';
 import navigation from '@app/navigation';
@@ -39,18 +39,18 @@ global.SSR = {
       </Router>
     </Provider>
   );
+  const statsFile = path.resolve('./dist/node/loadable-stats.json');
+  const extractor = new ChunkExtractor({ statsFile });
+  const jsxExtractor = extractor.collectChunks(<ChunkExtractorManager extractor={extractor}>{jsx}</ChunkExtractorManager>);
 
   // Первичный рендер для инициализации состояния
   SSR.firstRender = true;
   renderToString(jsx);
+
   await Promise.all(SSR.initPromises);
 
   // Обработка рендера с учётом параметров сборки, деления на чанки, динамические подгурзки
-  const statsFile = path.resolve('./dist/node/loadable-stats.json');
-  const extractor = new ChunkExtractor({ statsFile });
-  const jsxExtractor = extractor.collectChunks(jsx);
-  //
-  // // Итоговый рендер с инициализированным состоянием
+  // Итоговый рендер с инициализированным состоянием
   SSR.firstRender = false; // чтобы не работал хук useInit
   const html = renderToString(jsxExtractor);
 

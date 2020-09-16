@@ -1,20 +1,7 @@
 import store from '@store';
 import * as api from '@api';
 import session from '@store/session/actions';
-import mc from 'merge-change';
-
-export const types = {
-  SET: Symbol('SET'),
-};
-
-export const initState = {
-  data: {
-    login: '',
-    password: '123456',
-  },
-  wait: false,
-  errors: null,
-};
+import initState, { types } from './state.js';
 
 export default {
   /**

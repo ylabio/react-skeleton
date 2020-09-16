@@ -46,7 +46,7 @@ class FormLogin extends Component {
     const { data, errors, wait, theme } = this.props;
 
     return (
-      <form className={cn(`FormLogin`, themes('FormLogin', theme))} onSubmit={this.onSubmit}>
+      <form className={themes('FormLogin', theme)} onSubmit={this.onSubmit}>
         <LayoutField
           label={'Логин'}
           input={<Input type="text" value={data.login} onChange={this.onChange('login')} />}

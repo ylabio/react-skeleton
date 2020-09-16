@@ -18,7 +18,7 @@ class LayoutContent extends Component {
   render() {
     const { children, theme } = this.props;
 
-    return <div className={cn(`LayoutContent`, themes('LayoutContent', theme))}>{children}</div>;
+    return <div className={themes('LayoutContent', theme)}>{children}</div>;
   }
 }
 

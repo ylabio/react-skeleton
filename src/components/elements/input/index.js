@@ -47,14 +47,13 @@ class Input extends Component {
       required,
       focused,
       value,
-      theme,
       disabled,
       tabIndex,
       autocomplete,
     } = this.props;
 
     return (
-      <div className={cn('Input', themes('Input', theme))}>
+      <div className={themes('Input', this.props.theme)}>
         <input
           className="Input__input"
           value={value}

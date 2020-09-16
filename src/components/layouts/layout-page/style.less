@@ -1,15 +1,14 @@
-html, body, #app {
-  height: 100%;
-  position: relative;
-  padding: 0;
-  margin: 0;
-  font: 16px/20px normal Arial, sans-serif;
-}
-
 .LayoutPage{
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+
+  &_theme {
+    &_night {
+      background: black;
+      color: #eeeeee;
+    }
+  }
 
   &__header{
     background: #eee;

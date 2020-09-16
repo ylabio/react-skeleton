@@ -23,7 +23,7 @@ class LayoutHeader extends Component {
     const { left, children, right, center, theme } = this.props;
 
     return (
-      <div className={cn(`LayoutHeader`, themes('LayoutHeader', theme))}>
+      <div className={themes('LayoutHeader', theme)}>
         <LayoutContent>
           <div className="LayoutHeader__wrap">
             <div className="LayoutHeader__left">{left}</div>

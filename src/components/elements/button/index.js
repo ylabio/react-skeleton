@@ -1,50 +1,46 @@
-import React, { Component } from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import themes from '@utils/themes';
-
 import './style.less';
 
-class Button extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    onClick: PropTypes.func,
-    type: PropTypes.string,
-    title: PropTypes.string,
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    disabled: PropTypes.bool,
+function Button(props) {
+
+  const callbacks = {
+    onClick: useCallback(e => {
+      if (props.onClick) {
+        e.preventDefault();
+        props.onClick();
+      }
+    }, [props.onClick]),
   };
 
-  static defaultProps = {
-    type: 'button',
-    disabled: false,
-    theme: '',
-  };
-
-  onClick = e => {
-    const { onClick } = this.props;
-
-    if (onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
-  render() {
-    const { theme, title, type, children, disabled } = this.props;
-
-    return (
+  return (
       <button
-        type={type}
-        className={cn(`Button`, themes('Button', theme))}
-        title={title}
-        onClick={this.onClick}
-        disabled={disabled}
+        type={props.type}
+        className={themes('Button', props.theme)}
+        title={props.title}
+        onClick={callbacks.onClick}
+        disabled={props.disabled}
       >
-        {children}
+        {props.children}
       </button>
     );
-  }
 }
 
-export default Button;
+Button.propTypes = {
+  children: PropTypes.node,
+  onClick: PropTypes.func,
+  type: PropTypes.string,
+  title: PropTypes.string,
+  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  disabled: PropTypes.bool,
+};
+
+Button.defaultProps = {
+  type: 'button',
+  disabled: false,
+  theme: '',
+};
+
+export default React.memo(Button);

@@ -1,27 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import classes from './style.less';
+import themes from '@utils/themes';
+import cn from 'classnames';
 
-import './style.less';
-
-class LayoutPage extends Component {
-  static propTypes = {
-    header: PropTypes.node,
-    content: PropTypes.node,
-    footer: PropTypes.node,
-    children: PropTypes.node,
-  };
-
-  render() {
-    const { header, content, footer, children } = this.props;
-
-    return (
-      <div className="LayoutPage">
-        <div className="LayoutPage__header">{header}</div>
-        <div className="LayoutPage__content">{children || content}</div>
-        <div className="LayoutPage__footer">{footer}</div>
-      </div>
-    );
-  }
+function LayoutPage (props) {
+  return (
+    <div className={themes('LayoutPage', props.theme)}>
+      <div className="LayoutPage__header">{props.header}</div>
+      <div className="LayoutPage__content">{props.children || props.content}</div>
+      <div className="LayoutPage__footer">{props.footer}</div>
+    </div>
+  );
 }
 
-export default LayoutPage;
+LayoutPage.propTypes = {
+  header: PropTypes.node,
+  content: PropTypes.node,
+  footer: PropTypes.node,
+  children: PropTypes.node,
+  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]), // можно передать несколько тем через пробел или массивом
+};
+
+LayoutPage.defaultProps = {
+  theme: ''
+}
+
+export default React.memo(LayoutPage);

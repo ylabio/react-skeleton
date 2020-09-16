@@ -38,12 +38,12 @@ class Accordion extends Component {
 
     return (
       <div
-        className={cn(`Accordion`, themes('Accordion', theme))}
+        className={themes('Accordion', theme)}
         onClick={this.onClick}
         disabled={disabled}
       >
         <div
-          className={cn('Accordion__header', themes('Accordion__header', theme))}
+          className={themes('Accordion__header', theme)}
           onClick={this.handleClick}
         >
           <div className={'Accordion__title'}>{title}</div>

@@ -10,7 +10,6 @@ import CategoryTree from '@containers/category-tree';
 import useInit from '@utils/hooks/use-init';
 
 function Catalog(props) {
-
   const categoryId = props.match.params.categoryId;
 
   useInit(async () => {

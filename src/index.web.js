@@ -8,7 +8,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { Base64 } from 'js-base64';
 import store from '@store';
 import api, { ssr as ssrApi } from '@api';
 import navigation from '@app/navigation';

@@ -20,10 +20,10 @@ class Logo extends Component {
   };
 
   render() {
-    const { to, theme, title } = this.props;
+    const { to, title } = this.props;
 
     return (
-      <Link className={cn(`Logo`, themes('Logo', theme))} to={to} title={title}>
+      <Link className={themes('Logo', this.props.theme)} to={to} title={title}>
         Skeleton
       </Link>
     );
