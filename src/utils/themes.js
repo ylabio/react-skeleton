@@ -15,5 +15,5 @@ export default function (block, ...classes) {
   const f = (...classes) => {
     return base + cn(classes).replace(/(\s+)/g, `$1${base}`);
   };
-  return block + ' ' + classes && classes.length ? f(classes) : f;
+  return block + ' ' + (classes && classes.length ? f(classes) : f);
 }
