@@ -21,7 +21,7 @@
     "@loadable/component": "^5.13.1",
     "@loadable/server": "^5.13.1",
     "antd": "^4.5.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
