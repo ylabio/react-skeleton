@@ -15,12 +15,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 // For SSR
 const LoadablePlugin = require('@loadable/webpack-plugin');
@@ -76,7 +72,7 @@ let config = {
       {
         test: /\.css$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDevelopment, reloadAll: true } },
+          { loader: MiniCssExtractPlugin.loader, options: {} },
           //{ loader: 'style-loader' },
           { loader: 'css-loader', options: { url: true, import: true } },
         ],
@@ -84,7 +80,7 @@ let config = {
       {
         test: /\.less$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDevelopment, reloadAll: true } },
+          { loader: MiniCssExtractPlugin.loader, options: {} },
           //{ loader: 'style-loader' },
           { loader: 'css-loader', options: { url: true, import: true } },
           { loader: 'less-loader', options: { lessOptions: {} } },
@@ -92,7 +88,9 @@ let config = {
       },
       {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        use: [{ loader: 'url-loader', options: { limit: 1000, name: 'assets/[hash].[ext]' } }],
+        use: [
+          { loader: 'url-loader', options: { limit: 1000, name: 'assets/[contenthash].[ext]' } },
+        ],
       },
       {
         test: /\.jsx\.svg$/,
@@ -145,7 +143,6 @@ if (isWeb) {
   );
 }
 // if (isNode) {
-//   config.externals = ['react-helmet'/*, '@loadable/component'/*, nodeExternals()*/];
 // }
 
 if (isProduction) {
