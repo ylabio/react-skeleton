@@ -1,11 +1,11 @@
 import React, { Fragment, useCallback } from 'react';
-import LayoutPage from '@components/layouts/layout-page';
-import HeaderContainer from '@containers/header-container';
-import LayoutContent from '@components/layouts/layout-content';
-import FormLogin from '@components/forms/form-login';
-import useSelectorMap from '@utils/hooks/use-selector-map';
-import formLogin from '@store/form-login/actions';
-import navigation from '@app/navigation';
+import LayoutPage from '@src/components/layouts/layout-page';
+import HeaderContainer from '@src/containers/header-container';
+import LayoutContent from '@src/components/layouts/layout-content';
+import FormLogin from '@src/components/forms/form-login';
+import useSelectorMap from '@src/utils/hooks/use-selector-map';
+import formLogin from '@src/store/form-login/actions';
+import navigation from '@src/app/navigation';
 
 function Login(props) {
   const select = useSelectorMap(state => ({

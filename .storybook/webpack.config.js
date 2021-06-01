@@ -5,12 +5,12 @@ module.exports = {
   module: webpackConfig.module,
   resolve: {
     alias: {
-      '@components': path.resolve(__dirname, '../src/components/'),
-      '@containers': path.resolve(__dirname, '../src/containers/'),
+      '@src/components': path.resolve(__dirname, '../src/components/'),
+      '@src/containers': path.resolve(__dirname, '../src/containers/'),
       '@assets': path.resolve(__dirname, '../src/assets'),
-      '@store': path.resolve(__dirname, '../src/store/'),
-      '@utils': path.resolve(__dirname, '../src/utils/'),
-      '@api': path.resolve(__dirname, '../src/api/'),
+      '@src/store': path.resolve(__dirname, '../src/store/'),
+      '@src/utils': path.resolve(__dirname, '../src/utils/'),
+      '@src/api': path.resolve(__dirname, '../src/api/'),
       '@hoc-components': path.resolve(__dirname, './src/hoc-components/'),
     }
   }

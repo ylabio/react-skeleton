@@ -1,6 +1,6 @@
-import store from '@store';
-import * as api from '@api';
-import navigation from '@app/navigation.js';
+import store from '@src/store';
+import * as api from '@src/api';
+import navigation from '@src/app/navigation.js';
 import qs from 'qs';
 import mc from 'merge-change';
 import initState, { types } from './state.js';

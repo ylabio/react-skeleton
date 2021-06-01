@@ -21,16 +21,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // For SSR
 const LoadablePlugin = require('@loadable/webpack-plugin');
 
-// Aliases for IDE from package.json
-const packageConfig = require('./package.json');
-let alias = {};
-if (packageConfig._moduleAliases) {
-  const keys = Object.keys(packageConfig._moduleAliases);
-  for (const name of keys) {
-    alias[name] = path.resolve(__dirname, packageConfig._moduleAliases[name]);
-  }
-}
-
 let config = {
   name: target,
   target: target,
@@ -60,7 +50,9 @@ let config = {
   resolve: {
     extensions: ['.js', '.jsx'],
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    alias,
+    alias: {
+      '@src': path.resolve(__dirname, './src'),
+    },
   },
   module: {
     rules: [

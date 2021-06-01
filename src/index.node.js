@@ -12,11 +12,11 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import insertText from '@utils/insert-text';
-import store from '@store';
-import navigation from '@app/navigation';
-import api from '@api';
-import App from '@app';
+import insertText from '@src/utils/insert-text';
+import store from '@src/store';
+import navigation from '@src/app/navigation';
+import api from '@src/api';
+import App from '@src/app';
 import config from 'config.js';
 import template from './index.html';
 

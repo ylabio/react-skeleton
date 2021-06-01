@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import session from '@store/session/actions';
-import detectActive from '@utils/detect-active';
-import LayoutHeader from '@components/layouts/layout-header';
-import MenuTop from '@components/menus/menu-top';
-import Button from '@components/elements/button';
-import Logo from '@components/elements/logo';
+import session from '@src/store/session/actions';
+import detectActive from '@src/utils/detect-active';
+import LayoutHeader from '@src/components/layouts/layout-header';
+import MenuTop from '@src/components/menus/menu-top';
+import Button from '@src/components/elements/button';
+import Logo from '@src/components/elements/logo';
 
 class HeaderContainer extends Component {
   static propTypes = {

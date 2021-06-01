@@ -125,17 +125,17 @@ server {
 ```
 // package.js
 "_moduleAliases": {
-    "@api": "./src/api/",
-    "@app": "./src/app/",
-    "@components": "./src/components/",
-    "@containers": "./src/containers/",
-    "@store": "./src/store/",
+    "@src/api": "./src/api/",
+    "@src/app": "./src/app/",
+    "@src/components": "./src/components/",
+    "@src/containers": "./src/containers/",
+    "@src/store": "./src/store/",
     "@theme": "./src/theme",
-    "@utils": "./src/utils/"
+    "@src/utils": "./src/utils/"
 }
 
 // some-file.js
-import Button from "@components/button"
+import Button from "@src/components/button"
 ```
 
 ## Библиотека компонент

@@ -1,4 +1,4 @@
-import reducer from '@utils/reducer';
+import reducer from '@src/utils/reducer';
 import mc from 'merge-change';
 import { types, initState } from './actions.js';
 

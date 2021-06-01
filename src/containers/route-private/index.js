@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
-import useSelectorMap from '@utils/hooks/use-selector-map';
-import useInit from '@utils/hooks/use-init';
-import session from '@store/session/actions';
+import useSelectorMap from '@src/utils/hooks/use-selector-map';
+import useInit from '@src/utils/hooks/use-init';
+import session from '@src/store/session/actions';
 
 function RoutePrivate(props) {
   // Компонент для рендера и параметры роута

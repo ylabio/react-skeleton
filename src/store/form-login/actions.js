@@ -1,6 +1,6 @@
-import store from '@store';
-import * as api from '@api';
-import session from '@store/session/actions';
+import store from '@src/store';
+import * as api from '@src/api';
+import session from '@src/store/session/actions';
 import initState, { types } from './state.js';
 
 export default {

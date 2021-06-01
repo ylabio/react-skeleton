@@ -1,7 +1,7 @@
 ---
 to: src/store/<%= name %>/reducer.js
 ---
-import reducer from '@utils/reducer';
+import reducer from '@src/utils/reducer';
 import { types } from './actions.js';
 
 const initState = {

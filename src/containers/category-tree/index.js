@@ -1,8 +1,8 @@
 import React from 'react';
-import useSelectorMap from '@utils/hooks/use-selector-map';
+import useSelectorMap from '@src/utils/hooks/use-selector-map';
 import { Link } from 'react-router-dom';
-import Tree from '@components/elements/tree';
-import ssrPlaceholder from '@utils/ssr-placeholder';
+import Tree from '@src/components/elements/tree';
+import ssrPlaceholder from '@src/utils/ssr-placeholder';
 // import { DatePicker } from 'antd';
 
 const CategoryTree = ssrPlaceholder(

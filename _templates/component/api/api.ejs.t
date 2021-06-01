@@ -1,7 +1,7 @@
 ---
 to: src/api/<%= name %>.js
 ---
-import api from '@api';
+import api from '@src/apo';
 
 export default {
   load: () => {

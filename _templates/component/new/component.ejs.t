@@ -4,7 +4,7 @@ to: src/<%= path %>/index.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import themes from '@utils/theme';
+import themes from '@src/utils/theme';
 import './style.less';
 
 function <%= h.inflection.camelize(name) %>(props) {

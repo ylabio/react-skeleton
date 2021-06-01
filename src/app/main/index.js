@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import modal from '@store/modal/actions';
-import LayoutPage from '@components/layouts/layout-page';
-import HeaderContainer from '@containers/header-container';
-import LayoutContent from '@components/layouts/layout-content';
-import Button from '@components/elements/button';
-import Accordion from '@components/elements/accordion';
+import modal from '@src/store/modal/actions';
+import LayoutPage from '@src/components/layouts/layout-page';
+import HeaderContainer from '@src/containers/header-container';
+import LayoutContent from '@src/components/layouts/layout-content';
+import Button from '@src/components/elements/button';
+import Accordion from '@src/components/elements/accordion';
 
 function Main() {
   const callbacks = {

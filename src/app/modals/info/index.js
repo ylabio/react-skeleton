@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback } from 'react';
-import modal from '@store/modal/actions';
-import Button from '@components/elements/button';
-import LayoutModal from '@components/layouts/layout-modal';
+import modal from '@src/store/modal/actions';
+import Button from '@src/components/elements/button';
+import LayoutModal from '@src/components/layouts/layout-modal';
 
 function Info(props) {
   const callbacks = {

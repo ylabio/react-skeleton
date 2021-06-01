@@ -1,6 +1,6 @@
-import store from '@store';
-import * as api from '@api';
-import listToTree from '@utils/list-to-tree';
+import store from '@src/store';
+import * as api from '@src/api';
+import listToTree from '@src/utils/list-to-tree';
 import mc from 'merge-change';
 
 export const types = {

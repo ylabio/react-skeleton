@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import themes from '@utils/themes';
-import LayoutField from '@components/layouts/layout-field';
-import Input from '@components/elements/input';
-import Error from '@components/elements/error';
-import Button from '@components/elements/button';
+import themes from '@src/utils/themes';
+import LayoutField from '@src/components/layouts/layout-field';
+import Input from '@src/components/elements/input';
+import Error from '@src/components/elements/error';
+import Button from '@src/components/elements/button';
 
 import './style.less';
 

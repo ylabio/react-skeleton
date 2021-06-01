@@ -89,14 +89,5 @@
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"
-  },
-  "_moduleAliases": {
-    "@api": "./src/api/",
-    "@app": "./src/app/",
-    "@components": "./src/components/",
-    "@containers": "./src/containers/",
-    "@store": "./src/store/",
-    "@theme": "./src/theme",
-    "@utils": "./src/utils/"
   }
 }

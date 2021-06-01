@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classes from './style.less';
-import themes from '@utils/themes';
+import themes from '@src/utils/themes';
 import cn from 'classnames';
 
 function LayoutPage (props) {

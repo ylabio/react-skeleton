@@ -1,5 +1,5 @@
-import store from '@store';
-import apiService, * as api from '@api';
+import store from '@src/store';
+import apiService, * as api from '@src/api';
 import mc from 'merge-change';
 
 export const types = {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch, Link } from 'react-router-dom';
-import LayoutPage from '@components/layouts/layout-page';
-import HeaderContainer from '@containers/header-container';
-import LayoutContent from '@components/layouts/layout-content';
+import LayoutPage from '@src/components/layouts/layout-page';
+import HeaderContainer from '@src/containers/header-container';
+import LayoutContent from '@src/components/layouts/layout-content';
 
 function Private(props) {
   let { path } = props.match;

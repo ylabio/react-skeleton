@@ -1,8 +1,8 @@
 ---
 to: src/store/<%= name %>/actions.js
 ---
-import store from '@store';
-import * as api from '@api';
+import store from '@src/store';
+import * as api from '@src/api';
 
 export const types = {
   RESET: Symbol('RESET'),

@@ -8,10 +8,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import store from '@store';
-import api, { ssr as ssrApi } from '@api';
-import navigation from '@app/navigation';
-import App from '@app';
+import store from '@src/store';
+import api, { ssr as ssrApi } from '@src/api';
+import navigation from '@src/app/navigation';
+import App from '@src/app';
 import config from 'config.js';
 
 window.SSR = {

@@ -1,4 +1,4 @@
-import params from '@utils/query-params';
+import params from '@src/utils/query-params';
 
 export default class Ssr {
   /**

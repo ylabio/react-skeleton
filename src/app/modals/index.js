@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import modal from '@store/modal/actions';
+import modal from '@src/store/modal/actions';
 import * as modals from './config.js';
-import useSelectorMap from '@utils/hooks/use-selector-map';
+import useSelectorMap from '@src/utils/hooks/use-selector-map';
 
 function Modals() {
   const select = useSelectorMap(state => ({

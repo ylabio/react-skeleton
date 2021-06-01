@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import LayoutContent from '@components/layouts/layout-content';
+import LayoutContent from '@src/components/layouts/layout-content';
 import { Helmet } from 'react-helmet';
 
 function NotFound() {

@@ -2,23 +2,23 @@ import React, { Fragment, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import loadable from '@loadable/component';
-import RoutePrivate from '@containers/route-private';
-import Modals from '@app/modals';
-import Loading from '@app/loading';
+import RoutePrivate from '@src/containers/route-private';
+import Modals from '@src/app/modals';
+import Loading from '@src/app/loading';
 
-// import Main from '@app/main';
-// import Login from '@app/login';
-// import About from '@app/about';
-//import Catalog from '@app/catalog';
-// import Private from '@app/private';
-// import NotFound from '@app/not-found';
+// import Main from '@src/app/main';
+// import Login from '@src/app/login';
+// import About from '@src/app/about';
+//import Catalog from '@src/app/catalog';
+// import Private from '@src/app/private';
+// import NotFound from '@src/app/not-found';
 
-const Main = loadable(() => import('@app/main'), { fallback: <Loading /> });
-const Login = loadable(() => import('@app/login'), { fallback: <Loading /> });
-const About = loadable(() => import('@app/about'), { fallback: <Loading /> });
-const Catalog = loadable(() => import('@app/catalog'), { fallback: <Loading /> });
-const Private = loadable(() => import('@app/private'), { fallback: <Loading /> });
-const NotFound = loadable(() => import('@app/not-found'), { fallback: <Loading /> });
+const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
+const Login = loadable(() => import('@src/app/login'), { fallback: <Loading /> });
+const About = loadable(() => import('@src/app/about'), { fallback: <Loading /> });
+const Catalog = loadable(() => import('@src/app/catalog'), { fallback: <Loading /> });
+const Private = loadable(() => import('@src/app/private'), { fallback: <Loading /> });
+const NotFound = loadable(() => import('@src/app/not-found'), { fallback: <Loading /> });
 
 function App() {
   useEffect(() => {
