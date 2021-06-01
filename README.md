@@ -121,20 +121,9 @@ server {
 
 ## Алиасы путей
 
-В файле `package.js` кроме типовых свойств проекта прописаны алиасы на директории, чтобы импортировать их из любого файла через `@` вместо указания относительных путей. Алиасы также поймет IDE WebStorm.
-```
-// package.js
-"_moduleAliases": {
-    "@src/api": "./src/api/",
-    "@src/app": "./src/app/",
-    "@src/components": "./src/components/",
-    "@src/containers": "./src/containers/",
-    "@src/store": "./src/store/",
-    "@theme": "./src/theme",
-    "@src/utils": "./src/utils/"
-}
+Вместо указания относительных путей можно применить алиас на src директорию.
 
-// some-file.js
+```js
 import Button from "@src/components/button"
 ```
 
