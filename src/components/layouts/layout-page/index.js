@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classes from './style.less';
+import './style.less';
 import themes from '@src/utils/themes';
-import cn from 'classnames';
 
-function LayoutPage (props) {
+function LayoutPage(props) {
   return (
     <div className={themes('LayoutPage', props.theme)}>
       <div className="LayoutPage__header">{props.header}</div>
@@ -23,7 +22,7 @@ LayoutPage.propTypes = {
 };
 
 LayoutPage.defaultProps = {
-  theme: ''
-}
+  theme: '',
+};
 
 export default React.memo(LayoutPage);
