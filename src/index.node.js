@@ -1,62 +1,67 @@
 /**
  * Точка запуска приложения на node.js для SSR.
  * Входные параметры передаются через workerData от главного процесса.
- * Резлультат рендера возвращается через parentPort главному процессу.
+ * Результат рендера возвращается через parentPort главному процессу.
  * Приложение запускается отдельно в потоке на каждый запрос для локализации состояния рендера
  */
 import React from 'react';
 import path from 'path';
 import { parentPort, workerData } from 'worker_threads';
-import { renderToString } from 'react-dom/server';
+import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import insertText from '@src/utils/insert-text';
-import store from '@src/store';
-import navigation from '@src/app/navigation';
-import api from '@src/api';
-import App from '@src/app';
+import services from '@src/services';
 import config from 'config.js';
+import App from '@src/app';
 import template from './index.html';
-
-global.SSR = {
-  ...workerData,
-  active: true,
-  firstRender: false,
-  initPromises: [],
-};
+import insertText from '@src/utils/insert-text';
 
 (async () => {
-  api.configure(config.api);
-  navigation.configure({ ...config.navigation, initialEntries: [workerData.url] }); // with request url
-  store.configure();
+  // Инициализация менеджера сервисов
+  // Через него получаем сервисы ssr, api, navigation, store и другие
+  // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
+  await services.init(config);
 
+  // Корректировка общей конфигурации параметрами от сервера
+  services.configure({
+    navigation: {
+      // Точку входа для навигации (какую страницу рендерить)
+      initialEntries: [workerData.url],
+    },
+    ssr: {
+      // Все параметры рендера от воркера
+      ...workerData,
+    },
+  });
+
+  // JSX как у клиента
   const jsx = (
-    <Provider store={store}>
-      <Router history={navigation.history}>
+    <Provider store={services.store.reduxStore}>
+      <Router history={services.navigation.history}>
         <App />
       </Router>
     </Provider>
   );
+
+  // Обертка от loadable-components для корректной подгрузки чанков с динамическим импортом
   const statsFile = path.resolve('./dist/node/loadable-stats.json');
   const extractor = new ChunkExtractor({ statsFile });
-  const jsxExtractor = extractor.collectChunks(<ChunkExtractorManager extractor={extractor}>{jsx}</ChunkExtractorManager>);
+  const jsxExtractor = extractor.collectChunks(
+    <ChunkExtractorManager extractor={extractor}>{jsx}</ChunkExtractorManager>,
+  );
 
-  // Первичный рендер для инициализации состояния
-  SSR.firstRender = true;
-  renderToString(jsx);
+  // Рендер в строку с ожиданием асинхронных действий приложения
+  const html = await services.ssr.render(jsxExtractor);
 
-  await Promise.all(SSR.initPromises);
-
-  // Обработка рендера с учётом параметров сборки, деления на чанки, динамические подгурзки
-  // Итоговый рендер с инициализированным состоянием
-  SSR.firstRender = false; // чтобы не работал хук useInit
-  const html = renderToString(jsxExtractor);
+  // Ключи исполненных initState
+  const keys = services.ssr.getPrepareKeys();
 
   // Состояние
-  let state = store.getState();
-  let scriptState = `<script>window.stateKey="${SSR.stateKey}"</script>`;
+  const state = services.store.getState();
+
+  // В HTML добавляем ключ состояние, которое клиент выберет сам
+  const scriptState = `<script>window.stateKey="${services.ssr.getStateKey()}"</script>`;
 
   // Метаданные рендера
   const helmetData = Helmet.renderStatic();
@@ -76,7 +81,7 @@ global.SSR = {
   out = insertText.before(out, '<div id="app">', html);
   out = insertText.after(out, '</body>', scriptState + scriptTags);
 
-  parentPort.postMessage({ out, state, status: 200, html, pc: SSR.initPromises.length });
+  parentPort.postMessage({ out, state, keys, status: 200, html });
 })();
 
 process.on('unhandledRejection', function (reason /*, p*/) {

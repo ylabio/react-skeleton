@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import articles from '@src/store/articles/actions';
 import categories from '@src/store/categories/actions';
 import LayoutContent from '@src/components/layouts/layout-content';
@@ -14,11 +13,11 @@ function Catalog(props) {
 
   useInit(async () => {
     await articles.init({ categoryId });
-  }, [categoryId]);
+  }, [categoryId], { ssr: 'articles.init' });
 
-  useInit(async () => {
+  useInit( async () => {
     await categories.load({ fields: '*', limit: 1000 });
-  });
+  }, [], { ssr: 'categories.load' } );
 
   return (
     <LayoutPage header={<HeaderContainer />}>

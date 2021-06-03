@@ -3,11 +3,11 @@ import useSelectorMap from '@src/utils/hooks/use-selector-map';
 import { Link } from 'react-router-dom';
 import Tree from '@src/components/elements/tree';
 import ssrPlaceholder from '@src/utils/ssr-placeholder';
-// import { DatePicker } from 'antd';
 
 const CategoryTree = ssrPlaceholder(
   // WEB
   props => {
+
     const select = useSelectorMap(state => ({
       //items: state.categories.items,
       roots: state.categories.roots,

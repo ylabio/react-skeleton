@@ -15,7 +15,7 @@ const uniqid = require('uniqid');
 const app = express();
 
 // Отдача файлов кроме index.html
-app.use(express.static(path.resolve('./dist/web'), { index: false, /*dotfiles: 'allow'*/ }));
+app.use(express.static(path.resolve('./dist/web'), { index: false /*dotfiles: 'allow'*/ }));
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
@@ -68,14 +68,14 @@ app.get('/*', async (req, res) => {
       stateKey: stateKey,
     });
     // Запоминаем состояние на 5сек
-    stateStorage[stateKey] = { [stateSecret]: result.state };
+    stateStorage[stateKey] = { [stateSecret]: {state: result.state, keys: result.keys} };
     setTimeout(() => {
       if (stateKey in stateStorage) {
         delete stateStorage[stateKey];
       }
     }, 15000);
     // По куке клиент получит своё состояние
-    res.cookie('stateSecret', stateSecret, { expires: false, httpOnly: true/*, secure: true*/ });
+    res.cookie('stateSecret', stateSecret, { expires: false, httpOnly: true /*, secure: true*/ });
     res.writeHead(result.status, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(result.out);
   } catch (e) {
@@ -85,7 +85,7 @@ app.get('/*', async (req, res) => {
   }
   console.timeEnd('render');
 });
-app.listen(config.ssr.port, config.ssr.host);
+app.listen(config.renderServer.port, config.renderServer.host);
 
 /**
  * Рендер приложения в отдельном потоке
@@ -95,7 +95,11 @@ app.listen(config.ssr.port, config.ssr.host);
  */
 function render(params) {
   return new Promise((resolve, reject) => {
-    const worker = new Worker('./dist/node/main.js', { workerData: params, stdout: false, stderr: false });
+    const worker = new Worker('./dist/node/main.js', {
+      workerData: params,
+      stdout: false,
+      stderr: false,
+    });
     worker.on('message', resolve);
     worker.on('error', reject);
     worker.on('exit', code => {
@@ -109,4 +113,4 @@ process.on('unhandledRejection', function (reason /*, p*/) {
   process.exit(1);
 });
 
-console.log(`Server run on http://${config.ssr.host}:${config.ssr.port}`);
+console.log(`Server run on http://${config.renderServer.host}:${config.renderServer.port}`);

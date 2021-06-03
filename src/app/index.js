@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import loadable from '@loadable/component';
@@ -9,10 +9,11 @@ import Loading from '@src/app/loading';
 // import Main from '@src/app/main';
 // import Login from '@src/app/login';
 // import About from '@src/app/about';
-//import Catalog from '@src/app/catalog';
+// import Catalog from '@src/app/catalog';
 // import Private from '@src/app/private';
 // import NotFound from '@src/app/not-found';
 
+// Динамический импорт. При сборке деление на чанки
 const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
 const Login = loadable(() => import('@src/app/login'), { fallback: <Loading /> });
 const About = loadable(() => import('@src/app/about'), { fallback: <Loading /> });
@@ -21,9 +22,6 @@ const Private = loadable(() => import('@src/app/private'), { fallback: <Loading 
 const NotFound = loadable(() => import('@src/app/not-found'), { fallback: <Loading /> });
 
 function App() {
-  useEffect(() => {
-    SSR.firstRender = false;
-  }, []);
   return (
     <Fragment>
       <Helmet>

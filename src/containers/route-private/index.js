@@ -24,7 +24,7 @@ function RoutePrivate(props) {
   routeProps.render = useCallback(
     props => {
       if (select.session.wait) {
-        // Ожидание иницализации сессии
+        // Ожидание инициализации сессии
         return (
           <div>
             <i>Проверка сессии...</i>
@@ -35,6 +35,7 @@ function RoutePrivate(props) {
         return <Component {...props} />;
       } else {
         // Нет доступа - редирект
+        // @todo Не работает при SSR
         return <Redirect to={{ pathname: routeProps.failPath, state: { from: props.location } }} />;
       }
     },

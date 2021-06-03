@@ -1,6 +1,7 @@
-import store from '@src/store';
-import * as api from '@src/api';
-import navigation from '@src/app/navigation.js';
+//import store from '@src/store';
+import services from '@src/services';
+//import * as api from '@src/api';
+//import navigation from '@src/app/navigation.js';
 import qs from 'qs';
 import mc from 'merge-change';
 import initState, { types } from './state.js';
@@ -17,7 +18,7 @@ const actions = {
     let newParams = { ...initState.params };
 
     // Сливаем параметры из location.search, нормализуя их
-    const searchParams = navigation.getSearchParams();
+    const searchParams = services.navigation.getSearchParams();
     if (searchParams.limit) {
       newParams.limit = Math.max(1, Math.min(1000, parseInt(searchParams.limit)));
     }
@@ -72,19 +73,19 @@ const actions = {
     );
     try {
       // Учитывая текущие параметры, установить новые.
-      let prevState = store.getState().article;
+      let prevState = services.store.getState().article;
       let newParams = options.mergeParams ? mc.merge(prevState.params, params) : params;
 
       // Установка параметров, ожидания и сброс данных, если нужно
       if (options.clearData) {
         // Пока загружаются данные, текущие сбросить
-        store.dispatch({
+        services.store.dispatch({
           type: types.SET,
           payload: mc.merge(initState, { params: newParams, wait: options.loadData }),
         });
       } else {
         // Пока загружаются данные, чтобы показывались текущие
-        store.dispatch({
+        services.store.dispatch({
           type: types.SET,
           payload: { wait: options.loadData, params: newParams, errors: null },
         });
@@ -103,11 +104,11 @@ const actions = {
           },
         };
         // Выборка данных из АПИ
-        const response = await api.articles.getList(queryParams);
+        const response = await services.api.endpoint('articles').getList(queryParams);
 
         // Установка полученных данных в состояние
         const result = response.data.result;
-        store.dispatch({
+        services.store.dispatch({
           type: types.SET,
           payload: mc.patch(result, { wait: false, errors: null }),
         });
@@ -120,7 +121,7 @@ const actions = {
       return true;
     } catch (e) {
       if (e.response?.data?.error?.data) {
-        store.dispatch({
+        services.store.dispatch({
           type: types.SET,
           payload: { wait: false, errors: e.response.data.error.data.issues },
         });
@@ -158,14 +159,14 @@ const actions = {
       change.$set.sort = params.sort;
     }
     // Установка URL
-    const currentParams = navigation.getSearchParams();
+    const currentParams = services.navigation.getSearchParams();
     const newParams = mc.merge(currentParams, change);
     let newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
     });
-    navigation.setSearchParams(change, push);
+    services.navigation.setSearchParams(change, push);
     return true;
   },
 };

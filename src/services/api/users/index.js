@@ -1,5 +1,5 @@
 import params from '@src/utils/query-params';
-import Common from '@src/api/common';
+import Common from '@src/services/api/common';
 
 export default class Users extends Common {
   /**

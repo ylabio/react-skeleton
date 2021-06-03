@@ -1,3 +1,5 @@
+import services from '@src/services';
+
 const defaultServerRender = () => {
   return null;
 };
@@ -10,7 +12,7 @@ const defaultServerRender = () => {
  * @returns {(function(): *)|*}
  */
 export default function ssrPlaceholder(webRender, serverRender = defaultServerRender) {
-  if (process.env.IS_NODE) {
+  if (services.env.IS_NODE) {
     return serverRender;
   } else {
     return webRender;

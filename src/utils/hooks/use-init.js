@@ -1,28 +1,27 @@
 import { useEffect } from 'react';
+import services from '@src/services';
 
 /**
- * Хук для асинхронных расчётов, которые будут исполнены первом рендере или изменнии inputs.
- * Так же вызывается при SSR. Если callback асинхронный, то ожидается его исполнение перед
- * серверным рендером.
- * @param callback {Function}
- * @param inputs {Array}
- * @param onBackForward {Boolean}
- * @param force {Boolean} В любом случаи исполнять
+ * Хук для асинхронных расчётов, которые будут исполнены при первом рендере или изменении inputs.
+ * Так же вызывается при рендере на сервере с ожиданием исполнения асинхронного callback перед SSR.
+ * @param callback {Function} Пользовательская функция
+ * @param inputs {Array} Значения при смене которых callback снова исполнится.
+ * @param options {{backForward, force, ssr}}
  */
-export default function useInit(callback, inputs = [], onBackForward = false, force = false) {
-  if (process.env.IS_NODE && SSR.firstRender) {
-    // При серверном рендере исполняем один раз
-    const promise = callback(true);
-    SSR.initPromises.push(promise);
-    return promise;
+export default function useInit(callback, inputs = [], options = {onBackForward: false, force: false, ssr: null}) {
+  // Рендер на сервере. Вместо хуки вызов кэлбэка если передан ключ ssr и с этим ключом ещё не вызывался
+  if (services.env.IS_NODE) {
+    if (options.ssr) return services.ssr.prepare(callback, options.ssr);
   } else {
     // На фронте используется хук эффекта по умолчанию один раз, если не переданы зависимости inputs
     useEffect(() => {
-      // Не вызывать, если есть начальные данные от рендера на сервере
-      if (!SSR.firstRender || force) {
+      // Исполняется если опция форсирования или нет начальных данных от SSR по ключу
+      if (options.force || !services.ssr.hasPrepare(options.ssr)) {
+        // Удаляем ключ ssr, чтобы при последующих рендерах хук работал
+        services.ssr.deletePrepare(options.ssr);
         callback(false);
       }
-      if (onBackForward) {
+      if (options.backForward) {
         window.addEventListener('popstate', callback);
         return () => {
           window.removeEventListener('popstate', callback);

@@ -12,11 +12,12 @@
     "browser": true
   },
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
     "indent": ["error", 2, { "SwitchCase": 1 } ],
     "semi": ["error", "always"],
     "no-trailing-spaces": ["error", { "skipBlankLines": true }],
     "no-unused-vars": 1,
-    "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }]
+    "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }],
+    "function-call-argument-newline": ["error", "consistent"]
   }
 }

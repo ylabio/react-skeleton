@@ -24,9 +24,19 @@ const store = {
   dispatch: action => {},
   subscribe: listener => {},
   getState: () => {},
+  replaceReducer: nextReducer => {},
   /**
    * Custom methods
    */
+  /**
+   * Динамическая установка редьюсера
+   * @param key {String} Название редьюсера
+   * @param reducer {Function} Редьюсер
+   */
+  addReducer: (key, reducer) => {
+    reducers[key] = reducer;
+    store.configure(store.getState());
+  },
   // dispatchStart: (type, payload) => {
   //   store.dispatch({type, payload, START: true});
   // },

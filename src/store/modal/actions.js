@@ -1,4 +1,5 @@
-import store from '@src/store';
+//import store from '@src/store';
+import services from '@src/services';
 
 export const types = {
   SET: Symbol('SET'),
@@ -14,7 +15,7 @@ export const initState = {
 export default {
   open: async (name, params) => {
     return new Promise(resolve => {
-      store.dispatch({
+      services.store.dispatch({
         type: types.SET,
         payload: {
           name,
@@ -28,11 +29,11 @@ export default {
   },
 
   close: async result => {
-    const state = store.getState().modal;
+    const state = services.store.getState().modal;
     if (state.resolve) {
       state.resolve(result);
     }
-    store.dispatch({
+    services.store.dispatch({
       type: types.SET,
       payload: {
         show: false,

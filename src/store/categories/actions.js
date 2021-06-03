@@ -1,5 +1,6 @@
-import store from '@src/store';
-import * as api from '@src/api';
+//import store from '@src/store';
+import services from '@src/services';
+//import * as api from '@src/api';
 import listToTree from '@src/utils/list-to-tree';
 import mc from 'merge-change';
 
@@ -23,7 +24,7 @@ const actions = {
    * Сброс состояния к начальному
    */
   reset: () => {
-    store.dispatch({ type: types.SET, payload: initState });
+    services.store.dispatch({ type: types.SET, payload: initState });
   },
 
   /**
@@ -32,18 +33,18 @@ const actions = {
    * @returns {Promise<*>}
    */
   load: async params => {
-    store.dispatch({ type: types.SET, payload: { wait: true, errors: null } });
+    services.store.dispatch({ type: types.SET, payload: { wait: true, errors: null } });
     try {
-      const response = await api.categories.getList(params);
+      const response = await services.api.endpoint('categories').getList(params);
       const result = response.data.result;
-      store.dispatch({
+      services.store.dispatch({
         type: types.SET,
         payload: mc.patch(result, { roots: listToTree(result.items), wait: false, errors: null }),
       });
       return result;
     } catch (e) {
       if (e.response?.data?.error?.data) {
-        store.dispatch({
+        services.store.dispatch({
           type: types.SET,
           payload: { wait: false, errors: e.response.data.error.data.issues },
         });

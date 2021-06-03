@@ -146,7 +146,7 @@ if (isDevelopment && isWeb) {
   config.devServer = {
     //compress: false,
     contentBase: path.join(__dirname, 'dist', target),
-    port: appConfig.dev.port,
+    port: appConfig.devServer.port,
     publicPath: config.output.publicPath,
     hot: true,
     historyApiFallback: true,

@@ -1,5 +1,6 @@
-import store from '@src/store';
-import apiService, * as api from '@src/api';
+//import store from '@src/store';
+import services from '@src/services';
+//import apiService, * as api from '@src/api';
 import mc from 'merge-change';
 
 export const types = {
@@ -16,13 +17,13 @@ export const initState = {
 const actions = {
   clear: async (logoutRequest = true) => {
     if (logoutRequest) {
-      await api.users.logout();
+      await services.api.endpoint('users').logout();
     }
     if (process.env.IS_WEB) {
       localStorage.removeItem('token');
     }
-    store.dispatch({ type: types.SET, payload: mc.update(initState, { wait: false }) });
-    apiService.setToken(undefined);
+    services.store.dispatch({ type: types.SET, payload: mc.update(initState, { wait: false }) });
+    services.api.setToken(undefined);
   },
 
   // По токену восстановление информации об аккаунте
@@ -32,7 +33,7 @@ const actions = {
       // Только для устоновки токена в http
       await actions.save({ token, wait: true, exists: false });
       try {
-        const response = await api.users.current({});
+        const response = await services.api.endpoint('users').current({});
 
         await actions.save({ token, user: response.data.result, wait: false, exists: true });
       } catch (e) {
@@ -48,8 +49,8 @@ const actions = {
     if (process.env.IS_WEB) {
       localStorage.setItem('token', data.token);
     }
-    store.dispatch({ type: types.SET, payload: mc.update({ exists: true }, data) });
-    apiService.setToken(data.token);
+    services.store.dispatch({ type: types.SET, payload: mc.update({ exists: true }, data) });
+    services.api.setToken(data.token);
   },
 };
 

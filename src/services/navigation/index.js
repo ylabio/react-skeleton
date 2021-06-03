@@ -2,26 +2,26 @@ import { createBrowserHistory, createMemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
 
-class Navigation {
-  constructor() {
-    this._options = {};
+class NavigationService {
+  init(config, services) {
+    this.config = config;
+    this.services = services;
+
     this._history = {};
     this._configured = false;
-  }
 
-  configure(options) {
-    this._options = mc.merge(options, {});
-    switch (options.type) {
+    switch (this.config.type) {
       case 'memory':
-        this._history = createMemoryHistory(options);
+        this._history = createMemoryHistory(this.config);
         this._configured = true;
         break;
       case 'browser':
       default:
-        this._history = createBrowserHistory(options);
+        this._history = createBrowserHistory(this.config);
         this._configured = true;
         break;
     }
+    return this;
   }
 
   get history() {
@@ -154,4 +154,4 @@ class Navigation {
   }
 }
 
-export default new Navigation();
+export default NavigationService;
