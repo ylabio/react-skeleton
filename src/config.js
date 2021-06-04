@@ -16,8 +16,9 @@ let config = {
     },
   },
 
-  store: {
+  states: {
     preloadState: {},
+    defaultName: 'base'
   },
 
   navigation: {

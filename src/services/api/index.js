@@ -1,5 +1,5 @@
 import axios from 'axios';
-import endpoints from './endpoints.js';
+import endpoints from './export.js';
 
 class ApiService {
   async init(config, services) {

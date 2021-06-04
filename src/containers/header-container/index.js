@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import session from '@src/store/session/actions';
+//import session from '@src/store/session/actions';
 import detectActive from '@src/utils/detect-active';
 import LayoutHeader from '@src/components/layouts/layout-header';
 import MenuTop from '@src/components/menus/menu-top';
 import Button from '@src/components/elements/button';
 import Logo from '@src/components/elements/logo';
+import services from "@src/services";
 
 class HeaderContainer extends Component {
   static propTypes = {
@@ -50,7 +51,7 @@ class HeaderContainer extends Component {
   };
 
   onClickLogout = () => {
-    session.clear();
+    services.states.session.clear();
   };
 
   renderRight() {

@@ -1,5 +1,5 @@
 import mc from 'merge-change';
-import services from './services.js';
+import services from './export.js';
 
 class Services {
   constructor() {
@@ -87,11 +87,11 @@ class Services {
   }
 
   /**
-   * Сервис состояния приложения
-   * @returns {StoreService}
+   * Сервис действий и состояния приложения
+   * @returns {StatesService}
    */
-  get store() {
-    return this.get('store');
+  get states() {
+    return this.get('states');
   }
 
   /**

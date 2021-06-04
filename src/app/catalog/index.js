@@ -1,6 +1,7 @@
 import React from 'react';
-import articles from '@src/store/articles/actions';
-import categories from '@src/store/categories/actions';
+import services from '@src/services';
+//import articles from '@src/store/articles/actions';
+//import categories from '@src/store/categories/actions';
 import LayoutContent from '@src/components/layouts/layout-content';
 import HeaderContainer from '@src/containers/header-container';
 import LayoutPage from '@src/components/layouts/layout-page';
@@ -12,11 +13,12 @@ function Catalog(props) {
   const categoryId = props.match.params.categoryId;
 
   useInit(async () => {
-    await articles.init({ categoryId });
+    await services.states.articles.init({ categoryId });
   }, [categoryId], { ssr: 'articles.init' });
 
   useInit( async () => {
-    await categories.load({ fields: '*', limit: 1000 });
+    await services.states.categories.load({ fields: '*', limit: 1000 });
+    //await categories.load({ fields: '*', limit: 1000 });
   }, [], { ssr: 'categories.load' } );
 
   return (

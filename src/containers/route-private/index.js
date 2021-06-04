@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
 import useSelectorMap from '@src/utils/hooks/use-selector-map';
 import useInit from '@src/utils/hooks/use-init';
-import session from '@src/store/session/actions';
+import services from "@src/services";
+//import session from '@src/store/session/actions';
 
 function RoutePrivate(props) {
   // Компонент для рендера и параметры роута
@@ -17,7 +18,7 @@ function RoutePrivate(props) {
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации
     // Вызов происходит при переходе в роут с друго пути
-    await session.remind();
+    await services.states.session.remind();
   });
 
   // Что рендерить роуту в зависимости от состояния сессии

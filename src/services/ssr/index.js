@@ -11,7 +11,7 @@ class SSRService {
 
   /**
    * SERVER
-   * рендер приложения на сервере с ожиданием асинхронных действий.
+   * Рендер приложения на сервере с ожиданием асинхронных действий.
    * Асинхронные действия регистрируются методом prepare(), обычно в хуке useInit()
    * @param JSX React приложение
    * @returns {Promise<void>}
@@ -31,7 +31,7 @@ class SSRService {
 
   /**
    * SERVER
-   * Добавление ожидания подготовительного действия перед рендером на сервере
+   * Добавление ожидания действия перед рендером на сервере
    * @param callback {Promise|Function}
    * @param key {String} Ключ, под которым будут загружаться данные
    * @return {Promise} Промис переданного callback
@@ -92,7 +92,7 @@ class SSRService {
 
   /**
    * SERVER & CLIENT
-   * Ключ для состояния.
+   * Ключ для всего состояния.
    * На сервере берется из конфига, куда попадает из параметров воркера
    * На клиенте из window.stateKey, куда попадает из подготовленного сервером HTML
    * @returns {String}
@@ -116,13 +116,13 @@ class SSRService {
 
   /**
    * CLIENT
-   * Выборка подготовленного состояния
+   * Выборка всего подготовленного состояния с клиента по HTTP запрсом к серверу
    * @returns {Promise<*>}
    */
   async getPreloadState() {
     const ssrApi = services.api.endpoint('ssr');
     const response = await ssrApi.getPreloadState({key: this.getStateKey()});
-    // Ключ исполненных initState()
+    // Ключ исполненных prepare()
     if (response.data.keys){
       this.setPrepareKeys(response.data.keys);
     }

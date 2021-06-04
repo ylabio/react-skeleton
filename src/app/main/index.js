@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import modal from '@src/store/modal/actions';
+//import modal from '@src/store/modal/actions';
 import LayoutPage from '@src/components/layouts/layout-page';
 import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
 import Button from '@src/components/elements/button';
 import Accordion from '@src/components/elements/accordion';
+import services from "@src/services";
 
 function Main() {
   const callbacks = {
     showInfo: useCallback(async () => {
-      const result = await modal.open('info', {
+      const result = await services.states.modals.open('info', {
         overflowTransparent: false,
         overflowClose: true,
       });

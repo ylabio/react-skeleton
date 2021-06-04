@@ -1,15 +1,16 @@
 import React, { Fragment, useCallback } from 'react';
-import modal from '@src/store/modal/actions';
+//import modal from '@src/store/modal/actions';
 import Button from '@src/components/elements/button';
 import LayoutModal from '@src/components/layouts/layout-modal';
+import services from "@src/services";
 
 function Info(props) {
   const callbacks = {
     onCancel: useCallback(async () => {
-      await modal.close('Cancel value');
+      await services.states.modals.close('Cancel value');
     }, []),
     onSuccess: useCallback(async () => {
-      await modal.close('Success value');
+      await services.states.modals.close('Success value');
     }, []),
     renderFooter: useCallback(() => {
       return (

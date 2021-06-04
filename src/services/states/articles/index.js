@@ -1,24 +1,37 @@
-//import store from '@src/store';
-import services from '@src/services';
-//import * as api from '@src/api';
-//import navigation from '@src/app/navigation.js';
-import qs from 'qs';
-import mc from 'merge-change';
-import initState, { types } from './state.js';
+import mc from "merge-change";
+import qs from "qs";
+import BaseState from "@src/services/states/base";
 
-const actions = {
+class ArticlesState extends BaseState {
+
+  defaultState() {
+    return {
+      items: [],
+      count: 0,
+      params: {
+        limit: 20,
+        page: 1,
+        sort: '-date',
+        fields: `items(*,category(title),maidIn(title)), count`,
+        categoryId: null,
+      },
+      wait: false,
+      errors: null,
+    };
+  }
+
   /**
    * Инициализация параметров и данных
    * К начальным параметрам сливаются сохраненные из location.search и переданные в params
    * @param params {Object} Новые параметры. Переопределяют начальные и сохраненные параметры
    * @returns {Promise}
    */
-  init: async (params = {}) => {
+  async init(params = {}) {
     // В основе начальные параметры
-    let newParams = { ...initState.params };
+    let newParams = this.defaultState().params;
 
     // Сливаем параметры из location.search, нормализуя их
-    const searchParams = services.navigation.getSearchParams();
+    const searchParams = this.services.navigation.getSearchParams();
     if (searchParams.limit) {
       newParams.limit = Math.max(1, Math.min(1000, parseInt(searchParams.limit)));
     }
@@ -34,8 +47,8 @@ const actions = {
     // Сливаем новые параметры
     newParams = mc.merge(newParams, params);
     // Установка параметров и загрузка данных по ним
-    return actions.set(newParams, { mergeParams: false, loadData: true, saveParams: false });
-  },
+    return this.set(newParams, {mergeParams: false, loadData: true, saveParams: false});
+  }
 
   /**
    * Сброс состояния
@@ -46,15 +59,15 @@ const actions = {
    *   clearData {Boolean} Сбросить текущие данные
    * @returns {Promise}
    */
-  reset: async (params = {}, options = {}) => {
+  async reset(params = {}, options = {}) {
     options = Object.assign(
-      { saveParams: 'replace', loadData: false, clearData: true, mergeParams: false },
+      {saveParams: 'replace', loadData: false, clearData: true, mergeParams: false},
       options,
     );
     // Сливаем начальные и новые параметры
-    let newParams = objectUtils.merge(initState.params, params);
-    return actions.set(newParams, options);
-  },
+    let newParams = mc.merge(this.defaultState().params, params);
+    return this.set(newParams, options);
+  }
 
   /**
    * Установка новых параметров и загрузка данных по ним
@@ -66,29 +79,23 @@ const actions = {
    *  mergeParams {Boolean} Объединять новые параметры с текущим. Иначе полная замена на новые.
    * @returns {Promise}
    */
-  set: async (params = {}, options = {}) => {
+  async set(params = {}, options = {}) {
     options = Object.assign(
-      { saveParams: 'replace', mergeParams: true, loadData: true, clearData: false },
+      {saveParams: 'replace', mergeParams: true, loadData: true, clearData: false},
       options,
     );
     try {
       // Учитывая текущие параметры, установить новые.
-      let prevState = services.store.getState().article;
+      let prevState = this.currentState();
       let newParams = options.mergeParams ? mc.merge(prevState.params, params) : params;
 
       // Установка параметров, ожидания и сброс данных, если нужно
       if (options.clearData) {
         // Пока загружаются данные, текущие сбросить
-        services.store.dispatch({
-          type: types.SET,
-          payload: mc.merge(initState, { params: newParams, wait: options.loadData }),
-        });
+        this.resetState({params: newParams, wait: options.loadData});
       } else {
         // Пока загружаются данные, чтобы показывались текущие
-        services.store.dispatch({
-          type: types.SET,
-          payload: { wait: options.loadData, params: newParams, errors: null },
-        });
+        this.updateState({wait: options.loadData, params: newParams, errors: null});
       }
 
       // Загрузка данные по новым параметрам
@@ -104,47 +111,42 @@ const actions = {
           },
         };
         // Выборка данных из АПИ
-        const response = await services.api.endpoint('articles').getList(queryParams);
+        const response = await this.services.api.endpoint('articles').getList(queryParams);
 
         // Установка полученных данных в состояние
         const result = response.data.result;
-        services.store.dispatch({
-          type: types.SET,
-          payload: mc.patch(result, { wait: false, errors: null }),
-        });
+        this.updateState(mc.patch(result, {wait: false, errors: null}));
       }
 
       //  Сохранить параметры в localStoarage или location.search
       if (options.saveParams) {
-        actions.saveParams(newParams, options.saveParams === 'push');
+        this.saveParams(newParams, options.saveParams === 'push');
       }
       return true;
     } catch (e) {
       if (e.response?.data?.error?.data) {
-        services.store.dispatch({
-          type: types.SET,
-          payload: { wait: false, errors: e.response.data.error.data.issues },
-        });
+        this.updateState({wait: false, errors: e.response.data.error.data.issues});
       } else {
         throw e;
       }
     }
-  },
+  }
 
   /**
    * Запомнить текущие параметры состояния в Location.search
-   * Используется в actions.apply(). Напрямую нет смысла вызывать.
+   * Используется в states.apply(). Напрямую нет смысла вызывать.
    * @param params {Object} Параметры для сохранения
    * @param push Способ обновления Location.search. Если false, то используется navigation.replace()
    * @returns {Boolean}
    */
-  saveParams: (params, push = true) => {
+  saveParams(params, push = true) {
     // Сброс и установка только своих параметров, так как в адресе могут быть и другие
     let change = {
       // По умолчанию всё сбрасывается
       $unset: ['page', 'limit', 'status', /*'categoryId',*/ 'sort'],
       $set: {},
     };
+    const initState = this.defaultState();
     // Устанвока параметров, которые отличаются от начальных (от значений по умолчанию)
     if (params.page !== initState.params.page) {
       change.$set.page = params.page;
@@ -159,16 +161,16 @@ const actions = {
       change.$set.sort = params.sort;
     }
     // Установка URL
-    const currentParams = services.navigation.getSearchParams();
+    const currentParams = this.services.navigation.getSearchParams();
     const newParams = mc.merge(currentParams, change);
     let newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
     });
-    services.navigation.setSearchParams(change, push);
+    this.services.navigation.setSearchParams(change, push);
     return true;
-  },
-};
+  }
+}
 
-export default actions;
+export default ArticlesState;

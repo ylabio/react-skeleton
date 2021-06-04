@@ -4,21 +4,20 @@ import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
 import FormLogin from '@src/components/forms/form-login';
 import useSelectorMap from '@src/utils/hooks/use-selector-map';
-import formLogin from '@src/store/form-login/actions';
-//import navigation from '@src/app/navigation';
+//import formLogin from '@src/store/form-login/actions';
 import services from '@src/services';
 
-function Login(props) {
+function Login() {
   const select = useSelectorMap(state => ({
     formLogin: state.formLogin,
   }));
 
   const callbacks = {
     onChangeForm: useCallback(async data => {
-      await formLogin.change(data);
+      await services.states.formLogin.change(data);
     }, []),
     onSubmitForm: useCallback(async data => {
-      await formLogin.submit(data);
+      await services.states.formLogin.submit(data);
       // @todo перейти на страницу, с которой был редирект или по умочланию в приватный раздел
       services.navigation.goPrivate();
     }, []),

@@ -6,19 +6,14 @@ class NavigationService {
   init(config, services) {
     this.config = config;
     this.services = services;
-
     this._history = {};
-    this._configured = false;
-
     switch (this.config.type) {
       case 'memory':
         this._history = createMemoryHistory(this.config);
-        this._configured = true;
         break;
       case 'browser':
       default:
         this._history = createBrowserHistory(this.config);
-        this._configured = true;
         break;
     }
     return this;
@@ -31,18 +26,6 @@ class NavigationService {
   get location() {
     return this._history.location;
   }
-
-  // get length() {
-  //   return this._history.length;
-  // }
-  //
-  // get action() {
-  //   return this._history.action;
-  // }
-
-  // createHref(location) {
-  //   return this._history.createHref(location);
-  // }
 
   push(path, state) {
     return this._history.push(path, state);
