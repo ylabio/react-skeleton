@@ -1,11 +1,12 @@
 const isWeb = process.env.TARGET === 'web';
 
 let config = {
+  // Сервис с методами API
   api: {
     // Обычно хост на апи относительный и используется прокси для устранения CORS
     baseURL: isWeb ? '' : 'http://example.front.ylab.io',
     tokenHeader: 'X-Token',
-    defaultEndpoint: 'common',
+    defaultName: 'common',
     // Прокси на апи, если режим разработки или ssr без nginx
     proxy: {
       '/api/**': {
@@ -14,30 +15,39 @@ let config = {
         changeOrigin: true,
       },
     },
+    users: {
+      baseURL: 'http://example.front.ylab.io',
+      path: '',
+    }
   },
 
-  states: {
+  // Сервис действий и redux состояния
+  actions: {
+    log: true,
     preloadState: {},
     defaultName: 'base'
   },
 
+  // Сервис навигации
   navigation: {
     basename: '/', // если фронт доступен по вложенному пути
     type: isWeb ? 'browser' : 'memory',
   },
 
-  // Сервер разработки (локальный для горячего обновления фронта)
+  // HTTP сервер при разработки (локальный для горячего обновления фронта)
   devServer: {
     port: 8031,
   },
 
-  // Сервер для рендера
+  // HTTP сервер для рендера
   renderServer: {
     host: 'localhost',
     port: 8132,
     preloadState: true,
   },
 
+  // Сервис рендера на сервере
+  // Также используется на клиенте для учёта результатов серверного рендера
   ssr: {
     maxDepth: 10
   }

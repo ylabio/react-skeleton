@@ -18,7 +18,7 @@ function RoutePrivate(props) {
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации
     // Вызов происходит при переходе в роут с друго пути
-    await services.states.session.remind();
+    await services.actions.session.remind();
   });
 
   // Что рендерить роуту в зависимости от состояния сессии

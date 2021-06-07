@@ -51,7 +51,7 @@ class HeaderContainer extends Component {
   };
 
   onClickLogout = () => {
-    services.states.session.clear();
+    services.actions.session.clear();
   };
 
   renderRight() {

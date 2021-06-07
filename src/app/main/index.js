@@ -11,7 +11,7 @@ import services from "@src/services";
 function Main() {
   const callbacks = {
     showInfo: useCallback(async () => {
-      const result = await services.states.modals.open('info', {
+      const result = await services.actions.modals.open('info', {
         overflowTransparent: false,
         overflowClose: true,
       });

@@ -19,14 +19,14 @@ import insertText from '@src/utils/insert-text';
 
 (async () => {
   // Инициализация менеджера сервисов
-  // Через него получаем сервисы ssr, api, navigation, states и другие
+  // Через него получаем сервисы ssr, api, navigation, actions и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
   await services.init(config);
 
-  // Корректировка общей конфигурации параметрами от сервера
+  // Корректировка общей конфигурации параметрами запроса (передаются от главного процесса)
   services.configure({
     navigation: {
-      // Точку входа для навигации (какую страницу рендерить)
+      // Точка входа для навигации (какую страницу рендерить)
       initialEntries: [workerData.url],
     },
     ssr: {
@@ -37,7 +37,7 @@ import insertText from '@src/utils/insert-text';
 
   // JSX как у клиента
   const jsx = (
-    <Provider store={services.states.store}>
+    <Provider store={services.actions.store}>
       <Router history={services.navigation.history}>
         <App />
       </Router>
@@ -54,13 +54,13 @@ import insertText from '@src/utils/insert-text';
   // Рендер в строку с ожиданием асинхронных действий приложения
   const html = await services.ssr.render(jsxExtractor);
 
-  // Ключи исполненных initState
+  // Ключи исполненных ожиданий (чтобы клиент знал, какие действия были выполнены на сервере)
   const keys = services.ssr.getPrepareKeys();
 
   // Состояние
-  const state = services.states.getState();
+  const state = services.actions.store.getState();
 
-  // В HTML добавляем ключ состояние, которое клиент выберет сам
+  // В HTML добавляем ключ всего состояния, которое клиент подгрузит сам по ключу
   const scriptState = `<script>window.stateKey="${services.ssr.getStateKey()}"</script>`;
 
   // Метаданные рендера

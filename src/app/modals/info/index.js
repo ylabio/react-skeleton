@@ -7,10 +7,10 @@ import services from "@src/services";
 function Info(props) {
   const callbacks = {
     onCancel: useCallback(async () => {
-      await services.states.modals.close('Cancel value');
+      await services.actions.modals.close('Cancel value');
     }, []),
     onSuccess: useCallback(async () => {
-      await services.states.modals.close('Success value');
+      await services.actions.modals.close('Success value');
     }, []),
     renderFooter: useCallback(() => {
       return (

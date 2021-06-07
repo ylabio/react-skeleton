@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 //import modal from '@src/store/modal/actions';
-import * as modals from './config.js';
+import * as modals from './export.js';
 import useSelectorMap from '@src/utils/hooks/use-selector-map';
 import services from "@src/services";
 
@@ -18,7 +18,7 @@ function Modals() {
       const props = {
         ...select.modals?.params,
         close: result => {
-          return services.states.modals.close(result);
+          return services.actions.modals.close(result);
         },
       };
       if (select.modals?.show) {

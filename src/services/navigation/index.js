@@ -3,9 +3,8 @@ import qs from 'qs';
 import mc from 'merge-change';
 
 class NavigationService {
-  init(config, services) {
+  init(config) {
     this.config = config;
-    this.services = services;
     this._history = {};
     switch (this.config.type) {
       case 'memory':

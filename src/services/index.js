@@ -6,7 +6,7 @@ class Services {
     this.configs = {};
     this.list = {};
     this.classes = {};
-    this._env = mc.merge({ IS_FIRST_RENDER: true }, process.env);
+    this._env = process.env;
   }
 
   /**
@@ -88,10 +88,10 @@ class Services {
 
   /**
    * Сервис действий и состояния приложения
-   * @returns {StatesService}
+   * @returns {ActionsService}
    */
-  get states() {
-    return this.get('states');
+  get actions() {
+    return this.get('actions');
   }
 
   /**

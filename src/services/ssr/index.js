@@ -2,9 +2,8 @@ import {renderToString} from 'react-dom/server';
 import services from '@src/services';
 
 class SSRService {
-  init(config, services) {
+  init(config) {
     this.config = config;
-    this.services = services;
     this.promises = [];
     this.keys = {};
   }
@@ -98,7 +97,7 @@ class SSRService {
    * @returns {String}
    */
   getStateKey() {
-    if (this.services.env.IS_WEB) {
+    if (services.env.IS_WEB) {
       return window.stateKey;
     } else {
       return this.config.stateKey;
@@ -111,7 +110,7 @@ class SSRService {
    * @returns {Boolean}
    */
   hasPreloadState() {
-    return this.services.env.IS_WEB && !!window.stateKey;
+    return services.env.IS_WEB && !!window.stateKey;
   }
 
   /**

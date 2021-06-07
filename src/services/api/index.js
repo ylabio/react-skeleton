@@ -1,10 +1,9 @@
 import axios from 'axios';
-import endpoints from './export.js';
+import * as endpoints from './export.js';
 
 class ApiService {
-  async init(config, services) {
+  async init(config) {
     this.config = config;
-    this.services = services;
     this.axios = axios.create({
       baseURL: '',
       headers: {},
@@ -36,7 +35,7 @@ class ApiService {
    */
   endpoint(namespace) {
     if (!this.endpoints[namespace]) {
-      const Constructor = endpoints[namespace] || endpoints[this.config.defaultEndpoint];
+      const Constructor = endpoints[namespace] || endpoints[this.config.defaultName];
       this.endpoints[namespace] = new Constructor(this.axios, namespace);
     }
     return this.endpoints[namespace];

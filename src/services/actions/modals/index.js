@@ -1,4 +1,4 @@
-import BaseState from "@src/services/states/base";
+import BaseState from "@src/services/actions/base";
 
 class ModalsState extends BaseState {
 
@@ -19,7 +19,7 @@ class ModalsState extends BaseState {
         resolve,
         show: true,
         result: null,
-      });
+      }, 'Открытие модалки '+name);
     });
   }
 
@@ -32,7 +32,7 @@ class ModalsState extends BaseState {
       show: false,
       result: result,
       resolve: null,
-    });
+    }, 'Закрытие модалки');
   }
 }
 

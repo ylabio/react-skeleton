@@ -13,11 +13,11 @@ function Catalog(props) {
   const categoryId = props.match.params.categoryId;
 
   useInit(async () => {
-    await services.states.articles.init({ categoryId });
+    await services.actions.articles.init({ categoryId });
   }, [categoryId], { ssr: 'articles.init' });
 
   useInit( async () => {
-    await services.states.categories.load({ fields: '*', limit: 1000 });
+    await services.actions.categories.load({ fields: '*', limit: 1000 });
     //await categories.load({ fields: '*', limit: 1000 });
   }, [], { ssr: 'categories.load' } );
 

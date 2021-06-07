@@ -1,7 +1,12 @@
 import mc from "merge-change";
 import qs from "qs";
-import BaseState from "@src/services/states/base";
+import BaseState from "@src/services/actions/base";
+import services from '@src/services';
 
+/**
+ * Модуль товаров
+ * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список товаров.
+ */
 class ArticlesState extends BaseState {
 
   defaultState() {
@@ -31,7 +36,7 @@ class ArticlesState extends BaseState {
     let newParams = this.defaultState().params;
 
     // Сливаем параметры из location.search, нормализуя их
-    const searchParams = this.services.navigation.getSearchParams();
+    const searchParams = services.navigation.getSearchParams();
     if (searchParams.limit) {
       newParams.limit = Math.max(1, Math.min(1000, parseInt(searchParams.limit)));
     }
@@ -92,10 +97,10 @@ class ArticlesState extends BaseState {
       // Установка параметров, ожидания и сброс данных, если нужно
       if (options.clearData) {
         // Пока загружаются данные, текущие сбросить
-        this.resetState({params: newParams, wait: options.loadData});
+        this.resetState({params: newParams, wait: options.loadData}, 'Сброс текущих данных, установка параметров, статус ожидания');
       } else {
         // Пока загружаются данные, чтобы показывались текущие
-        this.updateState({wait: options.loadData, params: newParams, errors: null});
+        this.updateState({wait: options.loadData, params: newParams, errors: null}, 'Установка параметров, статус ожидания');
       }
 
       // Загрузка данные по новым параметрам
@@ -111,11 +116,11 @@ class ArticlesState extends BaseState {
           },
         };
         // Выборка данных из АПИ
-        const response = await this.services.api.endpoint('articles').getList(queryParams);
+        const response = await services.api.endpoint('articles').getList(queryParams);
 
         // Установка полученных данных в состояние
         const result = response.data.result;
-        this.updateState(mc.patch(result, {wait: false, errors: null}));
+        this.updateState(mc.patch(result, {wait: false, errors: null}), 'Список товаров загружен');
       }
 
       //  Сохранить параметры в localStoarage или location.search
@@ -125,7 +130,7 @@ class ArticlesState extends BaseState {
       return true;
     } catch (e) {
       if (e.response?.data?.error?.data) {
-        this.updateState({wait: false, errors: e.response.data.error.data.issues});
+        this.updateState({wait: false, errors: e.response.data.error.data.issues}, 'Ошибка от сервера');
       } else {
         throw e;
       }
@@ -134,7 +139,7 @@ class ArticlesState extends BaseState {
 
   /**
    * Запомнить текущие параметры состояния в Location.search
-   * Используется в states.apply(). Напрямую нет смысла вызывать.
+   * Используется в this.set(). Напрямую нет смысла вызывать.
    * @param params {Object} Параметры для сохранения
    * @param push Способ обновления Location.search. Если false, то используется navigation.replace()
    * @returns {Boolean}
@@ -161,14 +166,14 @@ class ArticlesState extends BaseState {
       change.$set.sort = params.sort;
     }
     // Установка URL
-    const currentParams = this.services.navigation.getSearchParams();
+    const currentParams = services.navigation.getSearchParams();
     const newParams = mc.merge(currentParams, change);
     let newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
     });
-    this.services.navigation.setSearchParams(change, push);
+    services.navigation.setSearchParams(change, push);
     return true;
   }
 }
