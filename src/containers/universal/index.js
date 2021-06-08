@@ -10,7 +10,7 @@ function Universal(props) {
 
   useInit(async () => {
     // Выборка начального списка
-    services.actions.get('name-from-annotation').init();
+    services.store.get('name-from-annotation').init();
   });
 
 

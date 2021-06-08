@@ -19,7 +19,7 @@ import insertText from '@src/utils/insert-text';
 
 (async () => {
   // Инициализация менеджера сервисов
-  // Через него получаем сервисы ssr, api, navigation, actions и другие
+  // Через него получаем сервисы ssr, api, navigation, store и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
   await services.init(config);
 
@@ -37,7 +37,7 @@ import insertText from '@src/utils/insert-text';
 
   // JSX как у клиента
   const jsx = (
-    <Provider store={services.actions.store}>
+    <Provider store={services.store.redux}>
       <Router history={services.navigation.history}>
         <App />
       </Router>
@@ -58,7 +58,7 @@ import insertText from '@src/utils/insert-text';
   const keys = services.ssr.getPrepareKeys();
 
   // Состояние
-  const state = services.actions.store.getState();
+  const state = services.store.redux.getState();
 
   // В HTML добавляем ключ всего состояния, которое клиент подгрузит сам по ключу
   const scriptState = `<script>window.stateKey="${services.ssr.getStateKey()}"</script>`;

@@ -1,7 +1,5 @@
 import React from 'react';
 import services from '@src/services';
-//import articles from '@src/store/articles/actions';
-//import categories from '@src/store/categories/actions';
 import LayoutContent from '@src/components/layouts/layout-content';
 import HeaderContainer from '@src/containers/header-container';
 import LayoutPage from '@src/components/layouts/layout-page';
@@ -13,11 +11,20 @@ function Catalog(props) {
   const categoryId = props.match.params.categoryId;
 
   useInit(async () => {
-    await services.actions.articles.init({ categoryId });
+    // Динамическое созадние endpoint к апи
+    services.api.createEndpoint({name: 'super', proto: 'crud', url: '/api/v1/articles'});
+    // Динамическое создание состояния для товаров
+    services.store.createState({name: 'super', proto: 'articles', apiEndpoint: 'super'});
+  }, []);
+
+  useInit(async () => {
+    // Инициализация параметров для начально выборки по ним
+    await services.store.get('super').initParams({filter: {category: categoryId }});
+    //await services.store.articles.initParams({filter: {category: categoryId }});
   }, [categoryId], { ssr: 'articles.init' });
 
   useInit( async () => {
-    await services.actions.categories.load({ fields: '*', limit: 1000 });
+    await services.store.categories.load({ fields: '*', limit: 1000 });
     //await categories.load({ fields: '*', limit: 1000 });
   }, [], { ssr: 'categories.load' } );
 

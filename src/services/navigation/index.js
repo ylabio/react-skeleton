@@ -2,6 +2,11 @@ import { createBrowserHistory, createMemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
 
+/**
+ * Сервис навигации (History API)
+ * Используется библиотекой react-router и для прямого управления историей навигации в браузере
+ * Учитывает режим работы для SSR
+ */
 class NavigationService {
   init(config) {
     this.config = config;

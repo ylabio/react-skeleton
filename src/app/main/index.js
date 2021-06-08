@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-//import modal from '@src/store/modal/actions';
 import LayoutPage from '@src/components/layouts/layout-page';
 import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
@@ -11,7 +10,7 @@ import services from "@src/services";
 function Main() {
   const callbacks = {
     showInfo: useCallback(async () => {
-      const result = await services.actions.modals.open('info', {
+      const result = await services.store.modals.open('info', {
         overflowTransparent: false,
         overflowClose: true,
       });

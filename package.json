@@ -10,6 +10,7 @@
     "build:ssr": "cross-env NODE_ENV=production TARGET=node webpack",
     "build:all": "npm run build & npm run build:ssr",
     "build:analize": "cross-env NODE_ENV=production BUILD_ANALYZE=true webpack",
+    "server": "node ./server.js",
     "test": "jest",
     "test:eslint": "./node_modules/.bin/eslint ./",
     "storybook": "cross-env NODE_ENV=development start-storybook -p 9030 -c .storybook"
@@ -20,6 +21,7 @@
   "dependencies": {
     "@loadable/component": "^5.15.0",
     "@loadable/server": "^5.15.0",
+    "ajv": "^8.6.0",
     "antd": "^4.16.1",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",

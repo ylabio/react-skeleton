@@ -119,7 +119,7 @@ class SSRService {
    * @returns {Promise<*>}
    */
   async getPreloadState() {
-    const ssrApi = services.api.endpoint('ssr');
+    const ssrApi = services.api.get('ssr');
     const response = await ssrApi.getPreloadState({key: this.getStateKey()});
     // Ключ исполненных prepare()
     if (response.data.keys){

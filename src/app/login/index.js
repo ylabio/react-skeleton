@@ -4,7 +4,6 @@ import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
 import FormLogin from '@src/components/forms/form-login';
 import useSelectorMap from '@src/utils/hooks/use-selector-map';
-//import formLogin from '@src/store/form-login/actions';
 import services from '@src/services';
 
 function Login() {
@@ -14,10 +13,10 @@ function Login() {
 
   const callbacks = {
     onChangeForm: useCallback(async data => {
-      await services.actions.formLogin.change(data);
+      await services.store.formLogin.change(data);
     }, []),
     onSubmitForm: useCallback(async data => {
-      await services.actions.formLogin.submit(data);
+      await services.store.formLogin.submit(data);
       // @todo перейти на страницу, с которой был редирект или по умочланию в приватный раздел
       services.navigation.goPrivate();
     }, []),

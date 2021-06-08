@@ -1,31 +1,52 @@
 const isWeb = process.env.TARGET === 'web';
+const isProduction = process.env.NODE_ENV === 'production';
 
 let config = {
   // Сервис с методами API
   api: {
-    // Обычно хост на апи относительный и используется прокси для устранения CORS
-    baseURL: isWeb ? '' : 'http://example.front.ylab.io',
-    tokenHeader: 'X-Token',
-    defaultName: 'common',
+    default: {
+      // Обычно хост на апи относительный и используется прокси для устранения CORS
+      baseURL: isWeb ? '' : 'http://example.front.ylab.io',
+      //headers: {},
+      //auth:{} base auth
+    },
     // Прокси на апи, если режим разработки или ssr без nginx
     proxy: {
       '/api/**': {
         target: 'http://example.front.ylab.io',
-        secure: true,
+        secure: false,
         changeOrigin: true,
       },
     },
-    users: {
-      baseURL: 'http://example.front.ylab.io',
-      path: '',
+    // Настройки для конкретных модулей api по их названиям
+    endpoints:{
+      users: {
+
+      },
+      ssr: {
+        baseURL: ''
+      }
     }
   },
 
-  // Сервис действий и redux состояния
-  actions: {
-    log: true,
+  // Сервис состояний и действий (redux)
+  store: {
+    log: isWeb && !isProduction, // false,
     preloadState: {},
-    defaultName: 'base'
+    // Настройки для конкретных модулей состояния по их названиям
+    states: {
+      session: {
+        tokenHeader: 'X-Token'
+      },
+      articles: {},
+      // Абстрактные модули состояния отключены
+      base: {
+        disabled: true
+      },
+      crudList: {
+        disabled: true
+      }
+    }
   },
 
   // Сервис навигации

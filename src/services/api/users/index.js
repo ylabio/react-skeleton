@@ -1,34 +1,13 @@
 import params from '@src/utils/query-params';
-import Common from '@src/services/api/common';
+import CRUDEndpoint from '@src/services/api/crud';
+import mc from "merge-change";
 
-export default class Users extends Common {
-  /**
-   * @param api {AxiosInstance} Экземпляр библиотеки axios
-   * @param path {String} Путь в url по умолчанию
-   */
-  constructor(api, path = 'users') {
-    super(api, path);
-  }
+class UsersEndpoint extends CRUDEndpoint{
 
-  /**
-   * Выбор списка
-   * @param search {Object} Параметры поиска
-   * @param fields {String} Какие поля выбирать
-   * @param limit {Number} Количество
-   * @param skip {Number} Сдвиг выборки от 0
-   * @param path {String} Путь в url
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
-   */
-  getList({
-    search,
-    fields = 'items(*), count, allCount, newCount, confirmCount, rejectCount',
-    limit = 20,
-    skip = 0,
-    path,
-    ...other
-  }) {
-    return super.getList({ search, fields, limit, skip, path, ...other });
+  defaultConfig() {
+    return mc.patch(super.defaultConfig(), {
+      url: '/api/v1/users',
+    });
   }
 
   /**
@@ -36,7 +15,11 @@ export default class Users extends Common {
    * @return {Promise}
    */
   current({ fields = '*', ...other }) {
-    return this.http.get(`/api/v1/${this.path}/self`, { params: params({ fields, ...other }) });
+    return this.request({
+      method: 'GET',
+      url: `${this.config.url}/self`,
+      params: params({ fields, ...other })
+    });
   }
 
   /**
@@ -49,13 +32,12 @@ export default class Users extends Common {
    * @returns {Promise}
    */
   login({ login, password, remember = false, fields = '*', ...other }) {
-    // Mock request
-    // return Promise.resolve({ data: { result: { user: { _id: 123 }, token: '123456' } } });
-    return this.http.post(
-      `/api/v1/users/sign`,
-      { login, password, remember },
-      { params: params({ fields, ...other }) },
-    );
+    return this.request({
+      method: 'POST',
+      data: { login, password, remember },
+      url: `${this.config.url}/sign`,
+      params: params({ fields, ...other })
+    });
   }
 
   /**
@@ -63,14 +45,27 @@ export default class Users extends Common {
    * @returns {Promise}
    */
   logout() {
-    return this.http.delete(`/api/v1/users/sign`);
+    return this.request({
+      method: 'DELETE',
+      url: `${this.config.url}/sign`
+    });
   }
 
   registration({ profile = {}, ...rest }) {
-    return this.http.post(`/api/v1/users`, { profile, ...rest });
+    return this.request({
+      method: 'POST',
+      data: { profile, ...rest },
+      url: `${this.config.url}`,
+    });
   }
 
   resetPassword({ login }) {
-    return this.http.post(`/api/v1/users/password`, { login });
+    return this.request({
+      method: 'POST',
+      data: { login },
+      url: `${this.config.url}/password`,
+    });
   }
 }
+
+export default UsersEndpoint;

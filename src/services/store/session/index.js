@@ -1,5 +1,5 @@
 import mc from "merge-change";
-import BaseState from "@src/services/actions/base";
+import BaseState from "@src/services/store/base";
 import services from '@src/services';
 
 class SessionState extends BaseState {
@@ -15,13 +15,13 @@ class SessionState extends BaseState {
 
   async clear(logoutRequest = true, description = 'Сброс сессии') {
     if (logoutRequest) {
-      await services.api.endpoint('users').logout();
+      await services.api.get('users').logout();
     }
     if (services.env.IS_WEB) {
       localStorage.removeItem('token');
     }
     this.resetState({wait: false}, description);
-    services.api.setToken(undefined);
+    services.api.setHeader(this.config.tokenHeader, undefined);
   }
 
   /**
@@ -34,7 +34,7 @@ class SessionState extends BaseState {
       // Только для установки токена в http
       await this.save({token, wait: true, exists: false}, 'Установка токена из localStore');
       try {
-        const response = await services.api.endpoint('users').current({});
+        const response = await services.api.get('users').current({});
         await this.save({token, user: response.data.result, wait: false, exists: true}, 'Установка данных сессии от сервера');
       } catch (e) {
         await this.clear(false, 'Сброс сессии из-за ответа сервера');
@@ -50,7 +50,7 @@ class SessionState extends BaseState {
       localStorage.setItem('token', data.token);
     }
     this.updateState(mc.patch({exists: true}, data), description);
-    services.api.setToken(data.token);
+    services.api.setHeader(this.config.tokenHeader, data.token);
   }
 }
 

@@ -1,6 +1,6 @@
 import mc from "merge-change";
 import listToTree from "@src/utils/list-to-tree";
-import BaseState from "@src/services/actions/base";
+import BaseState from "@src/services/store/base";
 import services from '@src/services';
 
 class CategoriesState extends BaseState{
@@ -22,7 +22,7 @@ class CategoriesState extends BaseState{
   async load(params) {
     this.updateState({wait: true, errors: null}, 'Статус ожидания');
     try {
-      const response = await services.api.endpoint('categories').getList(params);
+      const response = await services.api.get('categories').findMany(params);
       const result = response.data.result;
       this.updateState(mc.patch(result, {roots: listToTree(result.items), wait: false, errors: null}), 'Категории загружены');
       return result;

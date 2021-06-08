@@ -4,7 +4,17 @@ import services from '@src/services';
 class BaseState {
 
   constructor(config) {
-    this.config = config;
+    this.config = mc.patch(this.defaultConfig(), config);
+  }
+
+  /**
+   * Конфигурация по умолчанию
+   * @return {Object}
+   */
+  defaultConfig(){
+    return {
+      name: 'base' //поменяется сервисом при создании экземпляра
+    };
   }
 
   /**
@@ -20,7 +30,7 @@ class BaseState {
    * @return {*}
    */
   currentState() {
-    return services.actions.store.getState()[this.config.name];
+    return services.store.redux.getState()[this.config.name];
   }
 
   /**
@@ -29,7 +39,7 @@ class BaseState {
    * @param description {String} Описание действия для логирования
    */
   updateState(update = {}, description = 'Обновление') {
-    services.actions.store.dispatch({
+    services.store.redux.dispatch({
       type: this.config.name,
       payload: mc.update(this.currentState(), update),
       description
@@ -42,7 +52,7 @@ class BaseState {
    * @param description {String} Описание действия для логирования
    */
   resetState(update = {}, description = 'Сброс') {
-    services.actions.store.dispatch({
+    services.store.redux.dispatch({
       type: this.config.name,
       payload: mc.update(this.defaultState(), update),
       description

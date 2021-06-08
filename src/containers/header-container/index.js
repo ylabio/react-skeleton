@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-//import session from '@src/store/session/actions';
 import detectActive from '@src/utils/detect-active';
 import LayoutHeader from '@src/components/layouts/layout-header';
 import MenuTop from '@src/components/menus/menu-top';
@@ -51,7 +50,7 @@ class HeaderContainer extends Component {
   };
 
   onClickLogout = () => {
-    services.actions.session.clear();
+    services.store.session.clear();
   };
 
   renderRight() {

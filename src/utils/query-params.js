@@ -16,6 +16,14 @@ export default function queryParams(params) {
       }
     }
   }
+  if (result.sort){
+    if (typeof result.sort !== 'string'){
+      result.sort = Object
+        .entries(result.sort)
+        .map(([key, value]) => `${value.order === 'asc' ? '' : '-'}${key}`)
+        .join(',') || undefined;
+    }
+  }
   const keys = Object.keys(result);
   for (const key of keys) {
     if (typeof result[key] === 'undefined') {

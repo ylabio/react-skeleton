@@ -4,11 +4,11 @@ import useSelectorMap from '@src/utils/hooks/use-selector-map';
 
 function ArticleList() {
   const select = useSelectorMap(state => ({
-    items: state.articles.items,
-    wait: state.articles.wait,
+    items: state.super?.items,
+    wait: state.super?.wait,
   }));
 
-  if (select.wait) {
+  if (select.wait || !select.items) {
     return <div>{select.wait && <i>Загрузка...</i>}</div>;
   } else {
     return (

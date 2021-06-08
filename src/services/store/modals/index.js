@@ -1,4 +1,4 @@
-import BaseState from "@src/services/actions/base";
+import BaseState from "@src/services/store/base";
 
 class ModalsState extends BaseState {
 

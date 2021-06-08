@@ -90,8 +90,8 @@ class Services {
    * Сервис действий и состояния приложения
    * @returns {ActionsService}
    */
-  get actions() {
-    return this.get('actions');
+  get store() {
+    return this.get('store');
   }
 
   /**
@@ -100,6 +100,14 @@ class Services {
    */
   get ssr() {
     return this.get('ssr');
+  }
+
+  /**
+   * Сервис спецификаций
+   * @returns {SpecService}
+   */
+  get spec() {
+    return this.get('spec');
   }
 }
 
