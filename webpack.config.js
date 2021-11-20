@@ -26,13 +26,15 @@ let config = {
   target: target,
   mode: process.env.NODE_ENV, // https://webpack.js.org/configuration/mode/
   context: path.join(__dirname, '/src'),
-  entry: [`index.${target}.js`],
+  entry: `index.${target}.js`,
   output: {
     path: path.join(__dirname, 'dist', target),
     filename: '[name].js', //'[name]-bundle-[chunkhash:8].js'
     // publicPath: `/dist/${target}/`,
     // pathinfo: true
     libraryTarget: isNode ? 'commonjs2' : undefined,
+    library: 'ReactApp',
+    clean: true,
   },
   plugins: [
     new ProgressBarPlugin(),
@@ -54,6 +56,10 @@ let config = {
       '@src': path.resolve(__dirname, './src'),
     },
   },
+  experiments: {
+    //asset: true
+  },
+
   module: {
     rules: [
       {
@@ -80,9 +86,7 @@ let config = {
       },
       {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        use: [
-          { loader: 'url-loader', options: { limit: 1000, name: 'assets/[contenthash].[ext]' } },
-        ],
+        type: 'asset'
       },
       {
         test: /\.jsx\.svg$/,
@@ -142,13 +146,10 @@ if (isProduction) {
 
 if (isDevelopment && isWeb) {
   config.devtool = 'inline-source-map'; // "#cheap-module-inline-source-map";
-  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  //config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.devServer = {
-    //compress: false,
-    contentBase: path.join(__dirname, 'dist', target),
+    static: path.join(__dirname, 'dist', target),
     port: appConfig.devServer.port,
-    publicPath: config.output.publicPath,
-    hot: true,
     historyApiFallback: true,
     proxy: appConfig.api.proxy,
   };
