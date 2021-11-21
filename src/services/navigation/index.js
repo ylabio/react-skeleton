@@ -23,12 +23,20 @@ class NavigationService {
     return this;
   }
 
+  get location() {
+    return this._history.location;
+  }
+
+  get action(){
+    return this._history.action;
+  }
+
   get history() {
     return this._history;
   }
 
-  get location() {
-    return this._history.location;
+  get basename(){
+    return this.config.basename;
   }
 
   push(path, state) {
@@ -43,12 +51,12 @@ class NavigationService {
     return this._history.go(n);
   }
 
-  goBack() {
-    return this._history.goBack();
+  back() {
+    return this._history.back();
   }
 
-  goForward() {
-    return this._history.goForward();
+  forward() {
+    return this._history.forward();
   }
 
   block(prompt) {

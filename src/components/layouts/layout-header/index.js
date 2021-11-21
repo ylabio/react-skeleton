@@ -9,9 +9,9 @@ import './style.less';
 class LayoutHeader extends Component {
   static propTypes = {
     children: PropTypes.node,
-    left: PropTypes.node,
-    right: PropTypes.node,
-    center: PropTypes.node,
+    left: PropTypes.element,
+    right: PropTypes.any,
+    center: PropTypes.element,
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   };
 

@@ -6,9 +6,11 @@ import LayoutPage from '@src/components/layouts/layout-page';
 import ArticleList from '@src/containers/article-list';
 import CategoryTree from '@src/containers/category-tree';
 import useInit from '@src/utils/hooks/use-init';
+import {useParams} from "react-router-dom";
 
 function Catalog(props) {
-  const categoryId = props.match.params.categoryId;
+
+  const {categoryId} = useParams();
 
   useInit(async () => {
     // Динамическое созадние endpoint к апи

@@ -6,15 +6,18 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router-dom';
+import {Provider as StoreProvider} from 'react-redux';
+import RouterProvider from "@src/containers/router-provider";
 import configDefault from 'config.js';
 import services from '@src/services';
 import App from '@src/app';
 import mc from 'merge-change';
 
 export async function start(tagId = 'app', config = {}) {
+  // Итоговый конфиг
   config = mc.merge(configDefault, config);
+
+  // Метод рендера по умочланию
   let render = ReactDOM.render;
 
   // Инициализация менеджера сервисов
@@ -23,22 +26,23 @@ export async function start(tagId = 'app', config = {}) {
   await services.init(config);
 
   // Если есть подготовленные данные от SSR
-  // if (services.ssr.hasPreloadState()) {
-  //   // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store через конфиг
-  //   services.configure({
-  //     store: {
-  //       preloadedState: await services.ssr.getPreloadState(),
-  //     },
-  //   });
-  //   render = ReactDOM.hydrate;
-  // }
+  if (services.ssr.hasPreloadState()) {
+    // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store через конфиг
+    services.configure({
+      store: {
+        preloadedState: await services.ssr.getPreloadState(),
+      },
+    });
+    // Гидрация DOM от SSR
+    render = ReactDOM.hydrate;
+  }
 
   render(
-    <Provider store={services.store.redux}>
-      <Router history={services.navigation.history}>
+    <StoreProvider store={services.store.redux}>
+      <RouterProvider navigation={services.navigation}>
         <App/>
-      </Router>
-    </Provider>,
+      </RouterProvider>
+    </StoreProvider>,
     document.getElementById(tagId),
   );
 }

@@ -8,8 +8,8 @@ import React from 'react';
 import path from 'path';
 import { parentPort, workerData } from 'worker_threads';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { Provider as StoreProvider } from 'react-redux';
+import RouterProvider from "@src/containers/router-provider";
 import { Helmet } from 'react-helmet';
 import services from '@src/services';
 import config from 'config.js';
@@ -37,11 +37,11 @@ import insertText from '@src/utils/insert-text';
 
   // JSX как у клиента
   const jsx = (
-    <Provider store={services.store.redux}>
-      <Router history={services.navigation.history}>
+    <StoreProvider store={services.store.redux}>
+      <RouterProvider navigation={services.navigation}>
         <App />
-      </Router>
-    </Provider>
+      </RouterProvider>
+    </StoreProvider>
   );
 
   // Обертка от loadable-components для корректной подгрузки чанков с динамическим импортом

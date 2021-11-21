@@ -1,10 +1,11 @@
-import React, { Fragment } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import React, {Fragment} from 'react';
+import {Route, Routes} from 'react-router-dom';
+import {Helmet} from 'react-helmet';
 import loadable from '@loadable/component';
-import RoutePrivate from '@src/containers/route-private';
 import Modals from '@src/app/modals';
 import Loading from '@src/app/loading';
+import RequireAuth from "@src/containers/require-auth";
+import HeaderContainer from "@src/containers/header-container";
 
 // import Main from '@src/app/main';
 // import Login from '@src/app/login';
@@ -14,28 +15,30 @@ import Loading from '@src/app/loading';
 // import NotFound from '@src/app/not-found';
 
 // Динамический импорт. При сборке деление на чанки
-const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
-const Login = loadable(() => import('@src/app/login'), { fallback: <Loading /> });
-const About = loadable(() => import('@src/app/about'), { fallback: <Loading /> });
-const Catalog = loadable(() => import('@src/app/catalog'), { fallback: <Loading /> });
-const Private = loadable(() => import('@src/app/private'), { fallback: <Loading /> });
-const NotFound = loadable(() => import('@src/app/not-found'), { fallback: <Loading /> });
+const Main = loadable(() => import('@src/app/main'), {fallback: <Loading/>});
+const Login = loadable(() => import('@src/app/login'), {fallback: <Loading/>});
+const About = loadable(() => import('@src/app/about'), {fallback: <Loading/>});
+const Catalog = loadable(() => import('@src/app/catalog'), {fallback: <Loading/>});
+const Private = loadable(() => import('@src/app/private'), {fallback: <Loading/>});
+const NotFound = loadable(() => import('@src/app/not-found'), {fallback: <Loading/>});
 
 function App() {
+
   return (
     <Fragment>
       <Helmet>
         <title>Example</title>
       </Helmet>
-      <Switch>
-        <Route path="/" exact={true} component={Main} />
-        <Route path="/catalog/:categoryId?" component={Catalog} />
-        <Route path="/about" component={About} />
-        <Route path="/login" component={Login} />
-        <RoutePrivate path="/private" failpath="/login" component={Private} />
-        <Route component={NotFound} />
-      </Switch>
-      <Modals />
+      <Routes>
+        <Route path="/" exact={true} element={<Main/>}/>
+        <Route path="/catalog" element={<Catalog/>}/>
+        <Route path="/catalog/:categoryId" element={<Catalog/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/private/*" element={<RequireAuth redirect="/login"><Private/></RequireAuth>}/>
+        <Route path='*' element={<NotFound/>}/>
+      </Routes>
+      <Modals/>
     </Fragment>
   );
 }
