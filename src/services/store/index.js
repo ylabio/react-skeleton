@@ -1,5 +1,6 @@
 import * as modules from './exports.js';
 import mc from 'merge-change';
+
 /**
  * Хранилище состояния приложения
  */
@@ -72,6 +73,13 @@ class StoreService {
    * @param [description]
    */
   setState(newState, description = 'Устанока') {
+    if (this.config.log) {
+      console.group(`%c${'store.setState'} %c${description}`, `color: ${'#777'}; font-weight: normal`, `color: ${'#333'}; font-weight: bold`);
+      console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
+      console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
+      console.groupEnd();
+    }
+
     this.state = newState;
     // Оповещаем всех подписчиков об изменении стейта
     for (const lister of this.listners) {
@@ -87,18 +95,21 @@ class StoreService {
   get(name) {
     return this.modules[name];
   }
+
   /**
    * @return {ArticlesState}
    */
   get articles() {
     return this.get('articles');
   }
+
   /**
    * @return {CategoriesState}
    */
   get categories() {
     return this.get('categories');
   }
+
   /**
    * @return {ModalsState}
    */
