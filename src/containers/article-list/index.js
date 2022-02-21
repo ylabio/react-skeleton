@@ -4,8 +4,8 @@ import useSelector from "@src/utils/hooks/use-selector";
 
 function ArticleList() {
   const select = useSelector(state => ({
-    items: state.super?.items,
-    wait: state.super?.wait,
+    items: state.articles.items,
+    wait: state.articles.wait,
   }));
 
   if (select.wait || !select.items) {

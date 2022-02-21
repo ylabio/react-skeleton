@@ -1,11 +1,11 @@
 import mc from "merge-change";
-import CRUDListState from "@src/services/store/crud-list";
+import ListParamsState from "@src/services/store/list-params";
 
 /**
  * Модуль товаров
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список товаров.
  */
-class ArticlesState extends CRUDListState {
+class ArticlesState extends ListParamsState {
 
   defaultConfig(){
     return mc.patch(super.defaultConfig(), {
@@ -13,8 +13,8 @@ class ArticlesState extends CRUDListState {
     });
   }
 
-  defaultState() {
-    return mc.patch(super.defaultState(), {
+  initState() {
+    return mc.patch(super.initState(), {
       params: {
         fields: `items(*,category(title),maidIn(title)), count`,
         filter: {

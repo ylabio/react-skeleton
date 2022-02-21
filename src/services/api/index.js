@@ -64,6 +64,15 @@ class ApiService {
   }
 
   /**
+   * Запрос
+   * @return {*}
+   */
+  request(options) {
+    // Учитываются опции модуля и переданные в аргументах
+    return this.axios.request(options);
+  }
+
+  /**
    * Endpoint по названию
    * @param name {String} Название модуля endpoint
    * @returns {BaseEndpoint}

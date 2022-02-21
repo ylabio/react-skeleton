@@ -1,11 +1,11 @@
 import mc from "merge-change";
-import BaseState from "@src/services/store/base";
+import StoreModule from "@src/services/store/module";
 
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список.
  */
-class CRUDListState extends BaseState {
+class ListParamsState extends StoreModule {
 
   constructor(config, services) {
     super(config, services);
@@ -18,7 +18,7 @@ class CRUDListState extends BaseState {
    * @return {Object}
    */
   defaultConfig(){
-    return mc.patch(super.defaultState(), {
+    return mc.patch(super.defaultConfig(), {
       apiEndpoint: 'crud' // абстрактный endpoint
     });
   }
@@ -27,7 +27,7 @@ class CRUDListState extends BaseState {
    * Начальное состояние
    * @return {Object}
    */
-  defaultState() {
+  initState() {
     return {
       items: [],
       count: 0,
@@ -76,7 +76,7 @@ class CRUDListState extends BaseState {
    */
   async initParams(params = {}) {
     // В основе начальные параметры
-    const defaultParams = this.defaultState().params;
+    const defaultParams = this.initState().params;
     // Параметры из URL (query string)
     const queryParams = this.validateParams(this.services.navigation.getSearchParams());
     // Сливаем все параметры
@@ -97,7 +97,7 @@ class CRUDListState extends BaseState {
   async resetParams(params = {}, options = {}) {
     return this.setParams(
       // мержим параметры с начальными
-      mc.merge(this.defaultState().params, params),
+      mc.merge(this.initState().params, params),
       // мержить параметры с текущими и загружать данные не надо, но надо сбросить данные
       mc.merge({merge: false, remember: 'replace', load: false, clear: true}, options)
     );
@@ -118,7 +118,7 @@ class CRUDListState extends BaseState {
     try {
       // 1. ПАРАМЕТРЫ
       // Новые параметры (нужно ли учитывать текущие?)
-      let newParams = options.merge ? mc.merge(this.currentState().params, params) : params;
+      let newParams = options.merge ? mc.merge(this.getState().params, params) : params;
       if (options.clear) {
         // Сброс текущих данных, установка новых параметров
         // Если данные будут загружаться, то установка состояние ожидания
@@ -172,7 +172,7 @@ class CRUDListState extends BaseState {
    */
   validateParams(params){
     if (!this.validator(params)){
-      params = this.defaultState().params;
+      params = this.initState().params;
     }
     return params;
   }
@@ -193,4 +193,4 @@ class CRUDListState extends BaseState {
   }
 }
 
-export default CRUDListState;
+export default ListParamsState;

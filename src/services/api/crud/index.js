@@ -1,7 +1,7 @@
 import params from '@src/utils/query-params';
-import BaseEndpoint from "@src/services/api/base";
+import Endpoint from "@src/services/api/endpoint.js";
 
-class CRUDEndpoint extends BaseEndpoint{
+class CRUDEndpoint extends Endpoint{
 
   /**
    * Выбор списка

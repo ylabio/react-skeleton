@@ -88,7 +88,7 @@ class Services {
 
   /**
    * Сервис действий и состояния приложения
-   * @returns {ActionsService}
+   * @returns {StoreService}
    */
   get store() {
     return this.get('store');

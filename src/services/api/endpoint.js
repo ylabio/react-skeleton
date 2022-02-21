@@ -3,7 +3,7 @@ import mc from "merge-change";
 /**
  * Базовый (абстрактный) класс точки доступа к АПИ
  */
-class BaseEndpoint {
+class Endpoint {
 
   constructor(config, services) {
     this.services = services;
@@ -35,4 +35,4 @@ class BaseEndpoint {
   }
 }
 
-export default BaseEndpoint;
+export default Endpoint;

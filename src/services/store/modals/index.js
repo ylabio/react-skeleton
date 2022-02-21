@@ -1,8 +1,8 @@
-import BaseState from "@src/services/store/base";
+import StoreModule from "@src/services/store/module";
 
-class ModalsState extends BaseState {
+class ModalsState extends StoreModule {
 
-  defaultState() {
+  initState() {
     return {
       show: false,
       name: null,
@@ -24,7 +24,7 @@ class ModalsState extends BaseState {
   }
 
   async close(result) {
-    const state = this.currentState();
+    const state = this.getState();
     if (state.resolve) {
       state.resolve(result);
     }

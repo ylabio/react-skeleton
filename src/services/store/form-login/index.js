@@ -1,8 +1,8 @@
-import BaseState from "@src/services/store/base";
+import StoreModule from "@src/services/store/module";
 
-class FormLoginState extends BaseState {
+class FormLoginState extends StoreModule {
 
-  defaultState() {
+  initState() {
     return {
       data: {
         login: '',

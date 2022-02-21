@@ -1,9 +1,9 @@
 import mc from "merge-change";
-import BaseState from "@src/services/store/base";
+import StoreModule from "@src/services/store/module";
 
-class SessionState extends BaseState {
+class SessionState extends StoreModule {
 
-  defaultState() {
+  initState() {
     return {
       user: {},
       token: null, // Опционально, если используется в http.js

@@ -31,13 +31,6 @@ let config = {
         tokenHeader: 'X-Token'
       },
       articles: {},
-      // Абстрактные модули состояния отключены
-      base: {
-        disabled: true
-      },
-      crudList: {
-        disabled: true
-      }
     }
   },
 
