@@ -6,9 +6,8 @@
  */
 import React from 'react';
 import path from 'path';
-import {parentPort, workerData} from 'worker_threads';
+// import {parentPort, workerData} from 'worker_threads';
 import {ChunkExtractor, ChunkExtractorManager} from '@loadable/server';
-import {Provider as StoreProvider} from 'react-redux';
 import RouterProvider from "@src/containers/router-provider";
 import {Helmet} from 'react-helmet';
 import Services from '@src/services';
@@ -18,7 +17,7 @@ import template from './index.html';
 import insertText from '@src/utils/insert-text';
 import ServicesProvider from "@src/services/provider";
 
-(async () => {
+export default async (params) => {
   // Инициализация менеджера сервисов
   // Через него получаем сервисы ssr, api, navigation, store и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
@@ -28,11 +27,11 @@ import ServicesProvider from "@src/services/provider";
   services.configure({
     navigation: {
       // Точка входа для навигации (какую страницу рендерить)
-      initialEntries: [workerData.url],
+      initialEntries: [params.url],
     },
     ssr: {
       // Все параметры рендера от воркера
-      ...workerData,
+      ...params,
     },
   });
 
@@ -82,11 +81,5 @@ import ServicesProvider from "@src/services/provider";
   out = insertText.before(out, '<div id="app">', html);
   out = insertText.after(out, '</body>', scriptState + scriptTags);
 
-  parentPort.postMessage({out, state, keys, status: 200, html});
-})();
-
-process.on('unhandledRejection', function (reason /*, p*/) {
-  parentPort.postMessage({out: `ERROR: ${reason.toString()}`, status: 500});
-  console.error(reason);
-  process.exit(1);
-});
+  return {out, state, keys, status: 200, html};
+}

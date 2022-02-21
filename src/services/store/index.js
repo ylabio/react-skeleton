@@ -40,7 +40,9 @@ class StoreService {
       // Экземпляр модуля
       this.modules[config.name] = new constructor(config, this.services);
       // Состояние по умочланию от модуля
-      this.state[config.name] = this.modules[config.name].initState();
+      if (!this.state[config.name]) {
+        this.state[config.name] = this.modules[config.name].initState();
+      }
     }
   }
 

@@ -14,7 +14,7 @@ import App from '@src/app';
 import mc from 'merge-change';
 import ServicesProvider from "@src/services/provider";
 
-export async function start(tagId = 'app', config = {}) {
+(async function (tagId = 'app', config = {}){
   // Итоговый конфиг
   config = mc.merge(configDefault, config);
 
@@ -28,12 +28,8 @@ export async function start(tagId = 'app', config = {}) {
 
   // Если есть подготовленные данные от SSR
   if (services.ssr.hasPreloadState()) {
-    // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store через конфиг
-    services.configure({
-      store: {
-        preloadedState: await services.ssr.getPreloadState(),
-      },
-    });
+    // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store
+    services.store.setState(await services.ssr.getPreloadState());
     // Гидрация DOM от SSR
     render = ReactDOM.hydrate;
   }
@@ -46,4 +42,4 @@ export async function start(tagId = 'app', config = {}) {
     </ServicesProvider>,
     document.getElementById(tagId),
   );
-}
+})();

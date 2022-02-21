@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const httpProxy = require('http-proxy');
 const config = require('./src/config.js');
 const uniqid = require('uniqid');
+const {ReactApp} = require('./dist/node/main.js');
 
 const app = express();
 
@@ -60,11 +61,12 @@ app.get('/ssr/state/:key', async (req, res) => {
 
 // Все остальные запросы - рендер страницы
 app.get('/*', async (req, res) => {
+  console.log(req.method, req.url);
   console.time('render');
   try {
     const stateKey = uniqid();
     const stateSecret = uniqid(stateKey);
-    const result = await render({
+    const result = await ReactApp({
       method: req.method,
       url: req.url,
       headers: req.headers,
@@ -89,6 +91,7 @@ app.get('/*', async (req, res) => {
     res.end(`ERROR ${e.toString()}`);
   }
   console.timeEnd('render');
+
 });
 app.listen(config.renderServer.port, config.renderServer.host);
 
@@ -98,20 +101,20 @@ app.listen(config.renderServer.port, config.renderServer.host);
  * @param params
  * @returns {Promise<Object>}
  */
-function render(params) {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker('./dist/node/main.js', {
-      workerData: params,
-      stdout: false,
-      stderr: false,
-    });
-    worker.on('message', resolve);
-    worker.on('error', reject);
-    worker.on('exit', code => {
-      if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
-    });
-  });
-}
+// function render(params) {
+//   return new Promise((resolve, reject) => {
+//     const worker = new Worker('./dist/node/main.js', {
+//       workerData: params,
+//       stdout: false,
+//       stderr: false,
+//     });
+//     worker.on('message', resolve);
+//     worker.on('error', reject);
+//     worker.on('exit', code => {
+//       if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+//     });
+//   });
+// }
 
 process.on('unhandledRejection', function (reason /*, p*/) {
   console.error(reason);

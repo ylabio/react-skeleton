@@ -32,10 +32,14 @@ let config = {
     filename: '[name].js', //'[name]-bundle-[chunkhash:8].js'
     // publicPath: `/dist/${target}/`,
     // pathinfo: true
-    libraryTarget: isNode ? 'commonjs2' : undefined,
-    library: 'ReactApp',
+    library: {
+      name: 'ReactApp',
+      type: isNode ? 'commonjs2' : 'window',
+      export: 'default'
+    },
     clean: true,
   },
+
   plugins: [
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
@@ -131,8 +135,9 @@ if (isWeb) {
     }),
   );
 }
-// if (isNode) {
-// }
+if (isNode) {
+  //config.devtool = 'source-map';
+}
 
 if (isProduction) {
 }
