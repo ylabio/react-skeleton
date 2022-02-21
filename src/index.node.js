@@ -59,7 +59,7 @@ import ServicesProvider from "@src/services/provider";
   const keys = services.ssr.getPrepareKeys();
 
   // Состояние
-  const state = services.store.redux.getState();
+  const state = services.store.getState();
 
   // В HTML добавляем ключ всего состояния, которое клиент подгрузит сам по ключу
   const scriptState = `<script>window.stateKey="${services.ssr.getStateKey()}"</script>`;

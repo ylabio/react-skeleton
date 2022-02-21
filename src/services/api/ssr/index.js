@@ -1,6 +1,6 @@
-import BaseEndpoint from "@src/services/api/base";
+import Endpoint from "@src/services/api/endpoint";
 
-class SsrEndpoint extends BaseEndpoint{
+class SsrEndpoint extends Endpoint{
 
   getPreloadState({ key }) {
     // В запросе передаётся ключ состояния

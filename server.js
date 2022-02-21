@@ -33,11 +33,11 @@ proxy.on('error', function (err, req, res) {
   res.end(err.toString());
 });
 
-for (const path of Object.keys(config.api.proxy)) {
-  console.log(`Proxy ${path} => ${config.api.proxy[path].target}`);
+for (const path of Object.keys(config.devServer.proxy)) {
+  console.log(`Proxy ${path} => ${config.devServer.proxy[path].target}`);
   app.all(path, async (req, res) => {
     try {
-      return proxy.web(req, res, config.api.proxy[path]);
+      return proxy.web(req, res, config.devServer.proxy[path]);
     } catch (e) {
       console.error(e);
       res.send(500);
