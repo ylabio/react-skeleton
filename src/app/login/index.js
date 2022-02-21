@@ -3,13 +3,15 @@ import LayoutPage from '@src/components/layouts/layout-page';
 import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
 import FormLogin from '@src/components/forms/form-login';
-import useSelectorMap from '@src/utils/hooks/use-selector-map';
-import services from '@src/services';
+import useSelector from "@src/utils/hooks/use-selector";
+import useServices from "@src/utils/hooks/use-services";
 
 function Login() {
-  const select = useSelectorMap(state => ({
+  const select = useSelector(state => ({
     formLogin: state.formLogin,
   }));
+
+  const services = useServices();
 
   const callbacks = {
     onChangeForm: useCallback(async data => {

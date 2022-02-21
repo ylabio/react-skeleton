@@ -5,13 +5,13 @@ import LayoutHeader from '@src/components/layouts/layout-header';
 import MenuTop from '@src/components/menus/menu-top';
 import Button from '@src/components/elements/button';
 import Logo from '@src/components/elements/logo';
-import services from "@src/services";
-import useSelectorMap from "@src/utils/hooks/use-selector-map";
 import {useLocation} from "react-router-dom";
+import useSelector from "@src/utils/hooks/use-selector";
+import useServices from "@src/utils/hooks/use-services";
 
 function HeaderContainer(props) {
 
-  const select = useSelectorMap(state => ({
+  const select = useSelector(state => ({
     session: state.session
   }));
 
@@ -31,6 +31,7 @@ function HeaderContainer(props) {
     changeItems(detectActive(items, location));
   }, [location])
 
+  const services = useServices();
 
   const callbacks = {
     onClickLogin: useCallback(() => {

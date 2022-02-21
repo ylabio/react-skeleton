@@ -1,9 +1,12 @@
 import React, { Fragment, useCallback } from 'react';
 import Button from '@src/components/elements/button';
 import LayoutModal from '@src/components/layouts/layout-modal';
-import services from "@src/services";
+import useServices from "@src/utils/hooks/use-services";
 
 function Info(props) {
+
+  const services = useServices();
+
   const callbacks = {
     onCancel: useCallback(async () => {
       await services.store.modals.close('Cancel value');

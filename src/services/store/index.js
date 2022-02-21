@@ -8,7 +8,8 @@ import * as modules from './export.js';
  * Подмодулями реализуется вложенное именованное состояние и методы (действия) работы с ним
  */
 class ActionsService {
-  init(config) {
+  init(config, services) {
+    this.services = services;
     this.config = config;
     this._states = {};
     this._reducers = {};
@@ -48,7 +49,7 @@ class ActionsService {
       if (!config.proto) config.proto = config.name;
       if (!modules[config.proto]) throw new Error(`Not found base state "${config.name}"`);
       const constructor = modules[config.proto];
-      this._states[config.name] = new constructor(config);
+      this._states[config.name] = new constructor(config, this.services);
       const initState = this._states[config.name].defaultState();
       this._reducers[config.name] = reducer(config.name, initState);
       if (refreshStore && this._redux) {
@@ -92,6 +93,14 @@ class ActionsService {
         }
       }
     }
+  }
+
+  getState(){
+    return this._redux.getState();
+  }
+
+  subscribe(callback){
+    return this._redux.subscribe(callback);
   }
 
   /**

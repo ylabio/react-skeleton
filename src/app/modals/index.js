@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
 import * as modals from './export.js';
-import useSelectorMap from '@src/utils/hooks/use-selector-map';
-import services from "@src/services";
+import useSelector from "@src/utils/hooks/use-selector";
+import useServices from "@src/utils/hooks/use-services";
 
 function Modals() {
-  const select = useSelectorMap(state => ({
+  const select = useSelector(state => ({
     modals: state.modals,
   }));
+
+  const services = useServices();
 
   const callbacks = {
     /**

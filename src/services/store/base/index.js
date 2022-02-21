@@ -1,9 +1,10 @@
 import mc from "merge-change";
-import services from '@src/services';
 
 class BaseState {
 
-  constructor(config) {
+  constructor(config, services) {
+    this.services = services;
+    this.store = this.services.store;
     this.config = mc.patch(this.defaultConfig(), config);
   }
 
@@ -30,7 +31,7 @@ class BaseState {
    * @return {*}
    */
   currentState() {
-    return services.store.redux.getState()[this.config.name];
+    return this.store.redux.getState()[this.config.name];
   }
 
   /**
@@ -39,7 +40,7 @@ class BaseState {
    * @param description {String} Описание действия для логирования
    */
   updateState(update = {}, description = 'Обновление') {
-    services.store.redux.dispatch({
+    this.store.redux.dispatch({
       type: this.config.name,
       payload: mc.update(this.currentState(), update),
       description
@@ -52,7 +53,7 @@ class BaseState {
    * @param description {String} Описание действия для логирования
    */
   resetState(update = {}, description = 'Сброс') {
-    services.store.redux.dispatch({
+    this.store.redux.dispatch({
       type: this.config.name,
       payload: mc.update(this.defaultState(), update),
       description

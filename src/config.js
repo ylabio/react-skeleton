@@ -10,14 +10,6 @@ let config = {
       //headers: {},
       //auth:{} base auth
     },
-    // Прокси на апи, если режим разработки или ssr без nginx
-    proxy: {
-      '/api/**': {
-        target: 'http://example.front.ylab.io',
-        secure: false,
-        changeOrigin: true,
-      },
-    },
     // Настройки для конкретных модулей api по их названиям
     endpoints:{
       users: {
@@ -58,6 +50,14 @@ let config = {
   // HTTP сервер при разработки (локальный для горячего обновления фронта)
   devServer: {
     port: 8031,
+    // Прокси на апи, если режим разработки или ssr без nginx
+    proxy: {
+      '/api/**': {
+        target: 'http://example.front.ylab.io',
+        secure: false,
+        changeOrigin: true,
+      },
+    },
   },
 
   // HTTP сервер для рендера

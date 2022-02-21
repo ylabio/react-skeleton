@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
-import useSelectorMap from '@src/utils/hooks/use-selector-map';
 import useInit from '@src/utils/hooks/use-init';
-import services from "@src/services";
+import useSelector from "@src/utils/hooks/use-selector";
+import useServices from "@src/utils/hooks/use-services";
 
 function RequireAuth(props) {
 
   // Сессия из состояния
-  const select = useSelectorMap(state => ({
+  const select = useSelector(state => ({
     session: state.session,
   }));
+
+  const services = useServices();
 
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации

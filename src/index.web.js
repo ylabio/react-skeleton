@@ -9,9 +9,10 @@ import ReactDOM from 'react-dom';
 import {Provider as StoreProvider} from 'react-redux';
 import RouterProvider from "@src/containers/router-provider";
 import configDefault from 'config.js';
-import services from '@src/services';
+import Services from '@src/services';
 import App from '@src/app';
 import mc from 'merge-change';
+import ServicesProvider from "@src/services/provider";
 
 export async function start(tagId = 'app', config = {}) {
   // Итоговый конфиг
@@ -23,7 +24,7 @@ export async function start(tagId = 'app', config = {}) {
   // Инициализация менеджера сервисов
   // Через него получаем сервисы api, navigation, store и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
-  await services.init(config);
+  const services = await new Services().init(config);
 
   // Если есть подготовленные данные от SSR
   if (services.ssr.hasPreloadState()) {
@@ -38,11 +39,11 @@ export async function start(tagId = 'app', config = {}) {
   }
 
   render(
-    <StoreProvider store={services.store.redux}>
+    <ServicesProvider services={services}>
       <RouterProvider navigation={services.navigation}>
         <App/>
       </RouterProvider>
-    </StoreProvider>,
+    </ServicesProvider>,
     document.getElementById(tagId),
   );
 }

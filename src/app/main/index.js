@@ -5,9 +5,12 @@ import HeaderContainer from '@src/containers/header-container';
 import LayoutContent from '@src/components/layouts/layout-content';
 import Button from '@src/components/elements/button';
 import Accordion from '@src/components/elements/accordion';
-import services from "@src/services";
+import useServices from "@src/utils/hooks/use-services";
 
 function Main() {
+
+  const services = useServices();
+
   const callbacks = {
     showInfo: useCallback(async () => {
       const result = await services.store.modals.open('info', {

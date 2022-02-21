@@ -9,7 +9,8 @@ import mc from "merge-change";
  */
 class ApiService {
 
-  async init(config) {
+  async init(config, services) {
+    this.services = services;
     this.config = config;
     this._axios = axios.create(this.config.default);
     // Object.entries(this.config.default).forEach(([name, value]) => {
@@ -37,7 +38,7 @@ class ApiService {
     if (!config.proto) config.proto = config.name;
     if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
     const Constructor = endpoints[config.proto];
-    this.endpoints[config.name] = new Constructor(config);
+    this.endpoints[config.name] = new Constructor(config, this.services);
     return this.endpoints[config.name];
   }
 

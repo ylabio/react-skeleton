@@ -5,7 +5,8 @@ import Ajv from "ajv";
  * На текущий момент инкассирует настройку библиотеки ajv для валидации по JSONSchema
  */
 class SpecService {
-  async init(config) {
+  async init(config, services) {
+    this.services = services;
     this.config = config;
     this.ajv = new Ajv({
       //strict: false,

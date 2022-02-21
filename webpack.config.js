@@ -89,13 +89,6 @@ let config = {
         type: 'asset'
       },
       {
-        test: /\.jsx\.svg$/,
-        use: [
-          { loader: 'babel-loader' },
-          { loader: 'react-svg-loader', options: { jsx: true /*true outputs JSX tags*/ } },
-        ],
-      },
-      {
         test: /\.html$/,
         use: [
           {
@@ -151,7 +144,7 @@ if (isDevelopment && isWeb) {
     static: path.join(__dirname, 'dist', target),
     port: appConfig.devServer.port,
     historyApiFallback: true,
-    proxy: appConfig.api.proxy,
+    proxy: appConfig.devServer.proxy,
   };
 }
 

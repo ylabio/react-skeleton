@@ -1,8 +1,8 @@
 import {renderToString} from 'react-dom/server';
-import services from '@src/services';
 
 class SSRService {
-  init(config) {
+  init(config, services) {
+    this.services = services;
     this.config = config;
     this.promises = [];
     this.keys = {};
@@ -97,7 +97,7 @@ class SSRService {
    * @returns {String}
    */
   getStateKey() {
-    if (services.env.IS_WEB) {
+    if (this.services.env.IS_WEB) {
       return window.stateKey;
     } else {
       return this.config.stateKey;
@@ -110,7 +110,7 @@ class SSRService {
    * @returns {Boolean}
    */
   hasPreloadState() {
-    return services.env.IS_WEB && !!window.stateKey;
+    return this.services.env.IS_WEB && !!window.stateKey;
   }
 
   /**
@@ -119,7 +119,7 @@ class SSRService {
    * @returns {Promise<*>}
    */
   async getPreloadState() {
-    const ssrApi = services.api.get('ssr');
+    const ssrApi = this.services.api.get('ssr');
     const response = await ssrApi.getPreloadState({key: this.getStateKey()});
     // Ключ исполненных prepare()
     if (response.data.keys){

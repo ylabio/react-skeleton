@@ -1,6 +1,5 @@
 import mc from "merge-change";
 import BaseState from "@src/services/store/base";
-import services from '@src/services';
 
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
@@ -8,10 +7,10 @@ import services from '@src/services';
  */
 class CRUDListState extends BaseState {
 
-  constructor(config) {
-    super(config);
-    this.validator = services.spec.createValidator(this.schemaParams());
-    this.api = services.api.get(this.config.apiEndpoint);
+  constructor(config, services) {
+    super(config, services);
+    this.validator = this.services.spec.createValidator(this.schemaParams());
+    this.api = this.services.api.get(this.config.apiEndpoint);
   }
 
   /**
@@ -79,7 +78,7 @@ class CRUDListState extends BaseState {
     // В основе начальные параметры
     const defaultParams = this.defaultState().params;
     // Параметры из URL (query string)
-    const queryParams = this.validateParams(services.navigation.getSearchParams());
+    const queryParams = this.validateParams(this.services.navigation.getSearchParams());
     // Сливаем все параметры
     const newParams = mc.merge(defaultParams, queryParams, params);
     // Установка параметров и загрузка данных по ним
@@ -138,7 +137,7 @@ class CRUDListState extends BaseState {
       }
       //  Сохранить параметры в location.search
       if (options.remember) {
-        services.navigation.setSearchParams(newParams, options.remember === 'push');
+        this.services.navigation.setSearchParams(newParams, options.remember === 'push');
       }
 
       // 2. ДАННЫЕ
@@ -191,18 +190,6 @@ class CRUDListState extends BaseState {
       sort: params.sort,
       filter: params.filter,
     };
-  }
-
-  async createItem(item){
-
-  }
-
-  async updateItem(id, item){
-
-  }
-
-  async deleteItem(id){
-
   }
 }
 

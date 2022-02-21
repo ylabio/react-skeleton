@@ -6,22 +6,23 @@
  */
 import React from 'react';
 import path from 'path';
-import { parentPort, workerData } from 'worker_threads';
-import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import { Provider as StoreProvider } from 'react-redux';
+import {parentPort, workerData} from 'worker_threads';
+import {ChunkExtractor, ChunkExtractorManager} from '@loadable/server';
+import {Provider as StoreProvider} from 'react-redux';
 import RouterProvider from "@src/containers/router-provider";
-import { Helmet } from 'react-helmet';
-import services from '@src/services';
-import config from 'config.js';
+import {Helmet} from 'react-helmet';
+import Services from '@src/services';
+import configDefault from '@src/config.js';
 import App from '@src/app';
 import template from './index.html';
 import insertText from '@src/utils/insert-text';
+import ServicesProvider from "@src/services/provider";
 
 (async () => {
   // Инициализация менеджера сервисов
   // Через него получаем сервисы ssr, api, navigation, store и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
-  await services.init(config);
+  const services = await new Services().init(configDefault);
 
   // Корректировка общей конфигурации параметрами запроса (передаются от главного процесса)
   services.configure({
@@ -37,16 +38,16 @@ import insertText from '@src/utils/insert-text';
 
   // JSX как у клиента
   const jsx = (
-    <StoreProvider store={services.store.redux}>
+    <ServicesProvider services={services}>
       <RouterProvider navigation={services.navigation}>
-        <App />
+        <App/>
       </RouterProvider>
-    </StoreProvider>
+    </ServicesProvider>
   );
 
   // Обертка от loadable-components для корректной подгрузки чанков с динамическим импортом
   const statsFile = path.resolve('./dist/node/loadable-stats.json');
-  const extractor = new ChunkExtractor({ statsFile });
+  const extractor = new ChunkExtractor({statsFile});
   const jsxExtractor = extractor.collectChunks(
     <ChunkExtractorManager extractor={extractor}>{jsx}</ChunkExtractorManager>,
   );
@@ -65,7 +66,7 @@ import insertText from '@src/utils/insert-text';
 
   // Метаданные рендера
   const helmetData = Helmet.renderStatic();
-  const baseTag = `<base href="${config.navigation.basename}">`;
+  const baseTag = `<base href="${configDefault.navigation.basename}">`;
   const titleTag = helmetData.title.toString();
   const metaTag = helmetData.meta.toString();
   const linkTags = helmetData.link.toString();
@@ -81,11 +82,11 @@ import insertText from '@src/utils/insert-text';
   out = insertText.before(out, '<div id="app">', html);
   out = insertText.after(out, '</body>', scriptState + scriptTags);
 
-  parentPort.postMessage({ out, state, keys, status: 200, html });
+  parentPort.postMessage({out, state, keys, status: 200, html});
 })();
 
 process.on('unhandledRejection', function (reason /*, p*/) {
-  parentPort.postMessage({ out: `ERROR: ${reason.toString()}`, status: 500 });
+  parentPort.postMessage({out: `ERROR: ${reason.toString()}`, status: 500});
   console.error(reason);
   process.exit(1);
 });

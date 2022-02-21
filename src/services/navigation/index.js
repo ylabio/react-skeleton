@@ -8,7 +8,8 @@ import mc from 'merge-change';
  * Учитывает режим работы для SSR
  */
 class NavigationService {
-  init(config) {
+  init(config, services) {
+    this.services = services;
     this.config = config;
     this._history = {};
     switch (this.config.type) {

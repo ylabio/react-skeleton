@@ -1,34 +1,33 @@
 import React from 'react';
-import useSelectorMap from '@src/utils/hooks/use-selector-map';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Tree from '@src/components/elements/tree';
-import ssrPlaceholder from '@src/utils/ssr-placeholder';
+import useSelector from "@src/utils/hooks/use-selector";
+import useServices from "@src/utils/hooks/use-services";
 
-const CategoryTree = ssrPlaceholder(
-  // WEB
-  props => {
+function CategoryTree(props) {
 
-    const select = useSelectorMap(state => ({
-      //items: state.categories.items,
-      roots: state.categories.roots,
-      wait: state.categories.wait,
-    }));
+  const select = useSelector(state => ({
+    //items: state.categories.items,
+    roots: state.categories.roots,
+    wait: state.categories.wait,
+  }));
 
-    if (select.wait) {
-      return <div>{select.wait && <i>Загрузка...</i>}</div>;
-    } else {
-      return (
-        <Tree
-          items={select.roots}
-          renderItem={item => <Link to={`/catalog/${item._id}`}>{item.title}</Link>}
-        />
-      );
-    }
-  },
-  // SSR
-  props => {
+  const services = useServices();
+
+  if (services.env.IS_NODE) {
     return <div>Здесь будет меню!!!</div>;
-  },
-);
+  }
+
+  if (select.wait) {
+    return <div>{select.wait && <i>Загрузка...</i>}</div>;
+  } else {
+    return (
+      <Tree
+        items={select.roots}
+        renderItem={item => <Link to={`/catalog/${item._id}`}>{item.title}</Link>}
+      />
+    );
+  }
+}
 
 export default React.memo(CategoryTree);

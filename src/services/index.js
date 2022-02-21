@@ -111,4 +111,4 @@ class Services {
   }
 }
 
-export default new Services();
+export default Services;

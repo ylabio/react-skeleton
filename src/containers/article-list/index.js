@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import useSelectorMap from '@src/utils/hooks/use-selector-map';
+import useSelector from "@src/utils/hooks/use-selector";
 // import { DatePicker } from 'antd';
 
 function ArticleList() {
-  const select = useSelectorMap(state => ({
+  const select = useSelector(state => ({
     items: state.super?.items,
     wait: state.super?.wait,
   }));

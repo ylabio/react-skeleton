@@ -1,5 +1,4 @@
 import BaseState from "@src/services/store/base";
-import services from "@src/services";
 
 class FormLoginState extends BaseState {
 
@@ -30,10 +29,10 @@ class FormLoginState extends BaseState {
   async submit(data) {
     this.updateState({wait: true, errors: null}, 'Отправка формы');
     try {
-      const response = await services.api.get('users').login(data);
+      const response = await this.services.api.get('users').login(data);
       const result = response.data.result;
       // Установка и сохранение сессии
-      await services.store.session.save({user: result.user, token: result.token});
+      await this.store.session.save({user: result.user, token: result.token});
       this.resetState({}, 'Сброс формы после успешной отправки');
       return result;
     } catch (e) {

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import services from '@src/services';
+import useServices from "@src/utils/hooks/use-services";
 
 /**
  * Хук для асинхронных расчётов, которые будут исполнены при первом рендере или изменении inputs.
@@ -9,6 +9,7 @@ import services from '@src/services';
  * @param options {{backForward, ssrForce, ssr}}
  */
 export default function useInit(callback, inputs = [], options = {onBackForward: false, ssr: null, ssrForce: false}) {
+  const services = useServices();
   // Рендер на сервере.
   // На сервере вызов callback если передан ключ ssr и с этим ключом ещё не вызывался
   if (services.env.IS_NODE) {

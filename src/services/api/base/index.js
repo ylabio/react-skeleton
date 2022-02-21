@@ -1,12 +1,13 @@
 import mc from "merge-change";
-import services from '@src/services';
 
 /**
  * Базовый (абстрактный) класс точки доступа к АПИ
  */
 class BaseEndpoint {
 
-  constructor(config) {
+  constructor(config, services) {
+    this.services = services;
+    this.api = this.services.api;
     this.config = mc.patch(this.defaultConfig(), config);
   }
 
@@ -30,7 +31,7 @@ class BaseEndpoint {
    */
   request(options) {
     // Учитываются опции модуля и переданные в аргументах
-    return services.api.axios.request(mc.merge(this.config, options));
+    return this.api.axios.request(mc.merge(this.config, options));
   }
 }
 
