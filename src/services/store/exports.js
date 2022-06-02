@@ -1,5 +1,5 @@
 /**
- * Модули действий и связанные с ним стейты в redux
+ * Модули действий и связанные с ним стейты
  */
 export { default as categories } from './categories';
 export { default as articles } from './articles';

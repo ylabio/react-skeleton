@@ -72,6 +72,14 @@ class Services {
 
   /**
    * Сервис API
+   * @returns {DrawService}
+   */
+  get draw() {
+    return this.get('draw');
+  }
+
+  /**
+   * Сервис API
    * @returns {ApiService}
    */
   get api() {
