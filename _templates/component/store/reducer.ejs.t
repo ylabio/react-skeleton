@@ -1,5 +1,5 @@
 ---
-to: src/store/<%= name %>/reducer.js
+to: src/store/<%= name %>/reducer.ts
 ---
 import reducer from '@src/utils/reducer';
 import { types } from './actions.js';

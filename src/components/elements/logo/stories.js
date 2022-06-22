@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import { BrowserRouter } from 'react-router-dom';
 
-import Logo from './index.js';
+import Logo from './index.tsx';
 
 storiesOf('elements/Logo', module)
   .addDecorator(story => (

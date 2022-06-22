@@ -17,6 +17,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 // For SSR
 const LoadablePlugin = require('@loadable/webpack-plugin');
@@ -26,7 +27,7 @@ let config = {
   target: target,
   mode: process.env.NODE_ENV, // https://webpack.js.org/configuration/mode/
   context: path.join(__dirname, '/src'),
-  entry: `index.${target}.js`,
+  entry: `index.${target}.tsx`,
   output: {
     path: path.join(__dirname, 'dist', target),
     filename: '[name].js', //'[name]-bundle-[chunkhash:8].js'
@@ -35,7 +36,7 @@ let config = {
     library: {
       name: 'ReactApp',
       type: isNode ? 'commonjs2' : 'window',
-      export: 'default'
+      export: 'default',
     },
     clean: true,
   },
@@ -52,9 +53,12 @@ let config = {
     }),
     new LoadablePlugin(),
     new MiniCssExtractPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: { configFile: '../tsconfig.json' },
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.tsx', '.ts'],
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
       '@src': path.resolve(__dirname, './src'),
@@ -70,6 +74,18 @@ let config = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: [{ loader: 'babel-loader' }],
+      },
+      {
+        test: /\.(ts|tsx)$/i,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+          {
+            loader: 'ts-loader',
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -90,7 +106,7 @@ let config = {
       },
       {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        type: 'asset'
+        type: 'asset',
       },
       {
         test: /\.html$/,
@@ -144,7 +160,7 @@ if (isProduction) {
 
 if (isDevelopment && isWeb) {
   config.devtool = 'inline-source-map'; // "#cheap-module-inline-source-map";
-  //config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.devServer = {
     static: path.join(__dirname, 'dist', target),
     port: appConfig.devServer.port,

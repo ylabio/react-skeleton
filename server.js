@@ -9,7 +9,7 @@ const { Worker } = require('worker_threads');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const httpProxy = require('http-proxy');
-const config = require('./src/config.js');
+const config = require('./src/config');
 const uniqid = require('uniqid');
 const {ReactApp} = require('./dist/node/main.js');
 

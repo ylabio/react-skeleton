@@ -1,6 +1,6 @@
 ---
 inject: true
-to: src/api/index.js
+to: src/api/index.tsx
 skip_if: <%= name %>
 append: true
 ---

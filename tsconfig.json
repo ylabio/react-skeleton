@@ -1,0 +1,25 @@
+{
+  "include": ["src", "./src/typings"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@src": ["./src/index"],
+      "@src/*": ["./src/*"],
+    },
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es5",
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "outDir": "./dist/",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
+  }
+}

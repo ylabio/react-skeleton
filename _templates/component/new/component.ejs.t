@@ -1,5 +1,5 @@
 ---
-to: src/<%= path %>/index.js
+to: src/<%= path %>/index.tsx
 ---
 import React from 'react';
 import PropTypes from 'prop-types';
