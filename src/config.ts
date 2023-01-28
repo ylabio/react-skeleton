@@ -1,7 +1,9 @@
-const isWeb = process.env.TARGET === 'web';
-const isProduction = process.env.NODE_ENV === 'production';
+import { IConfig } from "./typings/config";
 
-let config = {
+const isWeb: boolean = process.env.TARGET === 'web';
+const isProduction: boolean = process.env.NODE_ENV === 'production';
+
+let config: IConfig = {
   // Сервис с методами API
   api: {
     default: {
@@ -67,4 +69,4 @@ let config = {
   }
 };
 
-module.exports = config;
+export default config;
