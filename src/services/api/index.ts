@@ -1,16 +1,17 @@
-import axios, {AxiosInstance, AxiosRequestConfig, HeadersDefaults} from 'axios';
+import axios, { Axios, AxiosInstance, AxiosRequestConfig, HeadersDefaults } from 'axios';
 import * as allEndpoints from './export';
 import mc from 'merge-change';
-import {IEndpoint} from "@src/services/api/endpoint";
+import { IEndpoint } from "@src/services/api/endpoint";
+import Services from '@src/services';
 
 const endpoints: any = allEndpoints;
 
 interface IApiService {
   config: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
-  services: any;
-  endpoints: {[key: string]: IEndpoint};
+  services: Services;
+  endpoints: { [key: string]: IEndpoint };
   _axios: AxiosInstance;
-  createEndpoint(config: AxiosRequestConfig) : void
+  createEndpoint(config: AxiosRequestConfig): void
   get(name: string): IEndpoint;
 }
 
@@ -21,11 +22,11 @@ interface IApiService {
  */
 class ApiService implements IApiService {
   config!: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
-  services: any;
-  endpoints!: {[key: string]: IEndpoint};
+  services!: Services;
+  endpoints!: { [key: string]: IEndpoint };
   _axios!: AxiosInstance;
 
-  async init(config: IApiService['config'], services: IApiService['services']) {
+  async init(config: IApiService['config'], services: IApiService['services']): Promise<ApiService> {
     this.services = services;
     this.config = config;
     this._axios = axios.create(this.config.default);
@@ -47,7 +48,7 @@ class ApiService implements IApiService {
    *   ... другие опции, переопределяющие опции конфига
    * @return {BaseEndpoint}
    */
-  createEndpoint(config: any) {
+  createEndpoint(config: any): IEndpoint {
     if (!config.name) throw new Error('Undefined endpoint name ');
     config = mc.merge(this.config.endpoints[config.name], config);
     // Если нет класса сопоставленного с name, то используется класс по умолчанию
@@ -62,7 +63,7 @@ class ApiService implements IApiService {
    * Экземпляр Axios для выполнения HTTP запросов
    * @return {AxiosInstance}
    */
-  get axios() {
+  get axios(): Axios {
     return this._axios;
   }
 

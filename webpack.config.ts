@@ -10,7 +10,7 @@ const isWeb = process.env.TARGET === 'web';
 const isNode = process.env.TARGET === 'node';
 const target = process.env.TARGET;
 
-const appConfig = require('./src/config.js');
+import appConfig from './src/config';
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
@@ -40,7 +40,8 @@ let config = {
     },
     clean: true,
   },
-
+  devtool: '',
+  devServer: {},
   plugins: [
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({

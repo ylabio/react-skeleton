@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
  * Контекст для Service
  * @type {React.Context<{}>}
  */
-export const ServicesContext = React.createContext({});
+export const ServicesContext: React.Context<{}> = React.createContext({});
 
 /**
  * Провайдер services.
@@ -13,6 +13,7 @@ export const ServicesContext = React.createContext({});
  * Провайдер не обрабатывает изменения в services.
  */
 function ServicesProvider({ services, children }: { services: any, children: React.ReactNode }) {
+  console.log(services)
   // В провайдер передатся объект services,
   // после чего services можно получиь через useContext(ServicesContext) в любом компоненте
   return <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>;

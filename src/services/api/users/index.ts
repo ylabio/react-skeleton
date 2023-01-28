@@ -1,6 +1,7 @@
 import params from '@src/utils/query-params';
 import CRUDEndpoint from '@src/services/api/crud';
 import mc from 'merge-change';
+import { AxiosResponse } from 'axios';
 
 class UsersEndpoint extends CRUDEndpoint {
   defaultConfig() {
@@ -13,7 +14,7 @@ class UsersEndpoint extends CRUDEndpoint {
    * Выбор одного юзера по токену (текущего авторизованного)
    * @return {Promise}
    */
-  current({ fields = '*', ...other }) {
+  current({ fields = '*', ...other }): Promise<AxiosResponse> {
     return this.request({
       method: 'GET',
       url: `${this.config.url}/self`,
@@ -41,7 +42,7 @@ class UsersEndpoint extends CRUDEndpoint {
     password: string,
     remember: boolean,
     fields: string,
-  }) {
+  }): Promise<AxiosResponse> {
     return this.request({
       method: 'POST',
       data: { login, password, remember },
@@ -54,14 +55,14 @@ class UsersEndpoint extends CRUDEndpoint {
    * Выход
    * @returns {Promise}
    */
-  logout() {
+  logout(): Promise<AxiosResponse> {
     return this.request({
       method: 'DELETE',
       url: `${this.config.url}/sign`,
     });
   }
 
-  registration({ profile = {}, ...rest }) {
+  registration({ profile = {}, ...rest }): Promise<AxiosResponse> {
     return this.request({
       method: 'POST',
       data: { profile, ...rest },
@@ -69,7 +70,7 @@ class UsersEndpoint extends CRUDEndpoint {
     });
   }
 
-  resetPassword({ login }: { login: string }) {
+  resetPassword({ login }: { login: string }): Promise<AxiosResponse> {
     return this.request({
       method: 'POST',
       data: { login },

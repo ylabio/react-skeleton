@@ -66,7 +66,7 @@ export default async (params: any) => {
 
   // Метаданные рендера
   const helmetData = Helmet.renderStatic();
-  const baseTag = `<base href="${configDefault.navigation.basename}">`;
+  const baseTag = `<base href="${configDefault.navigation?.basename}">`;
   const titleTag = helmetData.title.toString();
   const metaTag = helmetData.meta.toString();
   const linkTags = helmetData.link.toString();

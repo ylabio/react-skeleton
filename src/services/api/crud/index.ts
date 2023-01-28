@@ -1,5 +1,6 @@
 import params from '@src/utils/query-params';
 import Endpoint from '@src/services/api/endpoint';
+import { AxiosResponse } from 'axios';
 
 interface BaseQuery {
   fields?: string;
@@ -23,7 +24,7 @@ class CRUDEndpoint extends Endpoint {
     limit = 20,
     skip = 0,
     ...other
-  }: BaseQuery & { filter: string }) {
+  }: BaseQuery & { filter: string }): Promise<AxiosResponse> {
     return this.request({
       method: 'GET',
       url: this.config.url,
@@ -38,7 +39,7 @@ class CRUDEndpoint extends Endpoint {
    * @param other {Object} Другие параметры апи
    * @returns {Promise}
    */
-  findOne({ id, fields = '*', ...other }: BaseQuery & { id: string }) {
+  findOne({ id, fields = '*', ...other }: BaseQuery & { id: string }): Promise<AxiosResponse> {
     return this.request({
       method: 'GET',
       url: `${this.config.url}/${id}`,
@@ -54,7 +55,7 @@ class CRUDEndpoint extends Endpoint {
    * @param other {Object} Другие параметры апи
    * @returns {Promise}
    */
-  create({ data, fields = '*', ...other }: BaseQuery & { data: any }) {
+  create({ data, fields = '*', ...other }: BaseQuery & { data: any }): Promise<AxiosResponse> {
     return this.request({
       method: 'POST',
       url: `${this.config.url}`,
@@ -71,7 +72,7 @@ class CRUDEndpoint extends Endpoint {
    * @param other {Object} Другие параметры апи
    * @returns {Promise}
    */
-  update({ id, data, fields = '*', ...other }: BaseQuery & { id: string, data: any }) {
+  update({ id, data, fields = '*', ...other }: BaseQuery & { id: string, data: any }): Promise<AxiosResponse> {
     return this.request({
       method: 'PATCH',
       url: `${this.config.url}/${id}`,
@@ -87,7 +88,7 @@ class CRUDEndpoint extends Endpoint {
    * @param other {Object} Другие параметры апи
    * @returns {Promise}
    */
-  delete({ id, fields = '*', ...other }: { id: string, fields: string }) {
+  delete({ id, fields = '*', ...other }: { id: string, fields: string }): Promise<AxiosResponse> {
     return this.request({
       method: 'DELETE',
       url: `${this.config.url}/${id}`,

@@ -1,11 +1,18 @@
+import { IConfig } from '@src/typings/config';
 import mc from 'merge-change';
+import ApiService from './api';
 import allServices from './export';
+import NavigationService from './navigation';
+import SpecService from './spec';
+import SSRService from './ssr';
+import StoreService from './store';
 
 const services: any = allServices;
+type RecordConfig = Record<string, IConfig>;
 
 class Services {
   list: any;
-  configs: any;
+  configs: RecordConfig;
   classes: any;
   _env: any;
 
@@ -20,7 +27,7 @@ class Services {
    * @param configs
    * @returns {Services}
    */
-  async init(configs: any) {
+  async init(configs: IConfig): Promise<Services> {
     this.configure(configs);
     // Асинхронная загрузка классов сервисов
     let promises = [];
@@ -42,10 +49,13 @@ class Services {
    * @param configs {Object|Array<Object>} Массив с объектами опций.
    * @returns {Services}
    */
-  configure(configs: any) {
-    if (!Array.isArray(configs)) configs = [configs];
-    for (let i = 0; i < configs.length; i++) {
-      this.configs = mc.merge(this.configs, configs[i]);
+  configure(configs: IConfig): Services {
+    let arrConfigs: IConfig[] = [];
+    if (!Array.isArray(configs)) {
+      arrConfigs = [configs];
+    }
+    for (let i = 0; i < arrConfigs.length; i++) {
+      this.configs = mc.merge(this.configs, arrConfigs[i]);
     }
     return this;
   }
@@ -59,7 +69,7 @@ class Services {
    * Сервис создаётся в единственном экземпляре и при первом обращении инициализируется
    * @return {*}
    */
-  get(name: string, params = {}) {
+  get<T>(name: string, params = {}): T {
     if (!this.list[name]) {
       if (!this.classes[name]) {
         console.log(this.list, this.classes, name);
@@ -82,40 +92,40 @@ class Services {
    * Сервис API
    * @returns {ApiService}
    */
-  get api() {
-    return this.get('api');
+  get api(): ApiService {
+    return this.get<ApiService>('api');
   }
 
   /**
    * Сервис навигации
    * @returns {NavigationService}
    */
-  get navigation() {
-    return this.get('navigation');
+  get navigation(): NavigationService {
+    return this.get<NavigationService>('navigation');
   }
 
   /**
    * Сервис действий и состояния приложения
    * @returns {StoreService}
    */
-  get store() {
-    return this.get('store');
+  get store(): StoreService {
+    return this.get<StoreService>('store');
   }
 
   /**
    * Сервис рендера на сервере
    * @returns {SSRService}
    */
-  get ssr() {
-    return this.get('ssr');
+  get ssr(): SSRService {
+    return this.get<SSRService>('ssr');
   }
 
   /**
    * Сервис спецификаций
    * @returns {SpecService}
    */
-  get spec() {
-    return this.get('spec');
+  get spec(): SpecService {
+    return this.get<SpecService>('spec');
   }
 }
 

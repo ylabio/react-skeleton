@@ -1,21 +1,24 @@
 import mc from 'merge-change';
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import Services from '@src/services';
+import ApiService from '.';
+import { IApiConfig } from '@src/typings/config';
 
 export interface IEndpoint {
-  services: any;
-  api: any;
-  config: any;
+  services: Services;
+  api: ApiService;
+  config: IApiConfig;
 }
 
 /**
  * Базовый (абстрактный) класс точки доступа к АПИ
  */
 abstract class Endpoint {
-  services: any;
-  api: any;
-  config: any;
+  services: Services;
+  api: ApiService;
+  config: IApiConfig;
 
-  constructor(config: any, services: any) {
+  constructor(config: IApiConfig, services: Services) {
     this.services = services;
     this.api = this.services.api;
     this.config = mc.patch(this.defaultConfig(), config);
@@ -26,7 +29,7 @@ abstract class Endpoint {
    * Переопределяется общими параметрами сервиса api и параметрами из конфига экземпляра
    * @return {Object}
    */
-  defaultConfig() {
+  defaultConfig(): IApiConfig {
     return {
       url: '/api/v1/base',
       //baseURL: '',
@@ -39,7 +42,7 @@ abstract class Endpoint {
    * Запрос
    * @return {*}
    */
-  request(options: AxiosRequestConfig) {
+  request(options: AxiosRequestConfig): Promise<AxiosResponse<any, any>> {
     // Учитываются опции модуля и переданные в аргументах
     return this.api.axios.request(mc.merge(this.config, options));
   }
