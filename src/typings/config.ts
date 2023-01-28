@@ -10,7 +10,8 @@ export interface IApiConfig {
   },
   url?: string;
 };
-interface IStoreConfig {
+
+export interface IStoreConfig {
   log: boolean;
   preloadState: Record<string, any>;
   states: {
@@ -21,13 +22,13 @@ interface IStoreConfig {
   }
 };
 
-interface INavigationConfig {
+export interface INavigationConfig {
   basename?: string;
   type?: string;
   initialEntries?: string[]
 };
 
-interface IDevServerConfig {
+export interface IDevServerConfig {
   port: number,
   // Прокси на апи, если режим разработки или ssr без nginx
   proxy: {
@@ -39,13 +40,13 @@ interface IDevServerConfig {
   }
 };
 
-interface IRenderServerConfig {
+export interface IRenderServerConfig {
   host: string,
   port: number,
   preloadState: boolean,
 }
 
-interface ISsrConfig {
+export interface ISsrConfig {
   maxDepth: number
 }
 

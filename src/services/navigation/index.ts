@@ -1,6 +1,10 @@
-import { BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory } from 'history';
-import qs from 'qs';
+import { Blocker, BrowserHistory, createBrowserHistory, createMemoryHistory, Listener, MemoryHistory } from 'history';
+import qs, { ParsedQs } from 'qs';
 import mc from 'merge-change';
+import { INavigationConfig } from '@src/typings/config';
+import Services from '@src/services';
+import { Location, Action } from 'history';
+import { History } from 'history';
 
 /**
  * Сервис навигации (History API)
@@ -12,7 +16,7 @@ class NavigationService implements NavigationService {
   services: any;
   _history!: MemoryHistory | BrowserHistory;
 
-  init(config: any, services: any) {
+  init(config: INavigationConfig, services: Services): NavigationService {
     this.services = services;
     this.config = config;
     switch (this.config.type) {
@@ -27,19 +31,19 @@ class NavigationService implements NavigationService {
     return this;
   }
 
-  get location() {
+  get location(): Location {
     return this._history.location;
   }
 
-  get action() {
+  get action(): Action {
     return this._history.action;
   }
 
-  get history() {
+  get history(): History {
     return this._history;
   }
 
-  get basename() {
+  get basename(): string {
     return this.config.basename;
   }
 
@@ -63,11 +67,11 @@ class NavigationService implements NavigationService {
     return this._history.forward();
   }
 
-  block(prompt: any) {
+  block(prompt: Blocker) {
     return this._history.block(prompt);
   }
 
-  listen(listener: any) {
+  listen(listener: Listener) {
     return this._history.listen(listener);
   }
 
@@ -78,7 +82,7 @@ class NavigationService implements NavigationService {
    * @param clearSearch Удалить все текущие search параметры
    * @returns {string} Итоговая строка для href ссылки
    */
-  makeHref(path: string, searchParams = {}, clearSearch = false) {
+  makeHref(path: string, searchParams: Record<string, any> = {}, clearSearch: boolean = false): string {
     const currentParams = this.getSearchParams();
     const newParams = clearSearch ? searchParams : mc.update(currentParams, searchParams);
     let search = qs.stringify(newParams, {
@@ -94,9 +98,9 @@ class NavigationService implements NavigationService {
 
   /**
    * Текуший путь в адресе
-   * @returns {*}
+   * @returns {string}
    */
-  getPath() {
+  getPath(): string {
     return this._history.location.pathname;
   }
 
@@ -104,7 +108,7 @@ class NavigationService implements NavigationService {
    * Текущие search параметры, распарсенные из строки
    * @returns {*}
    */
-  getSearchParams() {
+  getSearchParams(): ParsedQs {
     return qs.parse(this._history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
   }
 
@@ -115,7 +119,7 @@ class NavigationService implements NavigationService {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams(params: any, push = true, clear = false, path: string) {
+  setSearchParams(params: any, push: boolean = true, clear: boolean = false, path: string) {
     const currentParams = this.getSearchParams();
     const newParams = clear ? params : mc.update(currentParams, params);
     let newSearch = qs.stringify(newParams, {
@@ -135,7 +139,7 @@ class NavigationService implements NavigationService {
    * Удаление всех search параметров
    * @param push Способ обновления Location.search. Если false, то используется window.history.replaceState()
    */
-  clearSearchParams(push = true) {
+  clearSearchParams(push: boolean = true) {
     const url = window.location.pathname + window.location.hash;
     if (push) {
       window.history.pushState({}, '', url);
@@ -148,7 +152,7 @@ class NavigationService implements NavigationService {
    * Custom navigations
    * @param push Способ обновления истории роутера. Если false, то используется history.replace()
    */
-  goPrivate(push = true) {
+  goPrivate(push: boolean = true) {
     push ? this._history.push('/private') : this._history.replace('/private');
   }
 }
