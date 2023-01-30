@@ -1,17 +1,18 @@
+import { ISsrConfig } from '@src/typings/config';
 import { renderToString } from 'react-dom/server';
+import Services from '..';
 
 declare global {
   interface Window { stateKey: string; }
 }
 
-
 class SSRService {
-  keys: any;
-  services: any;
-  config: any;
-  promises: any;
+  keys!: Record<string, any>;
+  services!: Services;
+  config!: ISsrConfig;
+  promises!: Promise<void>[];
 
-  init(config: any, services: any) {
+  init(config: ISsrConfig, services: Services) {
     this.services = services;
     this.config = config;
     this.promises = [];
@@ -63,8 +64,8 @@ class SSRService {
    * @param key {String}
    * @return {Boolean}
    */
-  hasPrepare(key: string) {
-    return key && key in this.keys;
+  hasPrepare(key: string): boolean {
+    return Boolean(key && key in this.keys);
   }
 
   /**
@@ -73,7 +74,7 @@ class SSRService {
    * Используется на клиенте, чтобы разблокировать логику работы с состоянием
    * @param key {String}
    */
-  deletePrepare(key: string) {
+  deletePrepare(key: string): void {
     if (this.hasPrepare(key)) {
       delete this.keys[key];
     }
@@ -84,7 +85,7 @@ class SSRService {
    * Ключи текущих ожиданий
    * @return {Array<String>}
    */
-  getPrepareKeys() {
+  getPrepareKeys(): string[] {
     return Object.keys(this.keys);
   }
 
@@ -106,11 +107,11 @@ class SSRService {
    * На клиенте из window.stateKey, куда попадает из подготовленного сервером HTML
    * @returns {String}
    */
-  getStateKey() {
+  getStateKey(): string {
     if (this.services.env.IS_WEB) {
       return window.stateKey;
     } else {
-      return this.config.stateKey;
+      return this.config.stateKey || "";
     }
   }
 
@@ -119,7 +120,7 @@ class SSRService {
    * Имеется ли подготовленное состояние от серверного рендера
    * @returns {Boolean}
    */
-  hasPreloadState() {
+  hasPreloadState(): boolean {
     return this.services.env.IS_WEB && !!window.stateKey;
   }
 
@@ -128,7 +129,7 @@ class SSRService {
    * Выборка всего подготовленного состояния с клиента по HTTP запрсом к серверу
    * @returns {Promise<*>}
    */
-  async getPreloadState() {
+  async getPreloadState(): Promise<any> {
     const ssrApi = this.services.api.get('ssr');
     const response = await ssrApi.getPreloadState({ key: this.getStateKey() });
     // Ключ исполненных prepare()

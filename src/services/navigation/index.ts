@@ -1,10 +1,8 @@
-import { Blocker, BrowserHistory, createBrowserHistory, createMemoryHistory, Listener, MemoryHistory } from 'history';
+import { History, Location, Action, Blocker, BrowserHistory, BrowserHistoryOptions, createBrowserHistory, createMemoryHistory, Listener, MemoryHistory } from 'history';
 import qs, { ParsedQs } from 'qs';
 import mc from 'merge-change';
 import { INavigationConfig } from '@src/typings/config';
 import Services from '@src/services';
-import { Location, Action } from 'history';
-import { History } from 'history';
 
 /**
  * Сервис навигации (History API)
@@ -12,8 +10,8 @@ import { History } from 'history';
  * Учитывает режим работы для SSR
  */
 class NavigationService implements NavigationService {
-  config: any;
-  services: any;
+  config!: INavigationConfig;
+  services!: Services;
   _history!: MemoryHistory | BrowserHistory;
 
   init(config: INavigationConfig, services: Services): NavigationService {
@@ -25,7 +23,7 @@ class NavigationService implements NavigationService {
         break;
       case 'browser':
       default:
-        this._history = createBrowserHistory(this.config);
+        this._history = createBrowserHistory(this.config as BrowserHistoryOptions);
         break;
     }
     return this;
@@ -44,7 +42,7 @@ class NavigationService implements NavigationService {
   }
 
   get basename(): string {
-    return this.config.basename;
+    return this.config.basename || "";
   }
 
   push(path: string, state: any) {

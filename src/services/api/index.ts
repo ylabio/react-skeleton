@@ -1,7 +1,7 @@
 import axios, { Axios, AxiosInstance, AxiosRequestConfig, HeadersDefaults } from 'axios';
 import * as allEndpoints from './export';
 import mc from 'merge-change';
-import { IEndpoint } from "@src/services/api/endpoint";
+import Endpoint, { IEndpoint } from "@src/services/api/endpoint";
 import Services from '@src/services';
 
 const endpoints: any = allEndpoints;
@@ -94,7 +94,7 @@ class ApiService implements IApiService {
    * @param name {String} Название модуля endpoint
    * @returns {BaseEndpoint}
    */
-  get(name: string) {
+  get(name: string): any {
     if (!this.endpoints[name]) {
       throw new Error(`Not found endpoint "${name}"`);
     }

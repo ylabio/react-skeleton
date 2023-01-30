@@ -47,7 +47,8 @@ export interface IRenderServerConfig {
 }
 
 export interface ISsrConfig {
-  maxDepth: number
+  maxDepth: number;
+  stateKey?: string;
 }
 
 export interface IConfig {
