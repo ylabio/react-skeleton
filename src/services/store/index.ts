@@ -1,31 +1,54 @@
-import * as allModules from './exports';
+import { modules } from './exports';
 import mc from 'merge-change';
+import Services from '@src/services';
+import { IStoreConfig } from '@src/typings/config';
+import ArticlesState from './articles';
+import CategoriesState from './categories';
+import ModalsState from './modals';
+import SessionState from './session';
+import FormLoginState from './form-login';
 
-const modules: any = allModules;
+type ModulesType = typeof modules;
+export type StoreModulesType = {
+  [P in keyof ModulesType]: InstanceType<ModulesType[P]>
+}
+export type RootState = {
+  [P in keyof StoreModulesType]: ReturnType<StoreModulesType[P]['initState']>;
+}
+export type NameType = keyof ModulesType;
 
+export interface IDefaultConfig {
+  name: NameType;
+  proto?: NameType;
+  disabled?: boolean
+}
 /**
  * Хранилище состояния приложения
  */
 class StoreService {
-  state: any;
-  listeners: any;
-  modules: any;
-  services: any;
-  config: any;
+  configName?: string; 
+  state: RootState;
+  listeners: ((state: RootState) => void)[];
+  modules: StoreModulesType;
+  services: Services;
+  config: IStoreConfig;
 
   constructor() {
+    this.config = {} as IStoreConfig;
     // Состояние приложения (данные всех модулей)
-    this.state = {};
+    this.state = {} as RootState;
     // Подписчики на изменение state
     this.listeners = [];
     // Модули
-    this.modules = {};
+    this.modules = {} as StoreModulesType;
+    // Сервисы
+    this.services = {} as Services;
   }
 
   init(config: any, services: any) {
     this.services = services;
     this.config = config;
-    const names = Object.keys(modules);
+    const names = Object.keys(modules) as NameType[];
     for (const name of names) {
       this.initModule({ name });
     }
@@ -36,10 +59,10 @@ class StoreService {
    * Инициализация модуля хранилища
    * @param config
    */
-  initModule(config: any) {
+  initModule(config: IDefaultConfig) {
     if (!config.name) throw new Error('Undefined store module name ');
     config = mc.merge(this.config.states[config.name], config);
-    if (config.disabled !== true) {
+    if (!config.disabled) {
       // Если нет класса сопоставленного с name, то используется класс по умолчанию
       if (!config.proto) config.proto = config.name;
       if (!modules[config.proto]) throw new Error(`Not found store module "${config.name}"`);
@@ -93,8 +116,8 @@ class StoreService {
 
     this.state = newState;
     // Оповещаем всех подписчиков об изменении стейта
-    for (const lister of this.listeners) {
-      lister(this.state);
+    for (const listener of this.listeners) {
+      listener(this.state);
     }
   }
 
@@ -103,42 +126,42 @@ class StoreService {
    * @param name {String} Название модуля
    * @return {StoreModule}
    */
-  get(name: string) {
+  get<T extends keyof StoreModulesType>(name: T): StoreModulesType[T] {
     return this.modules[name];
   }
 
   /**
    * @return {ArticlesState}
    */
-  get articles() {
-    return this.get('articles');
+  get articles(): ArticlesState {
+    return this.get<'articles'>('articles');
   }
 
   /**
    * @return {CategoriesState}
    */
-  get categories() {
-    return this.get('categories');
+  get categories(): CategoriesState {
+    return this.get<'categories'>('categories');
   }
 
   /**
    * @return {ModalsState}
    */
-  get modals() {
+  get modals(): ModalsState {
     return this.get('modals');
   }
 
   /**
    * @return {SessionState}
    */
-  get session() {
+  get session(): SessionState {
     return this.get('session');
   }
 
   /**
    * @return {FormLoginState}
    */
-  get formLogin() {
+  get formLogin(): FormLoginState {
     return this.get('formLogin');
   }
 }

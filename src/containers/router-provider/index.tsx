@@ -5,7 +5,6 @@ import { Router } from 'react-router-dom';
  * Провайдер для роутера вместо <BrowserRouter> <MemoryRouter> для использвоания services.navigation
  * @param navigation
  * @param children
- * @return {JSX.Element}
  */
 function RouterProvider({ navigation, children }: { navigation: any, children: JSX.Element }) {
   const [state, setState] = useState({

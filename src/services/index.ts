@@ -1,25 +1,19 @@
 import { IConfig } from '@src/typings/config';
 import mc from 'merge-change';
-import ApiService from './api';
-import allServices from './export';
-import NavigationService from './navigation';
-import SpecService from './spec';
-import SSRService from './ssr';
+import { services } from './export';
 import StoreService from './store';
+import ApiService from './api';
 
-const services: any = allServices;
 type RecordConfig = Record<string, IConfig>;
 
 class Services {
-  list: any;
+  list: Partial<Record<keyof typeof services, any>>;
   configs: RecordConfig;
-  classes: any;
   _env: any;
 
   constructor() {
     this.configs = {};
     this.list = {};
-    this.classes = {};
     this._env = process.env;
   }
 
@@ -27,19 +21,9 @@ class Services {
    * @param configs
    * @returns {Services}
    */
-  async init(configs: IConfig): Promise<Services> {
+  init(configs: IConfig): Services {
     this.configure(configs);
     // Асинхронная загрузка классов сервисов
-    let promises = [];
-    const names = Object.keys(services);
-    for (const name of names) {
-      promises.push(
-        services[name]().then((module: any) => {
-          this.classes[name] = module.default;
-        }),
-      );
-    }
-    await Promise.all(promises);
     return this;
   }
 
@@ -69,21 +53,22 @@ class Services {
    * Сервис создаётся в единственном экземпляре и при первом обращении инициализируется
    * @return {*}
    */
-  get<T>(name: string, params = {}): T {
+  get<T>(name: keyof typeof services, params = {}): T {
     if (!this.list[name]) {
-      if (!this.classes[name]) {
-        console.log(this.list, this.classes, name);
+      if (!services[name]) {
+        console.log(this.list, services, name);
         throw new Error(`Unknown service name "${name}"`);
       }
-      const Constructor = this.classes[name];
+      const Constructor = services[name];
       this.list[name] = new Constructor();
       let configName;
-      if (this.list[name].configName === 'function') {
-        configName = this.list[name].configName();
+      
+      if (this.list[name].configName && this.list[name]?.configName === 'function') {
+        configName = this.list[name]?.configName();
       } else {
         configName = name;
       }
-      this.list[name].init(mc.merge(this.configs[configName], params), this);
+      this.list[name]?.init(mc.merge(this.configs[configName], params), this);
     }
     return this.list[name];
   }
@@ -95,15 +80,6 @@ class Services {
   get api(): ApiService {
     return this.get<ApiService>('api');
   }
-
-  /**
-   * Сервис навигации
-   * @returns {NavigationService}
-   */
-  get navigation(): NavigationService {
-    return this.get<NavigationService>('navigation');
-  }
-
   /**
    * Сервис действий и состояния приложения
    * @returns {StoreService}
@@ -112,21 +88,6 @@ class Services {
     return this.get<StoreService>('store');
   }
 
-  /**
-   * Сервис рендера на сервере
-   * @returns {SSRService}
-   */
-  get ssr(): SSRService {
-    return this.get<SSRService>('ssr');
-  }
-
-  /**
-   * Сервис спецификаций
-   * @returns {SpecService}
-   */
-  get spec(): SpecService {
-    return this.get<SpecService>('spec');
-  }
 }
 
 export default Services;

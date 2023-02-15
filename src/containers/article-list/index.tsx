@@ -1,9 +1,8 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import useSelector from '@src/utils/hooks/use-selector';
-// import { DatePicker } from 'antd';
 
 function ArticleList() {
-  const select: any = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     items: state.articles.items,
     wait: state.articles.wait,
   }));

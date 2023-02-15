@@ -1,19 +1,22 @@
 import mc from 'merge-change';
-import StoreService from '@src/services/store/index';
+import StoreService, { IDefaultConfig, RootState } from '@src/services/store/index';
+import Services from '@src/services';
+import { IStoreConfig } from '@src/typings/config';
+import { InitStateType } from './list-params';
 
 /**
  * Базовый класс модуля хранилища
  */
 class StoreModule<Config = {}> {
   store: StoreService;
-  services: any;
-  config: { name: string } & Config;
+  services: Services;
+  config: IDefaultConfig & Config;
 
   /**
    * @param config {Object} Конфиг модуля
    * @param services {Services}
    */
-  constructor(config: any, services: any) {
+  constructor(config: IStoreConfig, services: Services) {
     this.services = services;
     this.store = this.services.store;
     this.config = mc.patch(this.defaultConfig(), config);
@@ -23,7 +26,7 @@ class StoreModule<Config = {}> {
    * Конфигурация по умолчанию
    * @return {Object}
    */
-  defaultConfig() {
+  defaultConfig(): IDefaultConfig {
     return {
       name: 'base', //поменяется сервисом при создании экземпляра
     };
@@ -33,7 +36,7 @@ class StoreModule<Config = {}> {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitStateType {
     return {};
   }
 
@@ -41,7 +44,7 @@ class StoreModule<Config = {}> {
    * Текущее своё состояние
    * @return {*}
    */
-  getState() {
+  getState(): RootState {
     return this.store.getState()[this.config.name];
   }
 
@@ -50,7 +53,7 @@ class StoreModule<Config = {}> {
    * @param state {*}
    * @param description {String} Описание действия для логирования
    */
-  setState(state: any, description = 'Установка') {
+  setState(state: RootState, description: string = 'Установка'): void {
     this.store.setState(
       {
         ...this.store.getState(),
@@ -65,8 +68,8 @@ class StoreModule<Config = {}> {
    * @param update {Object} Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description {String} Описание действия для логирования
    */
-  updateState(update = {}, description = 'Обновление') {
-    const state = mc.update(this.getState(), update);
+  updateState(update: RootState = {} as RootState, description: string = 'Обновление'): void{
+    const state: RootState = mc.update(this.getState(), update);
     if (state !== this.getState()) {
       this.setState(state, description);
     }
@@ -77,7 +80,7 @@ class StoreModule<Config = {}> {
    * @param update {Object} Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description {String} Описание действия для логирования
    */
-  resetState(update = {}, description = 'Сброс') {
+  resetState(update: RootState = {} as RootState, description: string = 'Сброс'): void {
     this.setState(mc.update(this.initState(), update), description);
   }
 }

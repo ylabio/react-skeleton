@@ -1,6 +1,23 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
 
+export type InitStateType = Partial<{
+  items: [],
+  count: number,
+  params: Partial<{
+    limit: number,
+    page: number,
+    sort: Record<string, 'desc' | 'asc'>,
+    fields: string,
+    filter: {
+      query: undefined, // поиск по строке
+    },
+  }>,
+  wait: boolean,
+  errors: any,
+}>
+
+
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список.
@@ -24,12 +41,11 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       apiEndpoint: 'crud', // абстрактный endpoint
     });
   }
-
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitStateType {
     return {
       items: [],
       count: 0,

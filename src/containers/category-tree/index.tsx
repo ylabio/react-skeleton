@@ -7,7 +7,7 @@ import useServices from '@src/utils/hooks/use-services';
 interface Props {}
 
 function CategoryTree(props: Props) {
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     //items: state.categories.items,
     roots: state.categories.roots,
     wait: state.categories.wait,

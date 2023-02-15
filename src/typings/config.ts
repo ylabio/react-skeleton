@@ -14,12 +14,7 @@ export interface IApiConfig {
 export interface IStoreConfig {
   log: boolean;
   preloadState: Record<string, any>;
-  states: {
-    session: {
-      tokenHeader: string;
-    },
-    articles: Record<string, any>;
-  }
+  states: Record<string, any>;
 };
 
 export interface INavigationConfig {

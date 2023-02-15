@@ -1,12 +1,12 @@
 import axios, { Axios, AxiosInstance, AxiosRequestConfig, HeadersDefaults } from 'axios';
 import * as allEndpoints from './export';
 import mc from 'merge-change';
-import Endpoint, { IEndpoint } from "@src/services/api/endpoint";
+import { IEndpoint } from "@src/services/api/endpoint";
 import Services from '@src/services';
 
 const endpoints: any = allEndpoints;
 
-interface IApiService {
+export interface IApiService {
   config: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
   services: Services;
   endpoints: { [key: string]: IEndpoint };

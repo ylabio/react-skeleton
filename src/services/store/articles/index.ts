@@ -1,5 +1,5 @@
 import mc from 'merge-change';
-import ListParamsState from '@src/services/store/list-params';
+import ListParamsState, { InitStateType } from '@src/services/store/list-params';
 
 /**
  * Модуль товаров
@@ -12,7 +12,7 @@ class ArticlesState extends ListParamsState {
     });
   }
 
-  initState() {
+  initState(): InitStateType {
     return mc.patch(super.initState(), {
       params: {
         fields: `items(*,category(title),maidIn(title)), count`,
