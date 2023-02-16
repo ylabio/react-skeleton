@@ -1,19 +1,28 @@
-import axios, { Axios, AxiosInstance, AxiosRequestConfig, HeadersDefaults } from 'axios';
-import * as allEndpoints from './export';
+import axios, { Axios, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosResponseHeaders } from 'axios';
+import { endpoints } from './export';
 import mc from 'merge-change';
 import { IEndpoint } from "@src/services/api/endpoint";
 import Services from '@src/services';
+import { EndpointsType, IApiConfig } from '@src/typings/config';
 
-const endpoints: any = allEndpoints;
+type EndpointType = typeof endpoints;
+
+export type NameEndpointType = keyof EndpointType;
+
+export type EndpointModulesType = {
+  [P in keyof EndpointType]: InstanceType<EndpointType[P]>
+}
+type ModuleConfig = IApiConfig & { proto?: NameEndpointType, name: NameEndpointType }
 
 export interface IApiService {
-  config: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
+  config: ModuleConfig;
   services: Services;
-  endpoints: { [key: string]: IEndpoint };
+  endpoints: EndpointsType<NameEndpointType>;
   _axios: AxiosInstance;
   createEndpoint(config: AxiosRequestConfig): void
   get(name: string): IEndpoint;
 }
+
 
 /**
  * Сервис HTTP API (REST API) к внешнему серверу
@@ -21,21 +30,25 @@ export interface IApiService {
  * Позволяет декомпозировать работу с АПИ на модули (endpoints)
  */
 class ApiService implements IApiService {
-  config!: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
+  endpoints: EndpointsType<'crud' | 'ssr' | 'users' | 'articles' | 'categories'> = "crud";
+  config!: ModuleConfig
   services!: Services;
-  endpoints!: { [key: string]: IEndpoint };
   _axios!: AxiosInstance;
 
-  async init(config: IApiService['config'], services: IApiService['services']): Promise<ApiService> {
+  async init(config: ModuleConfig, services: Services): Promise<ApiService> {
     this.services = services;
     this.config = config;
     this._axios = axios.create(this.config.default);
     // Object.entries(this.config.default).forEach(([name, value]) => {
     //   this.axios.defaults[name] = value;
     // });
-    this.endpoints = {};
+    this.endpoints = {} as EndpointsType<NameEndpointType>;
     // Создание модулей endpoint
-    Object.entries(endpoints).forEach(([name]) => this.createEndpoint({ name }));
+    console.log(this.endpoints)
+    Object.entries(endpoints).forEach(([name]) => {
+      const endpointName = name as NameEndpointType;
+      this.createEndpoint({ name: endpointName });
+    })
     return this;
   }
 
@@ -48,9 +61,9 @@ class ApiService implements IApiService {
    *   ... другие опции, переопределяющие опции конфига
    * @return {BaseEndpoint}
    */
-  createEndpoint(config: any): IEndpoint {
+  createEndpoint(config: ModuleConfig): IEndpoint {
     if (!config.name) throw new Error('Undefined endpoint name ');
-    config = mc.merge(this.config.endpoints[config.name], config);
+    config = mc.merge(this.config.endpoints?.[config.name], config);
     // Если нет класса сопоставленного с name, то используется класс по умолчанию
     if (!config.proto) config.proto = config.name;
     if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
@@ -72,7 +85,7 @@ class ApiService implements IApiService {
    * @param name {String} Название заголвока
    * @param value {*} Значение заголовка
    */
-  setHeader(name: keyof HeadersDefaults, value: any) {
+  setHeader(name: keyof HeadersDefaults, value: Partial<RawAxiosResponseHeaders>) {
     if (value) {
       this.axios.defaults.headers[name] = value;
     } else if (name in this.axios.defaults.headers) {
@@ -84,7 +97,7 @@ class ApiService implements IApiService {
    * Запрос
    * @return {*}
    */
-  request(options: any) {
+  request(options: any): any {
     // Учитываются опции модуля и переданные в аргументах
     return this.axios.request(options);
   }
@@ -94,7 +107,7 @@ class ApiService implements IApiService {
    * @param name {String} Название модуля endpoint
    * @returns {BaseEndpoint}
    */
-  get(name: string): any {
+  get(name: NameEndpointType): any {
     if (!this.endpoints[name]) {
       throw new Error(`Not found endpoint "${name}"`);
     }

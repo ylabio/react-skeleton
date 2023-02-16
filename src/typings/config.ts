@@ -1,13 +1,16 @@
+import { AxiosBasicCredentials, RawAxiosRequestHeaders, RawAxiosResponseHeaders } from "axios";
+
+export type EndpointsType<T> = any
+
+type BaseEndpointConfig = {
+  url?: string;
+  baseURL?: string;
+  headers?: Partial<RawAxiosRequestHeaders & RawAxiosResponseHeaders>;
+  auth?: AxiosBasicCredentials;
+}
 export interface IApiConfig {
-  default?: {
-    baseURL: string,
-    headers?: any,
-    auth?: Record<string, any>;
-  },
-  endpoints?: {
-    users: Record<string, any>;
-    ssr: Record<string, any>;
-  },
+  default?: BaseEndpointConfig,
+  endpoints?: EndpointsType<any>,
   url?: string;
 };
 

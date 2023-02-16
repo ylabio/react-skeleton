@@ -27,7 +27,7 @@ abstract class Endpoint {
   /**
    * Конфигурация по умолчанию
    * Переопределяется общими параметрами сервиса api и параметрами из конфига экземпляра
-   * @return {Object}
+   * @return {IApiConfig}
    */
   defaultConfig(): IApiConfig {
     return {
