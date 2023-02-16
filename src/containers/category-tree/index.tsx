@@ -14,7 +14,7 @@ function CategoryTree(props: Props) {
   }));
 
   const services = useServices();
-
+  
   if (services.env.IS_NODE) {
     return <div>Здесь будет меню!!!</div>;
   }

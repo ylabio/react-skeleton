@@ -1,11 +1,12 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import Services from '@src/services';
 
 /**
  * Контекст для Service
  * @type {React.Context<{}>}
  */
-export const ServicesContext: React.Context<{}> = React.createContext({});
+export const ServicesContext: React.Context<Services> = React.createContext({} as Services);
 
 /**
  * Провайдер services.
