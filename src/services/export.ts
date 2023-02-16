@@ -5,6 +5,9 @@ import { default as spec } from '@src/services/spec';
 import { default as store } from '@src/services/store';
 
 export const services = {
-  store: store,
-  api: api
+  store,
+  api,
+  navigation,
+  ssr,
+  spec,
 }

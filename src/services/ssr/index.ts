@@ -1,6 +1,6 @@
 import { ISsrConfig } from '@src/typings/config';
 import { renderToString } from 'react-dom/server';
-import Services from '..';
+import Services from '@src/services';
 
 declare global {
   interface Window { stateKey: string; }
@@ -64,7 +64,7 @@ class SSRService {
    * @param key {String}
    * @return {Boolean}
    */
-  hasPrepare(key: string): boolean {
+  hasPrepare(key: string | null): boolean {
     return Boolean(key && key in this.keys);
   }
 
@@ -74,8 +74,8 @@ class SSRService {
    * Используется на клиенте, чтобы разблокировать логику работы с состоянием
    * @param key {String}
    */
-  deletePrepare(key: string): void {
-    if (this.hasPrepare(key)) {
+  deletePrepare(key: string | null): void {
+    if (key && this.hasPrepare(key)) {
       delete this.keys[key];
     }
   }

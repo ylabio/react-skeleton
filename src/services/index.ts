@@ -3,6 +3,9 @@ import mc from 'merge-change';
 import { services } from './export';
 import StoreService from './store';
 import ApiService from './api';
+import NavigationService from './navigation';
+import SSRService from './ssr';
+import SpecService from './spec';
 
 type RecordConfig = Record<string, IConfig>;
 
@@ -62,7 +65,7 @@ class Services {
       const Constructor = services[name];
       this.list[name] = new Constructor();
       let configName;
-      
+
       if (this.list[name].configName && this.list[name]?.configName === 'function') {
         configName = this.list[name]?.configName();
       } else {
@@ -86,6 +89,27 @@ class Services {
    */
   get store(): StoreService {
     return this.get<StoreService>('store');
+  }
+  /**
+   * Сервис навигации приложения
+   * @returns {NavigationService}
+   */
+  get navigation(): NavigationService {
+    return this.get<NavigationService>('navigation');
+  }
+  /**
+     * Сервис SSR
+     * @returns {SSRService}
+     */
+  get ssr(): SSRService {
+    return this.get<SSRService>('ssr');
+  }
+  /**
+     * Сервис Spec
+     * @returns {SSRService}
+     */
+  get spec(): SpecService {
+    return this.get<SpecService>('spec');
   }
 
 }

@@ -5,7 +5,7 @@
  * предотвращения начального перерендера, а также инициализируется состояние, переданное сервером.
  */
 import React from 'react';
-import {createRoot, hydrateRoot, Root} from 'react-dom/client';
+import {createRoot, hydrateRoot} from 'react-dom/client';
 import RouterProvider from '@src/containers/router-provider';
 import config from '@src/config';
 import Services from '@src/services';

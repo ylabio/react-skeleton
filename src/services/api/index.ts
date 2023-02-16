@@ -85,7 +85,7 @@ class ApiService implements IApiService {
    * @param name {String} Название заголвока
    * @param value {*} Значение заголовка
    */
-  setHeader(name: keyof HeadersDefaults, value: Partial<RawAxiosResponseHeaders>) {
+  setHeader(name: keyof HeadersDefaults, value?: Partial<RawAxiosResponseHeaders>) {
     if (value) {
       this.axios.defaults.headers[name] = value;
     } else if (name in this.axios.defaults.headers) {

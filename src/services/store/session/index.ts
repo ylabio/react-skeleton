@@ -1,7 +1,8 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
+import { HeadersDefaults } from 'axios';
 
-class SessionState extends StoreModule<{ tokenHeader: string }> {
+class SessionState extends StoreModule<{ tokenHeader: keyof HeadersDefaults }> {
   initState() {
     return {
       user: {},

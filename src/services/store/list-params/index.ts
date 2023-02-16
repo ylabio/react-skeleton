@@ -1,5 +1,6 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
+import { NameEndpointType } from '@src/services/api';
 
 export type InitStateType = Partial<{
   items: [],
@@ -12,17 +13,17 @@ export type InitStateType = Partial<{
     filter: {
       query: undefined, // поиск по строке
     },
-  }>,
+  }> | null,
   wait: boolean,
   errors: any,
-}>
+}> & Record<string, any>
 
 
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список.
  */
-class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
+class ListParamsState extends StoreModule<{ apiEndpoint: NameEndpointType }> {
   validator: any;
   api: any;
 
@@ -161,7 +162,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       }
       //  Сохранить параметры в location.search
       if (options.remember) {
-        this.services.navigation.setSearchParams(newParams, options.remember === 'push');
+        this.services.navigation.setSearchParams({ params: newParams, push: options.remember === 'push' });
       }
 
       // 2. ДАННЫЕ

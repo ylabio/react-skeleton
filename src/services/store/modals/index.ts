@@ -1,8 +1,9 @@
 import StoreModule from "@src/services/store/module";
+import { InitStateType } from "../list-params";
 
 class ModalsState extends StoreModule {
 
-  initState() {
+  initState(): InitStateType {
     return {
       show: false,
       name: null,

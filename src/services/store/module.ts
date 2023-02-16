@@ -44,7 +44,7 @@ class StoreModule<Config = {}> {
    * Текущее своё состояние
    * @return {*}
    */
-  getState(): RootState {
+  getState(): InitStateType {
     return this.store.getState()[this.config.name];
   }
 
@@ -53,7 +53,7 @@ class StoreModule<Config = {}> {
    * @param state {*}
    * @param description {String} Описание действия для логирования
    */
-  setState(state: RootState, description: string = 'Установка'): void {
+  setState(state: InitStateType, description: string = 'Установка'): void {
     this.store.setState(
       {
         ...this.store.getState(),
@@ -68,8 +68,8 @@ class StoreModule<Config = {}> {
    * @param update {Object} Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description {String} Описание действия для логирования
    */
-  updateState(update: RootState = {} as RootState, description: string = 'Обновление'): void{
-    const state: RootState = mc.update(this.getState(), update);
+  updateState(update: InitStateType = {} as InitStateType, description: string = 'Обновление'): void{
+    const state: InitStateType = mc.update(this.getState(), update);
     if (state !== this.getState()) {
       this.setState(state, description);
     }
@@ -80,7 +80,7 @@ class StoreModule<Config = {}> {
    * @param update {Object} Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description {String} Описание действия для логирования
    */
-  resetState(update: RootState = {} as RootState, description: string = 'Сброс'): void {
+  resetState(update: InitStateType = {} as InitStateType, description: string = 'Сброс'): void {
     this.setState(mc.update(this.initState(), update), description);
   }
 }

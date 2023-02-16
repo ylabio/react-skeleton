@@ -1,9 +1,10 @@
 import mc from 'merge-change';
 import listToTree from '@src/utils/list-to-tree';
 import StoreModule from '@src/services/store/module';
+import { InitStateType } from '../list-params';
 
 class CategoriesState extends StoreModule {
-  initState() {
+  initState(): InitStateType {
     return {
       items: [],
       roots: [],

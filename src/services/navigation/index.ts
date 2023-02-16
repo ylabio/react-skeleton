@@ -45,7 +45,7 @@ class NavigationService implements NavigationService {
     return this.config.basename || "";
   }
 
-  push(path: string, state: any) {
+  push(path: string, state?: any) {
     return this._history.push(path, state);
   }
 
@@ -117,7 +117,8 @@ class NavigationService implements NavigationService {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams(params: any, push: boolean = true, clear: boolean = false, path: string) {
+  setSearchParams({ params, push = true, clear = false, path }
+    :{ params: any, push?: boolean, clear?: boolean, path?: string }) {
     const currentParams = this.getSearchParams();
     const newParams = clear ? params : mc.update(currentParams, params);
     let newSearch = qs.stringify(newParams, {
