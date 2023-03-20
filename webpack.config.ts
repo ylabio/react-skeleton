@@ -148,7 +148,7 @@ if (isWeb) {
       template: './index.html',
       filename: './index.html',
       title: 'App',
-      base: appConfig.navigation.basename,
+      base: appConfig.navigation?.basename,
     }),
   );
 }
@@ -164,9 +164,9 @@ if (isDevelopment && isWeb) {
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.devServer = {
     static: path.join(__dirname, 'dist', target),
-    port: appConfig.devServer.port,
+    port: appConfig.devServer?.port,
     historyApiFallback: true,
-    proxy: appConfig.devServer.proxy,
+    proxy: appConfig.devServer?.proxy,
   };
 }
 
