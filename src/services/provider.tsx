@@ -1,5 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import Services from '.';
 
 /**
  * Контекст для Service
@@ -12,7 +13,7 @@ export const ServicesContext = React.createContext({});
  * Подключает контекст к приложение для доступа к сервисам.
  * Провайдер не обрабатывает изменения в services.
  */
-function ServicesProvider({ services, children }: { services: any, children: React.ReactNode }) {
+function ServicesProvider({ services, children }: { services: Services, children: React.ReactNode }) {
   // В провайдер передатся объект services,
   // после чего services можно получиь через useContext(ServicesContext) в любом компоненте
   return <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>;

@@ -12,8 +12,7 @@
     "build:analize": "cross-env NODE_ENV=production BUILD_ANALYZE=true webpack",
     "server": "node ./server.js",
     "test": "jest",
-    "test:eslint": "./node_modules/.bin/eslint ./",
-    "storybook": "cross-env NODE_ENV=development start-storybook -p 9030 -c .storybook"
+    "test:eslint": "./node_modules/.bin/eslint ./"
   },
   "private": true,
   "author": "Vladimir Shestakov boolive@yandex.ru",
@@ -55,13 +54,8 @@
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
-    "@dump247/storybook-state": "^1.6.1",
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.15.2",
-    "@storybook/addon-actions": "^6.5.13",
-    "@storybook/addon-info": "^5.3.21",
-    "@storybook/addons": "^6.5.13",
-    "@storybook/react": "^6.5.13",
     "@types/loadable__server": "^5.12.6",
     "@types/lodash.get": "^4.4.7",
     "@types/react-dom": "^18.0.9",

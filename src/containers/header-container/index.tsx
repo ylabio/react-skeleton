@@ -6,15 +6,11 @@ import MenuTop from '@src/components/menus/menu-top';
 import Button from '@src/components/elements/button';
 import Logo from '@src/components/elements/logo';
 import { useLocation } from 'react-router-dom';
-import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
 
 interface Props {}
 
 function HeaderContainer(props: Props) {
-  const select: any = useSelector((state: any) => ({
-    session: state.session,
-  }));
 
   const location = useLocation();
 
@@ -49,21 +45,13 @@ function HeaderContainer(props: Props) {
   const renders = {
     right: useMemo(() => {
       let result = [];
-      if (select.session.exists) {
-        result.push(
-          <Button key={1} theme={['clear-white', 'margins']} onClick={callbacks.onClickLogout}>
-            Выход
-          </Button>,
-        );
-      } else {
-        result.push(
-          <Button key={1} theme={['clear-white', 'margins']} onClick={callbacks.onClickLogin}>
-            Вход
-          </Button>,
-        );
-      }
+      result.push(
+        <Button key={1} theme={['clear-white', 'margins']} onClick={callbacks.onClickLogin}>
+          Вход
+        </Button>,
+      );
       return result;
-    }, [select.session, callbacks.onClickLogout, callbacks.onClickLogin]),
+    }, [callbacks.onClickLogout, callbacks.onClickLogin]),
   };
 
   return <LayoutHeader left={<Logo />} right={renders.right} center={<MenuTop items={items} />} />;

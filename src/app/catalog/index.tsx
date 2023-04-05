@@ -12,30 +12,30 @@ function Catalog() {
   const { categoryId } = useParams<{ categoryId: string }>();
   const services = useServices();
 
-  useInit(
-    async () => {
-      // Инициализация параметров для начально выборки по ним
-      await services.store.articles.initParams({ filter: { category: categoryId } });
-    },
-    [categoryId],
-    { ssr: 'articles.init' },
-  );
+  // useInit(
+  //   async () => {
+  //     // Инициализация параметров для начально выборки по ним
+  //     await services.store.articles.initParams({ filter: { category: categoryId } });
+  //   },
+  //   [categoryId],
+  //   { ssr: 'articles.init' },
+  // );
 
-  useInit(
-    async () => {
-      await services.store.categories.load({ fields: '*', limit: 1000 });
-    },
-    [],
-    { ssr: 'categories.load' },
-  );
+  // useInit(
+  //   async () => {
+  //     await services.store.categories.load({ fields: '*', limit: 1000 });
+  //   },
+  //   [],
+  //   { ssr: 'categories.load' },
+  // );
 
   return (
     <LayoutPage header={<HeaderContainer />}>
       <LayoutContent>
         <h1>Каталог</h1>
-        <CategoryTree />
+        {/* <CategoryTree /> */}
         <hr />
-        <ArticleList />
+        {/* <ArticleList /> */}
       </LayoutContent>
     </LayoutPage>
   );

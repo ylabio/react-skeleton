@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import loadable from '@loadable/component';
-import Modals from '@src/app/modals';
+// import Modals from '@src/app/modals';
 import Loading from '@src/app/loading';
 import RequireAuth from '@src/containers/require-auth';
 import HeaderContainer from '@src/containers/header-container';
@@ -16,7 +16,7 @@ import HeaderContainer from '@src/containers/header-container';
 
 // Динамический импорт. При сборке деление на чанки
 const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
-const Login = loadable(() => import('@src/app/login'), { fallback: <Loading /> });
+// const Login = loadable(() => import('@src/app/login'), { fallback: <Loading /> });
 const About = loadable(() => import('@src/app/about'), { fallback: <Loading /> });
 const Catalog = loadable(() => import('@src/app/catalog'), { fallback: <Loading /> });
 const Private = loadable(() => import('@src/app/private'), { fallback: <Loading /> });
@@ -33,7 +33,7 @@ function App() {
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/catalog/:categoryId" element={<Catalog />} />
         <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route
           path="/private/*"
           element={
@@ -44,7 +44,7 @@ function App() {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Modals />
+      {/* <Modals /> */}
     </Fragment>
   );
 }

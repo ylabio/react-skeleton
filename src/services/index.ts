@@ -79,14 +79,6 @@ class Services {
   }
 
   /**
-   * Сервис API
-   * @returns {ApiService}
-   */
-  get api() {
-    return this.get('api');
-  }
-
-  /**
    * Сервис навигации
    * @returns {NavigationService}
    */
@@ -94,29 +86,6 @@ class Services {
     return this.get('navigation');
   }
 
-  /**
-   * Сервис действий и состояния приложения
-   * @returns {StoreService}
-   */
-  get store() {
-    return this.get('store');
-  }
-
-  /**
-   * Сервис рендера на сервере
-   * @returns {SSRService}
-   */
-  get ssr() {
-    return this.get('ssr');
-  }
-
-  /**
-   * Сервис спецификаций
-   * @returns {SpecService}
-   */
-  get spec() {
-    return this.get('spec');
-  }
 }
 
 export default Services;
