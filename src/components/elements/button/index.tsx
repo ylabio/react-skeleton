@@ -1,19 +1,11 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import cn from 'classnames';
-import themes from '@src/utils/themes';
+import { bem } from '@src/utils/bem';
 import './style.less';
+import { ButtonProps } from './type';
 
-interface Props {
-  onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
-  theme: string | string[];
-  title?: string;
-  disabled?: boolean;
-  children: React.ReactNode;
-}
+function Button({ type = 'button', disabled = false, theme = '', ...props }: ButtonProps) {
+  const cn = bem('Button');
 
-function Button(props: Props) {
   const callbacks = {
     onClick: useCallback(
       (e: React.SyntheticEvent) => {
@@ -28,30 +20,15 @@ function Button(props: Props) {
 
   return (
     <button
-      type={props.type}
-      className={themes('Button', props.theme)}
+      type={type}
+      className={cn({theme: theme})}
       title={props.title}
       onClick={callbacks.onClick}
-      disabled={props.disabled}
+      disabled={disabled}
     >
       {props.children}
     </button>
   );
 }
-
-Button.propTypes = {
-  children: PropTypes.node,
-  onClick: PropTypes.func,
-  type: PropTypes.string,
-  title: PropTypes.string,
-  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  disabled: PropTypes.bool,
-};
-
-Button.defaultProps = {
-  type: 'button',
-  disabled: false,
-  theme: '',
-};
 
 export default React.memo(Button);

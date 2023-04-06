@@ -21,13 +21,6 @@ import ServicesProvider from '@src/services/provider';
 
   // Метод рендера по умолчанию
   let hydrate = false;
-  // Если есть подготовленные данные от SSR
-  // if (services.ssr.hasPreloadState()) {
-  //   // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store
-  //   services.store.setState(await services.ssr.getPreloadState());
-  //   // Гидрация DOM от SSR
-  //   hydrate = true;
-  // }
 
   const app = (
     <ServicesProvider services={services}>
