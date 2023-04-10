@@ -115,7 +115,7 @@ class NavigationService implements NavigationService {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams(params: any, push = true, clear = false, path: string) {
+  setSearchParams(params: any, push = true, clear = false, path?: string) {
     const currentParams = this.getSearchParams();
     const newParams = clear ? params : mc.update(currentParams, params);
     let newSearch = qs.stringify(newParams, {

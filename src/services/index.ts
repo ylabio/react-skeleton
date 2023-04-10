@@ -1,17 +1,30 @@
 import mc from 'merge-change';
 import allServices from './export';
 
-const services: any = allServices;
+export type IServices = typeof allServices
+
+export type IServicesClasses = {
+  [P in keyof IServices]: Awaited<ReturnType<IServices[P]>>["default"]
+}
+
+export type IServicesModules = {
+  [P in keyof IServicesClasses]: InstanceType<IServicesClasses[P]>
+}
+
+const services: IServices = allServices;
+
+type INameServices = keyof IServices;
+
 
 class Services {
-  list: any;
+  list: IServicesModules;
   configs: any;
   classes: any;
   _env: any;
 
   constructor() {
     this.configs = {};
-    this.list = {};
+    this.list = {} as IServicesModules;
     this.classes = {};
     this._env = process.env;
   }
@@ -24,7 +37,7 @@ class Services {
     this.configure(configs);
     // Асинхронная загрузка классов сервисов
     let promises = [];
-    const names = Object.keys(services);
+    const names = Object.keys(services) as INameServices[];
     for (const name of names) {
       promises.push(
         services[name]().then((module: any) => {
@@ -59,7 +72,7 @@ class Services {
    * Сервис создаётся в единственном экземпляре и при первом обращении инициализируется
    * @return {*}
    */
-  get(name: string, params = {}) {
+  get<T extends keyof IServicesModules>(name: T, params = {}): IServicesModules[T] {
     if (!this.list[name]) {
       if (!this.classes[name]) {
         console.log(this.list, this.classes, name);
@@ -67,13 +80,7 @@ class Services {
       }
       const Constructor = this.classes[name];
       this.list[name] = new Constructor();
-      let configName;
-      if (this.list[name].configName === 'function') {
-        configName = this.list[name].configName();
-      } else {
-        configName = name;
-      }
-      this.list[name].init(mc.merge(this.configs[configName], params), this);
+      this.list[name].init(mc.merge(this.configs[name], params), this);
     }
     return this.list[name];
   }
@@ -84,6 +91,14 @@ class Services {
    */
   get navigation() {
     return this.get('navigation');
+  }
+
+  /**
+   * Сервис навигации
+   * @returns {StoreService}
+   */
+  get store() {
+    return this.get('store');
   }
 
 }
