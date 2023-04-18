@@ -1,20 +1,7 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
 import Services from '@src/services';
-
-export interface InitListParamsStateType {
-  items: any[],
-  count: number,
-  params: {
-    limit: number,
-    page: number,
-    sort: { date: 'asc' |  'desc'},
-    fields: string,
-    filter: object,
-  },
-  wait: false,
-  errors: null,
-}
+import { InitListParamsStateType } from './types';
 
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
@@ -197,9 +184,9 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    * @return {Object} Корректные параметры
    */
   validateParams(params: any) {
-    if (!this.validator(params)) {
-      params = this.initState().params;
-    }
+    // if (!this.validator(params)) {
+    //   params = this.initState().params;
+    // }
     return params;
   }
 
@@ -217,6 +204,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       filter: params.filter,
     };
   }
+
 }
 
 export default ListParamsState;

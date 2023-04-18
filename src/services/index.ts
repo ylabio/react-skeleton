@@ -1,19 +1,8 @@
 import mc from 'merge-change';
 import allServices from './export';
+import { INameServices, IServices, IServicesModules } from './types';
 
-export type IServices = typeof allServices
-
-export type IServicesClasses = {
-  [P in keyof IServices]: Awaited<ReturnType<IServices[P]>>["default"]
-}
-
-export type IServicesModules = {
-  [P in keyof IServicesClasses]: InstanceType<IServicesClasses[P]>
-}
-
-const services: IServices = allServices;
-
-type INameServices = keyof IServices;
+export const services: IServices = allServices;
 
 
 class Services {

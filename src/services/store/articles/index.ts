@@ -1,5 +1,6 @@
 import mc from 'merge-change';
-import ListParamsState, { InitListParamsStateType } from '@src/services/store/list-params';
+import ListParamsState from '@src/services/store/list-params';
+import { InitListParamsStateType } from '../list-params/types';
 
 /**
  * Модуль товаров

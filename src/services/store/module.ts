@@ -1,6 +1,7 @@
 import mc from 'merge-change';
-import StoreService, { INameModules } from '@src/services/store/index';
+import StoreService from '@src/services/store/index';
 import Services from '..';
+import { INameModules } from './types';
 
 /**
  * Базовый класс модуля хранилища

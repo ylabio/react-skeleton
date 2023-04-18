@@ -1,18 +1,7 @@
 import * as modules from './exports';
 import mc from 'merge-change';
 import Services from '..';
-
-export type IModules = typeof modules
-
-export type IStoreModules = {
-  [P in keyof IModules]: InstanceType<IModules[P]>
-}
-
-export type IRootState = {
-  [P in keyof IStoreModules]: ReturnType<IStoreModules[P]['initState']>
-}
-
-export type INameModules = keyof IModules;
+import { INameModules, IRootState, IStoreModules } from './types';
 
 export interface IDefaultConfig {
   name: INameModules;
@@ -26,9 +15,10 @@ export interface IDefaultConfig {
 class StoreService {
   state: IRootState;
   private listeners: any[];
-  private modules: IStoreModules;
+  modules: IStoreModules;
   public services: Services;
   private config: any;
+  // actions: IStoreModules
 
 
   constructor() {
@@ -39,6 +29,15 @@ class StoreService {
     this.listeners = [];
     // Модули
     this.modules = {} as IStoreModules;
+
+    // this.actions = new Proxy (this.modules, {
+    //   get: <T extends keyof IStoreModules>(target: IStoreModules, key: T) => {
+    //     if (!target[key]) {
+    //       throw new Error ('Store module not found');
+    //     }
+    //     return target[key];
+    //   }
+    // })
   }
 
   init(config: any, services: Services) {
@@ -117,6 +116,10 @@ class StoreService {
     }
   }
 
+  get actions() {
+    return this.modules;
+  }
+
   /**
    * Доступ к модулю состояния
    * @param name {String} Название модуля
@@ -124,13 +127,6 @@ class StoreService {
    */
   get<T extends keyof IStoreModules>(name: T): IStoreModules[T] {
     return this.modules[name];
-  }
-
-  /**
-   * @return {ArticlesState}
-   */
-  get articles() {
-    return this.get('articles');
   }
 }
 
