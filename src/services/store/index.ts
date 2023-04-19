@@ -1,7 +1,7 @@
 import * as modules from './exports';
 import mc from 'merge-change';
-import Services from '..';
 import { INameModules, IRootState, IStoreModules } from './types';
+import { IServicesModules } from '../types';
 
 export interface IDefaultConfig {
   name: INameModules;
@@ -16,13 +16,13 @@ class StoreService {
   state: IRootState;
   private listeners: any[];
   modules: IStoreModules;
-  public services: Services;
+  public services: IServicesModules;
   private config: any;
   // actions: IStoreModules
 
 
   constructor() {
-    this.services = {} as Services;
+    this.services = {} as IServicesModules;
     // Состояние приложения (данные всех модулей)
     this.state = {} as IRootState;
     // Подписчики на изменение state
@@ -40,7 +40,7 @@ class StoreService {
     // })
   }
 
-  init(config: any, services: Services) {
+  init(config: any, services: IServicesModules) {
     this.services = services;
     this.config = config;
     const names = Object.keys(modules) as INameModules[];

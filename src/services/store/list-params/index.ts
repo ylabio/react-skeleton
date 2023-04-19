@@ -1,6 +1,5 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
-import Services from '@src/services';
 import { InitListParamsStateType } from './types';
 
 /**
@@ -10,12 +9,6 @@ import { InitListParamsStateType } from './types';
 class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
   validator: any;
   api: any;
-
-  constructor(config: any, services: Services) {
-    super(config, services);
-    // this.validator = this.services.spec.createValidator(this.schemaParams());
-    // this.api = this.services.api.get(this.config.apiEndpoint);
-  }
 
   /**
    * Конфигурация по умолчанию

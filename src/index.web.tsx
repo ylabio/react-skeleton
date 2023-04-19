@@ -18,6 +18,8 @@ import ServicesProvider from '@src/services/provider';
   // Через него получаем сервисы api, navigation, store и другие
   // При первом обращении к ним, они будут автоматически инициализированы с учётом конфигурации
   const services = await new Services().init(config);
+  // new Services().init(config).then(() => ...)
+  console.log('index.web.tsx', services);
 
   // Метод рендера по умолчанию
   let hydrate = false;

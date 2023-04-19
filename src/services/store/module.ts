@@ -1,21 +1,21 @@
 import mc from 'merge-change';
 import StoreService from '@src/services/store/index';
-import Services from '..';
 import { INameModules } from './types';
+import { IServicesModules } from '../types';
 
 /**
  * Базовый класс модуля хранилища
  */
 class StoreModule<Config = {}> {
   store: StoreService;
-  services: Services;
+  services: IServicesModules;
   config: { name: INameModules } & Config;
 
   /**
    * @param config {Object} Конфиг модуля
-   * @param services {Services}
+   * @param services {IServicesModules}
    */
-  constructor(config: any, services: Services) {
+  constructor(config: any, services: IServicesModules) {
     this.services = services;
     this.store = this.services.store;
     this.config = mc.patch(this.defaultConfig(), config);

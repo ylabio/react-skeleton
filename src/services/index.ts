@@ -4,18 +4,25 @@ import { INameServices, IServices, IServicesModules } from './types';
 
 export const services: IServices = allServices;
 
-
 class Services {
   list: IServicesModules;
   configs: any;
   classes: any;
   _env: any;
+  proxy: IServicesModules;
 
   constructor() {
     this.configs = {};
     this.list = {} as IServicesModules;
     this.classes = {};
     this._env = process.env;
+    const self = this;
+    this.proxy = new Proxy (this.list, {
+      get: <T extends keyof (IServicesModules)>(target: IServicesModules, key: T) => {
+        console.log(key);
+        return self.get(key);
+      }
+    })
   }
 
   /**
@@ -35,7 +42,9 @@ class Services {
       );
     }
     await Promise.all(promises);
-    return this;
+
+    // return this;
+    return Promise.resolve(this.proxy);
   }
 
   /**
@@ -69,26 +78,26 @@ class Services {
       }
       const Constructor = this.classes[name];
       this.list[name] = new Constructor();
-      this.list[name].init(mc.merge(this.configs[name], params), this);
+      this.list[name].init(mc.merge(this.configs[name], params), this.proxy);
     }
     return this.list[name];
   }
 
-  /**
-   * Сервис навигации
-   * @returns {NavigationService}
-   */
-  get navigation() {
-    return this.get('navigation');
-  }
+  // /**
+  //  * Сервис навигации
+  //  * @returns {NavigationService}
+  //  */
+  // get navigation() {
+  //   return this.get('navigation');
+  // }
 
-  /**
-   * Сервис навигации
-   * @returns {StoreService}
-   */
-  get store() {
-    return this.get('store');
-  }
+  // /**
+  //  * Сервис навигации
+  //  * @returns {StoreService}
+  //  */
+  // get store() {
+  //   return this.get('store');
+  // }
 
 }
 
