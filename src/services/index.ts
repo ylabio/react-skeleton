@@ -86,22 +86,6 @@ class Services {
     return this.list[name];
   }
 
-  // /**
-  //  * Сервис навигации
-  //  * @returns {NavigationService}
-  //  */
-  // get navigation() {
-  //   return this.get('navigation');
-  // }
-
-  // /**
-  //  * Сервис навигации
-  //  * @returns {StoreService}
-  //  */
-  // get store() {
-  //   return this.get('store');
-  // }
-
 }
 
 export default Services;

@@ -6,7 +6,6 @@
   "env": {
     "development": {
       "plugins": [
-        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
         [
           "@babel/plugin-transform-react-jsx",
           {
@@ -32,7 +31,6 @@
     },
     "production": {
       "plugins": [
-        ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
         "@babel/plugin-transform-runtime",
         "@babel/plugin-proposal-class-properties",
         "@babel/plugin-transform-react-jsx",
