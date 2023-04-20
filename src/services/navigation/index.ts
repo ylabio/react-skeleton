@@ -1,6 +1,7 @@
 import { BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
+import { IServicesModules } from '../types';
 
 /**
  * Сервис навигации (History API)
@@ -9,10 +10,16 @@ import mc from 'merge-change';
  */
 class NavigationService implements NavigationService {
   config: any;
-  services: any;
+  services: IServicesModules;
   _history!: MemoryHistory | BrowserHistory;
 
-  init(config: any, services: any) {
+  constructor() {
+    this.services = {} as IServicesModules;
+    // Модули
+    // this.modules = {} as IStoreModules;
+  }
+
+  init(config: any, services: IServicesModules) {
     this.services = services;
     this.config = config;
     switch (this.config.type) {
