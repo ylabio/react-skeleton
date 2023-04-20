@@ -19,8 +19,11 @@ class Services {
     const self = this;
     this.proxy = new Proxy (this.list, {
       get: <T extends keyof (IServicesModules)>(target: IServicesModules, key: T) => {
-        console.log(key);
-        return self.get(key);
+        if (this.classes[key]) { // проверяем на классах, так list может быть пуст
+          return self.get(key);
+        } else {
+          return target[key]; // Для доступа к служебным полям объекта
+        }
       }
     })
   }
