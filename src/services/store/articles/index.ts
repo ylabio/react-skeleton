@@ -42,6 +42,11 @@ class ArticlesState extends ListParamsState {
       },
     });
   }
+
+  async findMany(params: any) {
+    const response = await this.services.api.endpoints.articles.findMany(params);
+    return response.data.result;
+  }
 }
 
 export default ArticlesState;

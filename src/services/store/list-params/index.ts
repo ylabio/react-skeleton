@@ -149,9 +149,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
         // Параметры для API запроса (конвертация из всех параметров состояния с учётом новых)
         const apiParams = this.apiParams(newParams);
         // Выборка данных из АПИ
-        const response = await this.api.findMany(apiParams);
-        // Установка полученных данных в состояние
-        const result = response.data.result;
+        const result = await this.findMany(apiParams);
         this.updateState(mc.patch(result, { wait: false, errors: null }), 'Список загружен');
       }
       return true;
@@ -195,6 +193,13 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       fields: params.fields.replace(/\s/g, ''),
       sort: params.sort,
       filter: params.filter,
+    };
+  }
+
+  async findMany(params: any) {
+    return {
+      items: [],
+      count: 0,
     };
   }
 

@@ -20,12 +20,12 @@ export interface IDefaultConfig {
 class ApiService {
   config!: { default: AxiosRequestConfig, endpoints: IEndpointsModules };
   services: IServicesModules;
-  endpoints!: IEndpointsModules;
+  _endpoints!: IEndpointsModules;
   _axios!: AxiosInstance;
 
   constructor() {
     this.services = {} as IServicesModules;
-    this.endpoints = {} as IEndpointsModules;
+    this._endpoints = {} as IEndpointsModules;
   }
 
   async init(config: any, services: IServicesModules) {
@@ -59,8 +59,8 @@ class ApiService {
     if (!config.proto) config.proto = config.name;
     if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
     const Constructor = endpoints[config.proto];
-    this.endpoints[config.name] = new Constructor(config, this.services);
-    return this.endpoints[config.name];
+    this._endpoints[config.name] = new Constructor(config, this.services);
+    return this._endpoints[config.name];
   }
 
   /**
@@ -93,8 +93,9 @@ class ApiService {
     return this.axios.request(options);
   }
 
-  get actions() {
-    return this.endpoints;
+  //переназвать на endpoints
+  get endpoints() {
+    return this._endpoints;
   }
 
   /**
@@ -103,10 +104,10 @@ class ApiService {
    * @returns {BaseEndpoint}
    */
   get<T extends keyof IEndpointsModules>(name: T): IEndpointsModules[T] {
-    if (!this.endpoints[name]) {
+    if (!this._endpoints[name]) {
       throw new Error(`Not found endpoint "${name}"`);
     }
-    return this.endpoints[name];
+    return this._endpoints[name];
   }
 }
 

@@ -7,10 +7,4 @@ export type IEndpointsModules = {
   [P in keyof IAllEndpoints]: InstanceType<IAllEndpoints[P]>
 }
 
-export type INameEndpoints = keyof IEndpointsModules;
-
-export interface IEndpoint {
-  services: IServicesModules;
-  api: any;
-  config: any;
-}
+export type INameEndpoints = keyof IAllEndpoints;
