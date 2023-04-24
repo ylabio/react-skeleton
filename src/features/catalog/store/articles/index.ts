@@ -1,12 +1,17 @@
 import mc from 'merge-change';
-import ListParamsState from '@src/services/store/list-params';
+import ListParamsState from '@src/features/catalog/store/list-params';
 import { InitListParamsStateType } from '../list-params/types';
 
 /**
  * Модуль товаров
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список товаров.
  */
-class ArticlesState extends ListParamsState {
+
+interface IArticlesState {
+  test: () => string;
+}
+
+class ArticlesState extends ListParamsState implements IArticlesState {
   defaultConfig() {
     return mc.patch(super.defaultConfig(), {
       apiEndpoint: 'articles', // Если endpoint не реализован, то, возможно, он создаётся динамически
@@ -46,6 +51,10 @@ class ArticlesState extends ListParamsState {
   async findMany(params: any) {
     const response = await this.services.api.endpoints.articles.findMany(params);
     return response.data.result;
+  }
+
+  test() {
+    return 'test';
   }
 }
 

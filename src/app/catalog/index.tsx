@@ -1,5 +1,5 @@
 import React from 'react';
-import ArticleList from '@src/containers/article-list';
+import ArticleList from '@src/features/catalog/containers/article-list';
 import useInit from '@src/utils/hooks/use-init';
 import { useParams } from 'react-router-dom';
 import useServices from '@src/utils/hooks/use-services';
@@ -9,12 +9,12 @@ function Catalog() {
   const services = useServices();
 
   useInit(
-    async () => {
+    () => {
       // Инициализация параметров для начально выборки по ним
-      await services.store.actions.articles.initParams({ filter: { category: categoryId } });
+      services.store.actions.articles.initParams({ filter: { category: categoryId } });
+      services.store.actions.articles.findMany({});
     },
     [categoryId],
-    { ssr: 'articles.init' },
   );
 
   // useInit(

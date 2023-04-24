@@ -4,7 +4,6 @@ import mc from 'merge-change';
 import { IEndpointsModules, INameEndpoints } from './types';
 import { IServicesModules } from '../types';
 
-// const endpoints: IEndpointsModules = allEndpoints;
 
 export interface IDefaultConfig {
   name: INameEndpoints;
@@ -32,9 +31,6 @@ class ApiService {
     this.services = services;
     this.config = config;
     this._axios = axios.create(this.config.default);
-    // Object.entries(this.config.default).forEach(([name, value]) => {
-    //   this.axios.defaults[name] = value;
-    // });
     // Создание модулей endpoint
     const names = Object.keys(endpoints) as INameEndpoints[];
     for (const name of names) {
@@ -52,14 +48,13 @@ class ApiService {
    *   ... другие опции, переопределяющие опции конфига
    * @return {BaseEndpoint}
    */
-  createEndpoint(config: IDefaultConfig) {
+  createEndpoint<T extends keyof IEndpointsModules>(config: {name: T}) {
     if (!config.name) throw new Error('Undefined endpoint name ');
     config = mc.merge(this.config.endpoints[config.name], config);
     // Если нет класса сопоставленного с name, то используется класс по умолчанию
-    if (!config.proto) config.proto = config.name;
-    if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
-    const Constructor = endpoints[config.proto];
-    this._endpoints[config.name] = new Constructor(config, this.services);
+    if (!endpoints[config.name]) throw new Error(`Not found base endpoint "${config.name}"`);
+    const Constructor = endpoints[config.name];
+    this._endpoints[config.name] = new Constructor(config, this.services) as IEndpointsModules[T];
     return this._endpoints[config.name];
   }
 

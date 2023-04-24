@@ -2,10 +2,11 @@ import React from 'react';
 import useSelector from '@src/utils/hooks/use-selector';
 
 function ArticleList() {
-  const select: any = useSelector((state) => ({
+  const select = useSelector((state) => ({
     items: state.articles.items,
     wait: state.articles.wait,
   }));
+
 
   if (select.wait || !select.items) {
     return <div>{select.wait && <i>Загрузка...</i>}</div>;

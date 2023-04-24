@@ -76,7 +76,6 @@ class Services {
   get<T extends keyof IServicesModules>(name: T, params = {}): IServicesModules[T] {
     if (!this.list[name]) {
       if (!this.classes[name]) {
-        console.log(this.list, this.classes, name);
         throw new Error(`Unknown service name "${name}"`);
       }
       const Constructor = this.classes[name];
