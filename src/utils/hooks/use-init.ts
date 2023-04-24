@@ -15,7 +15,7 @@ interface initOptions {
 }
 
 export default function useInit(
-  callback: (ev: PopStateEvent | boolean) => void,
+  callback: (ev?: PopStateEvent | boolean) => void,
   inputs: any[] = [],
   options: initOptions = { onBackForward: false, ssr: null, ssrForce: false },
 ) {
@@ -26,6 +26,7 @@ export default function useInit(
   } else {
     // На клиенте используется хук эффекта по умолчанию один раз, если не переданы зависимости inputs
     useEffect(() => {
+      callback();
       // Если в истории браузера меняются только query-параметры, то react-router не оповестит
       // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
       // браузера (если нужно отреагировать на изменения query-параметров при переходе по истории)
