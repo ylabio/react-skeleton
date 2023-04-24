@@ -54,7 +54,7 @@ class StoreService {
    * Инициализация модуля хранилища
    * @param config
    */
-  initModule(config: IDefaultConfig) {
+  initModule<T extends keyof IStoreModules>(config: {name: T, disabled?: boolean, proto?: T}) {
     if (!config.name) throw new Error('Undefined store module name ');
     config = mc.merge(this.config.states[config.name], config);
     if (config.disabled !== true) {
@@ -64,7 +64,7 @@ class StoreService {
       const constructor = modules[config.proto];
 
       // Экземпляр модуля
-      this.modules[config.name] = new constructor(config, this.services);
+      this.modules[config.name] = new constructor(config, this.services) as IStoreModules[T];
       // Состояние по умочланию от модуля
       if (!this.state[config.name]) {
         this.state[config.name] = this.modules[config.name].initState();
