@@ -4,8 +4,6 @@ import mc from 'merge-change';
 import { IEndpointsModules, INameEndpoints } from './types';
 import { IServicesModules } from '../types';
 
-// const endpoints: IEndpointsModules = allEndpoints;
-
 export interface IDefaultConfig {
   name: INameEndpoints;
   proto?: INameEndpoints;
@@ -20,21 +18,18 @@ export interface IDefaultConfig {
 class ApiService {
   config!: { default: AxiosRequestConfig, endpoints: IEndpointsModules };
   services: IServicesModules;
-  endpoints!: IEndpointsModules;
+  _endpoints!: IEndpointsModules;
   _axios!: AxiosInstance;
 
   constructor() {
     this.services = {} as IServicesModules;
-    this.endpoints = {} as IEndpointsModules;
+    this._endpoints = {} as IEndpointsModules;
   }
 
   async init(config: any, services: IServicesModules) {
     this.services = services;
     this.config = config;
     this._axios = axios.create(this.config.default);
-    // Object.entries(this.config.default).forEach(([name, value]) => {
-    //   this.axios.defaults[name] = value;
-    // });
     // Создание модулей endpoint
     const names = Object.keys(endpoints) as INameEndpoints[];
     for (const name of names) {
@@ -52,15 +47,14 @@ class ApiService {
    *   ... другие опции, переопределяющие опции конфига
    * @return {BaseEndpoint}
    */
-  createEndpoint(config: IDefaultConfig) {
+  createEndpoint<T extends keyof IEndpointsModules>(config: {name: T}) {
     if (!config.name) throw new Error('Undefined endpoint name ');
     config = mc.merge(this.config.endpoints[config.name], config);
     // Если нет класса сопоставленного с name, то используется класс по умолчанию
-    if (!config.proto) config.proto = config.name;
-    if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
-    const Constructor = endpoints[config.proto];
-    this.endpoints[config.name] = new Constructor(config, this.services);
-    return this.endpoints[config.name];
+    if (!endpoints[config.name]) throw new Error(`Not found base endpoint "${config.name}"`);
+    const Constructor = endpoints[config.name];
+    this._endpoints[config.name] = new Constructor(config, this.services) as IEndpointsModules[T];
+    return this._endpoints[config.name];
   }
 
   /**
@@ -93,8 +87,8 @@ class ApiService {
     return this.axios.request(options);
   }
 
-  get actions() {
-    return this.endpoints;
+  get endpoints() {
+    return this._endpoints;
   }
 
   /**
@@ -103,10 +97,10 @@ class ApiService {
    * @returns {BaseEndpoint}
    */
   get<T extends keyof IEndpointsModules>(name: T): IEndpointsModules[T] {
-    if (!this.endpoints[name]) {
+    if (!this._endpoints[name]) {
       throw new Error(`Not found endpoint "${name}"`);
     }
-    return this.endpoints[name];
+    return this._endpoints[name];
   }
 }
 
