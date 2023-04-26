@@ -5,7 +5,6 @@ let cache = new Map();
 export default function useSuspense(callback: Function, key: NonNullable<unknown>) {
   useEffect(() => {
     if(cache.get(key)?.timeout) clearTimeout(cache.get(key).timeout);
-
     return () => {
       cache.delete(key)
     };
@@ -22,24 +21,20 @@ export default function useSuspense(callback: Function, key: NonNullable<unknown
         }
       }).then(
         () => {
-          cacheData.status = 'fulfilled';
-          cacheData.timeout = setTimeout(() => {
-            cache.delete(key);
-          }, 0);
-        },
-        () => {
-          cacheData.status = 'rejected';
-          cacheData.timeout = setTimeout(() => {
-            cache.delete(key);
-          }, 0);
-        },
+          cache.set(key, {
+            ...cache.get(key),
+            waiting: false,
+            timeout: setTimeout(() => {
+              cache.delete(key);
+            }, 0),
+          })
+        }
       ),
-      status: 'pending',
+      waiting: true,
       timeout: undefined,
     });
   }
-  let cacheData = cache.get(key) as {promise:Promise<string>, status: string; timeout: any};
-  if (cacheData.status === 'pending') {
-    throw cacheData.promise;
+  if (cache.get(key).waiting) {
+    throw cache.get(key).promise;
   }
 }
