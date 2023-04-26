@@ -21,7 +21,11 @@ function ArticleList() {
     // wait: state.articles.wait,
   }));
 
-  useSuspense(async () => services.store.actions.articles.initParams({ filter: { category: categoryId } }), `ArticleList${categoryId}`);
+  useSuspense(async () => {
+      await services.store.actions.articles.initParams({ filter: { category: categoryId } })
+    },
+    `ArticleList${categoryId}`
+  );
 
   return (
     <ul>

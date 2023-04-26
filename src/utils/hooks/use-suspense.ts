@@ -1,32 +1,45 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 let cache = new Map();
 
 export default function useSuspense(callback: Function, key: NonNullable<unknown>) {
   useEffect(() => {
-    return cache.clear();
-  });
+    if(cache.get(key)?.timeout) clearTimeout(cache.get(key).timeout);
+
+    return () => {
+      cache.delete(key)
+    };
+  }, []);
   if (!cache.has(key)) {
-    cache.set(key, callback());
+    cache.set(key, {
+      promise: new Promise(async (res, rej) => {
+        try {
+          await callback();
+          res('done');
+        }
+        catch(e) {
+          rej(e)
+        }
+      }).then(
+        () => {
+          cacheData.status = 'fulfilled';
+          cacheData.timeout = setTimeout(() => {
+            cache.delete(key);
+          }, 0);
+        },
+        () => {
+          cacheData.status = 'rejected';
+          cacheData.timeout = setTimeout(() => {
+            cache.delete(key);
+          }, 0);
+        },
+      ),
+      status: 'pending',
+      timeout: undefined,
+    });
   }
-  let promise = cache.get(key) as Promise<string> & {status: string; value: any; reason: any};
-  if (promise.status === 'fulfilled') {
-    // return promise.value;
-  } else if (promise.status === 'rejected') {
-    throw promise.reason;
-  } else {
-    // promise.status = 'pending';
-    promise.then(
-      result => {
-        promise.status = 'fulfilled';
-        promise.value = result;
-      },
-      reason => {
-        promise.status = 'rejected';
-        promise.reason = reason;
-      },
-    );
-    throw promise;
+  let cacheData = cache.get(key) as {promise:Promise<string>, status: string; timeout: any};
+  if (cacheData.status === 'pending') {
+    throw cacheData.promise;
   }
-  return promise.value;
 }
