@@ -50,11 +50,11 @@ class NavigationService implements NavigationService {
     return this.config.basename;
   }
 
-  push(path: string, state: any) {
+  push(path: string, state?: any) {
     return this._history.push(path, state);
   }
 
-  replace(path: string, state: any) {
+  replace(path: string, state?: any) {
     return this._history.replace(path, state);
   }
 

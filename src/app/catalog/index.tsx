@@ -1,35 +1,23 @@
-import React from 'react';
-import ArticleList from '@src/features/catalog/containers/article-list';
-import useInit from '@src/utils/hooks/use-init';
-import { useParams } from 'react-router-dom';
+import React, { Suspense } from 'react';
 import useServices from '@src/utils/hooks/use-services';
+import Loading from '../loading';
+import Button from '@src/components/elements/button';
+
+const ArticleList = React.lazy(() => import('@src/features/catalog/containers/article-list'));
 
 function Catalog() {
-  const { categoryId } = useParams<{ categoryId: string }>();
   const services = useServices();
-
-  useInit(
-    () => {
-      // Инициализация параметров для начально выборки по ним
-      services.store.actions.articles.initParams({ filter: { category: categoryId } });
-      services.store.actions.articles.findMany({});
-    },
-    [categoryId],
-  );
-
-  // useInit(
-  //   async () => {
-  //     await services.store.actions.categories.load({ fields: '*', limit: 1000 });
-  //   },
-  //   [],
-  //   { ssr: 'categories.load' },
-  // );
 
   return (
     <>
+        <Button onClick={() => {services.navigation.push('/')}}>Главная</Button>
         <h1>Каталог</h1>
         <hr />
-        <ArticleList />
+        <Suspense fallback={<Loading />}>
+          <ArticleList />
+          <ArticleList />
+          <ArticleList />
+        </Suspense>
     </>
   );
 }

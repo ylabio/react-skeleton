@@ -3,10 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import loadable from '@loadable/component';
 import Loading from '@src/app/loading';
+import Catalog from '@src/app/catalog';
+import Main from '@src/app/main';
 
 // Динамический импорт. При сборке деление на чанки
-const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
-const Catalog = loadable(() => import('@src/app/catalog'), { fallback: <Loading /> });
+// const Main = loadable(() => import('@src/app/main'), { fallback: <Loading /> });
+// const Catalog = loadable(() => import('@src/app/catalog'), { fallback: <Loading /> });
 
 function App() {
   return (
