@@ -24,7 +24,7 @@ function ArticleList() {
   useSuspense(async () => {
       await services.store.actions.articles.initParams({ filter: { category: categoryId } })
     },
-    `ArticleList${categoryId}`
+    ['ArticleList', { filter: { category: categoryId } }]
   );
 
   return (
