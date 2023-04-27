@@ -9,6 +9,12 @@ function ArticleList() {
   const services = useServices();
   const { categoryId } = useParams<{ categoryId: string }>();
 
+  useSuspense(async () => {
+      await services.store.actions.articles.initParams({ filter: { category: categoryId } })
+    },
+    ['ArticleList', categoryId ]
+  );
+
   // useInit(
   //   () => {
   //     services.store.actions.articles.initParams({ filter: { category: categoryId } });
@@ -20,12 +26,6 @@ function ArticleList() {
     items: state.articles.items,
     // wait: state.articles.wait,
   }));
-
-  useSuspense(async () => {
-      await services.store.actions.articles.initParams({ filter: { category: categoryId } })
-    },
-    ['ArticleList', { filter: { category: categoryId } }]
-  );
 
   return (
     <ul>

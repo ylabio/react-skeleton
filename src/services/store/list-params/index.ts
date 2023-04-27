@@ -152,6 +152,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
         const result = await this.findMany(apiParams);
         this.updateState(mc.patch(result, { wait: false, errors: null }), 'Список загружен');
       }
+
       return true;
     } catch (e: any) {
       if (e.response?.data?.error?.data) {
