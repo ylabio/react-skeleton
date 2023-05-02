@@ -115,7 +115,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
     try {
       // 1. ПАРАМЕТРЫ
       // Новые параметры (нужно ли учитывать текущие?)
-      let newParams = options.merge ? mc.merge(this.getState().params, params) : params;
+      let newParams = options.merge ? mc.merge(this.getState()?.params, params) : params;
       if (options.clear) {
         // Сброс текущих данных, установка новых параметров
         // Если данные будут загружаться, то установка состояние ожидания

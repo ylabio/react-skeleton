@@ -67,7 +67,7 @@ class StoreService {
       this.modules[config.name] = new constructor(config, this.services) as IStoreModules[T];
       // Состояние по умочланию от модуля
       if (!this.state[config.name]) {
-        this.state[config.name] = this.modules[config.name].initState();
+        this.state[config.name] = this.modules[config.name].initState() as IRootState[T];
       }
     }
   }

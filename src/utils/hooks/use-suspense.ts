@@ -53,7 +53,8 @@ export default function useSuspense(callback: Function, deps: [string, ...unknow
   // Удаление записи в кэше при демонтаже react-элемента.
   useEffect(() => {
     return () => {
-      cache.delete(key)
+      console.log('delete cache', key);
+      cache.delete(key);
     };
   }, []);
 }
