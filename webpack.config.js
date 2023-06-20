@@ -160,7 +160,6 @@ if (isProduction) {
 
 if (isDevelopment && isWeb) {
   config.devtool = 'inline-source-map'; // "#cheap-module-inline-source-map";
-  config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.devServer = {
     static: path.join(__dirname, 'dist', target),
     port: appConfig.devServer.port,

@@ -19,7 +19,7 @@ function Login() {
     }, []),
     onSubmitForm: useCallback(async (data: any) => {
       await services.store.formLogin.submit(data);
-      // @todo перейти на страницу, с которой был редирект или по умочланию в приватный раздел
+      // @todo перейти на страницу, с которой был редирект или по умолчанию в приватный раздел
       services.navigation.goPrivate();
     }, []),
   };

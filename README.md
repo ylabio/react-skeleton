@@ -119,35 +119,6 @@ server {
 
 `pm2 start process.json`
 
-## Алиасы путей
-
-Вместо указания относительных путей можно применить алиас на src директорию.
-
-```js
-import Button from "@src/components/button"
-```
-
-## Библиотека компонент
-
-`npm run storybook`
-
-[http://localhost:9030](http://localhost:9030/)
-
 ## Анализ размера сборки
 
 `npm run build-analize`
-
-## Code generator
-
-Для автоматического создания типовых файлов можно использовать hygen.io
-
-`npm i -g hygen`
-
-```
-hygen component help
-hygen component new --name Pizza --path components/elements/pizza
-hygen component store pizzas
-hygen component api pizzas
-```
-
-Шаблоны и пути к файлам можно редактировать в папке `_templates`

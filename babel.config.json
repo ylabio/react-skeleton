@@ -24,9 +24,6 @@
           }
         ],
         "@babel/plugin-transform-runtime",
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-syntax-class-properties",
-        "@babel/plugin-proposal-object-rest-spread",
         "@loadable/babel-plugin"
       ]
     },
@@ -34,10 +31,6 @@
       "plugins": [
         ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
         "@babel/plugin-transform-runtime",
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-transform-react-jsx",
-        "@babel/plugin-syntax-class-properties",
-        "@babel/plugin-proposal-object-rest-spread",
         "@loadable/babel-plugin"
       ]
     }

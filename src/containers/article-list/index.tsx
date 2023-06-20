@@ -15,7 +15,7 @@ function ArticleList() {
       <ul>
         {select.items.map((item: any) => (
           <li key={item._id}>
-            {item.title} | {item.maidIn.title} | {item.category.title} | {item.price} руб
+            {item.title} | {item.madeIn.title} | {item.category.title} | {item.price} руб
           </li>
         ))}
       </ul>

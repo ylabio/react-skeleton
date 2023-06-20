@@ -15,7 +15,7 @@ class ArticlesState extends ListParamsState {
   initState() {
     return mc.patch(super.initState(), {
       params: {
-        fields: `items(*,category(title),maidIn(title)), count`,
+        fields: `items(*,category(title),madeIn(title)), count`,
         filter: {
           category: undefined,
           $unset: ['query'], // параметр query не нужен от базового класса
