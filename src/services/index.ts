@@ -13,7 +13,7 @@ class Services {
     this.configs = {};
     this.list = {};
     this.classes = {};
-    this._env = process.env;
+    this._env = import.meta.env;
   }
 
   /**

@@ -6,7 +6,7 @@ export default {
    * @param insert
    * @returns {string|*}
    */
-  after: (source: string, after: string, insert: string) => {
+  after: (source, after, insert) => {
     const index = source.indexOf(after);
     if (index !== -1) {
       return source.substr(0, index) + insert + source.substr(index);
@@ -22,7 +22,7 @@ export default {
    * @param insert
    * @returns {string|*}
    */
-  before: (source: string, before: string, insert: string) => {
+  before: (source, before, insert) => {
     let index = source.indexOf(before);
     if (index !== -1) {
       index += before.length;

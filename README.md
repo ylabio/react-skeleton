@@ -83,35 +83,52 @@ Nginx должен отдавать статичные файлы из `./dist/w
 
 ```
 server {
-    listen 80;
-    server_name react-skeleton.com;
-    location / {
-        root /home/user/react-skeleton/dist/web;
-        try_files $uri /index.html;
-    }
+  listen 80;
+  server_name react-skeleton.com;
+  location / {
+    root /home/user/react-skeleton/dist/web;
+    try_files $uri /index.html;
+  }
 }
 ```
 
-Если планируется использовать серверный рендер (SSR), то потребуется запустить приложение на node.js и вместо отдачи index.html из nginx проксировать запросы в серверное приложение.
+Если планируется использовать серверный рендер (SSR), то потребуется запустить приложение на node.js 
+и проксировать запросы в серверное приложение.
+
+Для оптимизации запросы на файлы-ресурсы (картинки, стили...) можно раздавать через nginx.
+
+В nginx можно также настроить прокси к апи, если оно находится на другом хосте.
 
 ```
 server {
-    listen 80;
-    server_name react-skeleton.com;
-    location / {
-        root /home/user/react-skeleton/dist/web;
-        try_files $uri @ssr;
-    }
+  listen 80;
+  server_name react-skeleton.com;
+  client_max_body_size 10M;
+  
+  #  location /api/ {
+  #     proxy_redirect off;
+  #     proxy_set_header Host api.react-skeleton.com; 
+  #     proxy_set_header X-Real-IP $remote_addr;
+  #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  #     proxy_set_header X-Forwarded-Proto $scheme;
+  #     proxy_set_header X-Frame-Options SAMEORIGIN;
+  #     proxy_pass https://api.react-skeleton.com;
+  #  }
+    
+  #  location ~ \.(js|css|png|pdf|svg|webp|ico|ttf) {
+  #    root /var/www/newsite/dist/web/;
+  #    try_files $uri $uri/ =404; 
+  #  }
 
-    location @ssr {
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Frame-Options   SAMEORIGIN;
-        proxy_pass http://127.0.0.1:8133;
-    }
+  location / {
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Frame-Options SAMEORIGIN;
+    proxy_pass http://127.0.0.1:8132;
+  }
 }
 ```
 

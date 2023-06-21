@@ -31,8 +31,7 @@ let config = {
   output: {
     path: path.join(__dirname, 'dist', target),
     filename: '[name].js', //'[name]-bundle-[chunkhash:8].js'
-    // publicPath: `/dist/${target}/`,
-    // pathinfo: true
+    publicPath: '',//process.env.ASSET_PATH, // путь подставляемый к ресурсам в html
     library: {
       name: 'ReactApp',
       type: isNode ? 'commonjs2' : 'window',
@@ -40,6 +39,7 @@ let config = {
     },
     clean: true,
   },
+
 
   plugins: [
     new ProgressBarPlugin(),

@@ -107,7 +107,7 @@ class SSRService {
    * @returns {String}
    */
   getStateKey() {
-    if (this.services.env.IS_WEB) {
+    if (!this.services.env.SSR) {
       return window.stateKey;
     } else {
       return this.config.stateKey;
@@ -120,7 +120,7 @@ class SSRService {
    * @returns {Boolean}
    */
   hasPreloadState() {
-    return this.services.env.IS_WEB && !!window.stateKey;
+    return !this.services.env.SSR && !!window.stateKey;
   }
 
   /**

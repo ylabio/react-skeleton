@@ -23,7 +23,8 @@ export default function useInit(
   const services = useServices();
   // Рендер на сервере.
   // На сервере вызов callback если передан ключ ssr и с этим ключом ещё не вызывался
-  if (services.env.IS_NODE) {
+
+  if (services.env.SSR) {
     if (options.ssr) {
       return services.ssr.prepare(callback, options.ssr);
     } else {

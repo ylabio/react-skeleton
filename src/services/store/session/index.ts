@@ -15,7 +15,7 @@ class SessionState extends StoreModule<{ tokenHeader: string }> {
     if (logoutRequest) {
       await this.services.api.get('users').logout();
     }
-    if (this.services.env.IS_WEB) {
+    if (!this.services.env.SSR) {
       localStorage.removeItem('token');
     }
     this.resetState({ wait: false }, description);
@@ -27,7 +27,7 @@ class SessionState extends StoreModule<{ tokenHeader: string }> {
    * @return {Promise<void>}
    */
   async remind() {
-    const token = this.services.env.IS_WEB ? localStorage.getItem('token') : undefined;
+    const token = !this.services.env.SSR ? localStorage.getItem('token') : undefined;
     if (token) {
       // Только для установки токена в http
       await this.save({ token, wait: true, exists: false }, 'Установка токена из localStore');
@@ -47,7 +47,7 @@ class SessionState extends StoreModule<{ tokenHeader: string }> {
   }
 
   async save(data: any, description = 'Установка сессии') {
-    if (this.services.env.IS_WEB) {
+    if (!this.services.env.SSR) {
       localStorage.setItem('token', data.token);
     }
     this.updateState(mc.patch({ exists: true }, data), description);
