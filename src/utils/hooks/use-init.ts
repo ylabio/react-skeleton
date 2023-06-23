@@ -16,7 +16,7 @@ interface initOptions {
 }
 
 export default function useInit(
-  callback: (ev: PopStateEvent | boolean) => void,
+  callback: () => void,
   inputs: any[] = [],
   options: initOptions = { onBackForward: false, ssr: null, ssrForce: false },
 ) {
@@ -28,7 +28,7 @@ export default function useInit(
     if (options.ssr) {
       return services.ssr.prepare(callback, options.ssr);
     } else {
-      return callback(false);
+      return callback();
     }
   } else {
     // На клиенте используется хук эффекта по умолчанию один раз, если не переданы зависимости inputs
@@ -36,7 +36,7 @@ export default function useInit(
       // a) Если нет начальных данных от SSR по ключу ssr, то вызывается callback
       // b) Если ssrForce==true, то клиент заново вызывает callback, деже если результат вызова есть от серверного рендера
       if (options.ssrForce || !services.ssr.hasPrepare(options.ssr)) {
-        callback(false);
+        callback();
       } else {
         // Удаляем ключ ssr, чтобы при последующих рендерах хук работал
         services.ssr.deletePrepare(options.ssr);

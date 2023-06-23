@@ -21,7 +21,7 @@ export default function useSelector(selector: any) {
       // Сравнение с предыдущей выборкой
       if (!shallowequal(select.current, result)) {
         select.current = result;
-        select.current.time = store.getState().time
+        select.current.time = store.getState().time;
         // Заставляем компонент перерендериться, чтобы его useSelector взял новую выборку.
         redraw({});
       }

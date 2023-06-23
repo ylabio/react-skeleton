@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
 import detectActive from '@src/utils/detect-active';
 import LayoutHeader from '@src/components/layouts/layout-header';
 import MenuTop from '@src/components/menus/menu-top';
@@ -9,9 +8,7 @@ import { useLocation } from 'react-router-dom';
 import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
 
-interface Props {}
-
-function HeaderContainer(props: Props) {
+function HeaderContainer() {
   const select: any = useSelector((state: any) => ({
     session: state.session,
   }));

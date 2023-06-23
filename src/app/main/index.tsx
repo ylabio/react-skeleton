@@ -12,7 +12,7 @@ function Main() {
 
   const callbacks = {
     showInfo: useCallback(async () => {
-      const result = await services.store.modals.open('info', {
+      await services.store.modals.open('info', {
         overflowTransparent: false,
         overflowClose: true,
       });

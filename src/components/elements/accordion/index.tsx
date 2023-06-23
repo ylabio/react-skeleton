@@ -41,7 +41,7 @@ class Accordion extends Component<Props> {
 
   render() {
     const { isOpen } = this.state;
-    const { theme, title, children, disabled } = this.props;
+    const { theme, title, children } = this.props;
 
     return (
       <div className={themes('Accordion', theme)} onClick={this.handleClick}>

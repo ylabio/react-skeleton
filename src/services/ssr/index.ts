@@ -1,10 +1,5 @@
 import { renderToString } from 'react-dom/server';
 
-declare global {
-  interface Window { stateKey: string; }
-}
-
-
 class SSRService {
   keys: any;
   services: any;
@@ -45,15 +40,15 @@ class SSRService {
    * @param key {String} Ключ, под которым будут загружаться данные
    * @return {Promise} Промис переданного callback
    */
-  async prepare(callback: (payload: boolean) => any, key: string) {
+  async prepare(callback: () => any, key: string) {
     if (key) {
       if (!this.hasPrepare(key)) {
-        this.keys[key] = callback instanceof Promise ? callback : callback(true);
+        this.keys[key] = callback instanceof Promise ? callback : callback();
         this.promises.push(this.keys[key]);
       }
       return this.keys[key];
     } else {
-      return callback instanceof Promise ? callback : callback(true);
+      return callback instanceof Promise ? callback : callback();
     }
   }
 

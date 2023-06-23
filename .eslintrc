@@ -1,6 +1,6 @@
 {
   "extends": ["plugin:react/recommended", "prettier"],
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "requireConfigFile": false,
     "ecmaVersion": 8,
@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-  "plugins": ["babel", "react", "prettier"],
+  "plugins": ["react", "@typescript-eslint"],
   "env": {
     "browser": true
   },

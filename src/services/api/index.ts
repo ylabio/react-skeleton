@@ -10,8 +10,8 @@ interface IApiService {
   services: any;
   endpoints: {[key: string]: IEndpoint};
   _axios: AxiosInstance;
-  createEndpoint(config: AxiosRequestConfig) : void
-  get(name: string): IEndpoint;
+  // createEndpoint(config: AxiosRequestConfig) : void
+  // get(name: string): IEndpoint;
 }
 
 /**
@@ -19,7 +19,7 @@ interface IApiService {
  * Инкапсулиурет настройку библиотеки axios для осуществления http запросов
  * Позволяет декомпозировать работу с АПИ на модули (endpoints)
  */
-class ApiService implements IApiService {
+class ApiService {
   config!: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
   services: any;
   endpoints!: {[key: string]: IEndpoint};
