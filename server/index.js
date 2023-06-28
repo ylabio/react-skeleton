@@ -6,7 +6,6 @@ import InitialStore from "./utils/initial-store.js";
 import routers from './routers/index.js';
 import config from "./config.js";
 
-
 (async () => {
   const initialStore = new InitialStore();
   const app = express();

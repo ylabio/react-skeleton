@@ -26,6 +26,10 @@ export default async ({app, initialStore, config}) => {
 
   // Рендер
   app.get('/*', async (req, res) => {
+    // @todo кэшировать рендер и раздавать его
+    // @todo задержки в основном из-за обращения к АПИ (~400ms) чисто рендер (~20ms)
+    // @todo применить заголовки HTTP для кэширования в браузере
+
     // Секрет для идентификации стейта
     const secret = initialStore.makeSecretKey();
 
@@ -42,7 +46,7 @@ export default async ({app, initialStore, config}) => {
     }
 
     let didError = false;
-    let isCrawler = true;
+    let isCrawler = true; // Режим ожидания всех данных перед отдачей потока
 
     const sendHeaders = (res) => {
       res.cookie('stateSecret', secret.secret, {httpOnly: true/*, maxAge: 100/*, secure: true*/});
@@ -69,10 +73,8 @@ export default async ({app, initialStore, config}) => {
         if (isCrawler) {
           sendHeaders(res);
           streamHelmet(pipe, head.helmet).pipe(res);
-        } else {
-          //res.end('<h1>Something</h1>');
         }
-        // Дамп состояния всех сервисов запоминается в initialStore
+        // Дамп всех сервисов запоминается в initialStore
         initialStore.remember(secret, servicesManager.collectDump());
       },
       onError(error) {

@@ -5,7 +5,8 @@ const config = {
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
-      baseURL: SSR ? 'http://localhost:8050' : '',
+      // Но в режиме рендера на сервере необходимо указать полный адрес к АПИ
+      baseURL: SSR ? 'http://example.front.ylab.io' : '',
       //headers: {},
       //auth:{} base auth
     },
