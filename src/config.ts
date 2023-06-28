@@ -7,7 +7,7 @@ const config = {
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
-      baseURL: isSSR ? 'http://localhost:5173' : '',
+      baseURL: isSSR ? 'http://localhost:8132' : '',
       //headers: {},
       //auth:{} base auth
     },

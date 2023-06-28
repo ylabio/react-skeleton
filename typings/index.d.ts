@@ -16,8 +16,3 @@ interface ImportMeta {
 interface Window {
   initialKey: string;
 }
-
-type StateSecret = {
-  key: string,
-  secret: string
-}

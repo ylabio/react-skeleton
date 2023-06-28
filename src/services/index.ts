@@ -97,7 +97,7 @@ class Services {
    */
   private async initInitialState() {
     if (this.hasInitialState()) {
-      const response = await fetch(`/ssr/state/${window.initialKey}`);
+      const response = await fetch(`/initial/${window.initialKey}`);
       const json = await response.json();
       for (const [key, value] of Object.entries(json)){
         this.initialState.set(key as TServicesNames, value);

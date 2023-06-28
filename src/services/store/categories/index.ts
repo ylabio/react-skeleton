@@ -19,7 +19,7 @@ class CategoriesState extends StoreModule<undefined> {
    * @returns {Promise<*>}
    */
   async load(params: any) {
-    this.updateState({ wait: true, errors: null }, 'Статус ожидания');
+    this.updateState({ wait: true, errors: null, x: 100 }, 'Статус ожидания');
     try {
       const response = await this.services.api.endpoints.categories.findMany(params);
       const result = response.data.result;

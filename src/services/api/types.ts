@@ -2,7 +2,7 @@ import * as endpoints from './export';
 import {Axios, AxiosRequestConfig, AxiosResponse} from "axios";
 
 /**
- * Модули АПИ
+ * Конструкторы модулей АПИ
  */
 export type TEndpointsContructors = typeof endpoints;
 

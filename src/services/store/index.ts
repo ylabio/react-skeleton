@@ -35,6 +35,10 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
     };
   }
 
+  /**
+   * Инициализация сервиса
+   * @param initialState Предустановленное начальное состояние. Обычно использует при SSR
+   */
   init(initialState?: unknown) {
     const names = Object.keys(modules) as TStoreNames[];
     for (const name of names) {
@@ -46,7 +50,7 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
    * Инициализация модуля хранилища
    * @param name Имя модуля, по которому будет обращение к действиям и состоянию
    * @param moduleName Название JS модуля. По умолчанию равен name
-   * @param initialState Предустановленное начальное состояние. Обычно использует для SSR
+   * @param initialState Предустановленное начальное состояние модуля. Обычно использует при SSR
    */
   initModule<T extends keyof TStoreModules>(name: T, moduleName?: T, initialState?: TStoreState[T]) {
     const config = this.config.states;
@@ -121,6 +125,10 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
     return this.modules[name];
   }
 
+  /**
+   * Дамп текущего состояния.
+   * Используется на сервере, чтобы передать состояние клиенту после SSR
+   */
   dump(): TStoreState {
     return this.getState();
   }

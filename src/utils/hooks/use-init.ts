@@ -46,8 +46,12 @@ export default function useInit(
         services.suspense.throw(options.ssr);
       }
     } else {
-      // Инициализация ещё не выполнялась
-      services.suspense.wait(options.ssr, fn());
+      try {
+        // Инициализация ещё не выполнялась
+        services.suspense.wait(options.ssr, fn());
+      } catch (e) {
+        console.error(e);
+      }
       services.suspense.throw(options.ssr);
     }
   }

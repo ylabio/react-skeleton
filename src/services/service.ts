@@ -4,7 +4,7 @@ import {TServices} from "@src/services/types";
 /**
  * Базовый класс модуля хранилища
  */
-abstract class Service<Config, Dump>{
+abstract class Service<Config, Dump> {
   protected services: TServices;
   protected config: Config;
 

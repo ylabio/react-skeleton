@@ -1,6 +1,6 @@
 import uniqid from "uniqid";
 
-export default class StateCache {
+export default class InitialStore {
   constructor() {
     this.items = new Map();
   }

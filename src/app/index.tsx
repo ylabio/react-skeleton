@@ -24,7 +24,9 @@ function App() {
   return (
     <Fragment>
       <Helmet>
+        <html lang="en"/>
         <title>Example</title>
+        <meta name="description" content="React skeleton example" />
       </Helmet>
       <Suspense fallback={<Loading />}>
         <Routes>
