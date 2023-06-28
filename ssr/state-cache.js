@@ -14,15 +14,15 @@ export default class StateCache {
   remember({key, secret}, state, time = 15000){
     this.items.set(key, { [secret]: state });
     setTimeout(() => {
-      delete this.items.delete(key);
+      //delete this.items.delete(key);
     }, time);
   }
 
   get({key, secret}){
     let result = {};
     if (this.items.has(key) && this.items.get(key)[secret]) {
-      result = this.items.get(key)[secret]
-      delete this.items.delete(key);
+      result = this.items.get(key)[secret];
+      //delete this.items.delete(key);
     }
     return result;
   }

@@ -10,15 +10,13 @@ import root from "@src/root";
  */
 (async function () {
 
-  const {Root, services} = await root();
+  const {Root, servicesManager} = await root();
 
   const dom = document.getElementById('app');
   if (!dom) throw new Error('Failed to find the root element');
 
-  // Если есть подготовленные данные от SSR
-  if (services.ssr.hasPreloadState()) {
-    // Получаем всё состояние, с которым рендерился HTML на сервере и передаём его в сервис store
-    services.store.setState(await services.ssr.getPreloadState());
+  // Если есть подготовленные данные
+  if (servicesManager.hasInitialState()) {
     hydrateRoot(dom, <Root/>);
   } else {
     createRoot(dom).render(<Root/>);

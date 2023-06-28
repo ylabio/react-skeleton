@@ -1,6 +1,7 @@
 import StoreModule from '@src/services/store/module';
 
-class FormLoginState extends StoreModule {
+class FormLoginState extends StoreModule<undefined> {
+
   initState() {
     return {
       data: {
@@ -28,10 +29,10 @@ class FormLoginState extends StoreModule {
   async submit(data: any) {
     this.updateState({ wait: true, errors: null }, 'Отправка формы');
     try {
-      const response = await this.services.api.get('users').login(data);
+      const response = await this.services.api.endpoints.users.login(data);
       const result = response.data.result;
       // Установка и сохранение сессии
-      await this.store.session.save({ user: result.user, token: result.token });
+      await this.store.actions.session.set({ user: result.user, token: result.token });
       this.resetState({}, 'Сброс формы после успешной отправки');
       return result;
     } catch (e: any) {

@@ -1,6 +1,6 @@
 import StoreModule from "@src/services/store/module";
 
-class ModalsState extends StoreModule {
+class ModalsState extends StoreModule<undefined> {
 
   initState() {
     return {
@@ -11,7 +11,7 @@ class ModalsState extends StoreModule {
     };
   }
 
-  async open(name: string, params: any) {
+  async open(name: string, params: unknown) {
     return new Promise(resolve => {
       this.updateState({
         name,
@@ -23,7 +23,7 @@ class ModalsState extends StoreModule {
     });
   }
 
-  async close(result: any) {
+  async close(result: unknown) {
     const state = this.getState();
     if (state.resolve) {
       state.resolve(result);

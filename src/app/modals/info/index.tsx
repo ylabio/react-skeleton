@@ -13,10 +13,10 @@ function Info(props: Props) {
 
   const callbacks = {
     onCancel: useCallback(async () => {
-      await services.store.modals.close('Cancel value');
+      await services.store.actions.modals.close('Cancel value');
     }, []),
     onSuccess: useCallback(async () => {
-      await services.store.modals.close('Success value');
+      await services.store.actions.modals.close('Success value');
     }, []),
     renderFooter: useCallback(() => {
       return (

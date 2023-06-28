@@ -1,16 +1,18 @@
 import React from "react";
+import {HelmetProvider} from "react-helmet-async";
 import RouterProvider from '@src/containers/router-provider';
 import Services from '@src/services';
 import App from '@src/app';
 import ServicesProvider from '@src/services/provider';
-import defaultConfig from '@src/config.js';
-import {HelmetProvider} from "react-helmet-async";
+import defaultConfig from '@src/config';
 
 export default async function root(config = {}) {
 
   // Инициализация менеджера сервисов
+  const servicesManager = new Services();
   // Через services получаем доступ к store, api, navigation и всем другим сервисам
-  const services = await new Services().init([defaultConfig, config]);
+  const services = await servicesManager.init([defaultConfig, config]);
+
   const head = {};
 
   const Root = () => (
@@ -22,5 +24,5 @@ export default async function root(config = {}) {
       </RouterProvider>
     </ServicesProvider>
   );
-  return {Root, services, head};
+  return {Root, servicesManager, head};
 }

@@ -3,7 +3,7 @@
  * @param params
  */
 export default function queryParams(params: { [key: string]: any }) {
-  let result = { ...params };
+  let result = {...params};
   // result.search[key] => result["search[key]"]
   if (result.search) {
     delete result.search;

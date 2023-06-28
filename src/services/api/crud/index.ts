@@ -7,7 +7,7 @@ interface BaseQuery {
   skip?: number;
 }
 
-class CRUDEndpoint extends Endpoint {
+class CRUDEndpoint extends Endpoint<{url: string}> {
   /**
    * Выбор списка
    * @param search {Object} Параметры поиска

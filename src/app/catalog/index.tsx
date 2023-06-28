@@ -15,7 +15,7 @@ function Catalog() {
   useInit(
     async () => {
       // Инициализация параметров для начально выборки по ним
-      await services.store.articles.initParams({ filter: { category: categoryId } });
+      await services.store.actions.articles.initParams({ filter: { category: categoryId } });
     },
     [categoryId],
     { ssr: 'articles.init' },
@@ -23,7 +23,7 @@ function Catalog() {
 
   useInit(
     async () => {
-      await services.store.categories.load({ fields: '*', limit: 1000 });
+      await services.store.actions.categories.load({ fields: '*', limit: 1000 });
     },
     [],
     { ssr: 'categories.load' },

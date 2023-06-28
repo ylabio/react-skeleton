@@ -39,7 +39,7 @@ function HeaderContainer() {
     }, []),
 
     onClickLogout: useCallback(() => {
-      services.store.session.clear();
+      services.store.actions.session.clear();
     }, []),
   };
 

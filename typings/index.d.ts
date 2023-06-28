@@ -7,11 +7,15 @@ declare module '*.html' {
 
 interface ImportMeta {
   env: {
-    NODE_ENV: 'production' | 'development'
+    NODE_ENV: 'production' | 'development',
+    SSR: boolean,
+    PROD: boolean
   }
 }
 
-interface Window { stateKey: string; }
+interface Window {
+  initialKey: string;
+}
 
 type StateSecret = {
   key: string,

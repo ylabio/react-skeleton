@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import LayoutContent from '@src/components/layouts/layout-content';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 function NotFound() {
   return (

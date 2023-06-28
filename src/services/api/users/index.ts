@@ -1,12 +1,12 @@
 import params from '@src/utils/query-params';
 import CRUDEndpoint from '@src/services/api/crud';
-import mc from 'merge-change';
 
 class UsersEndpoint extends CRUDEndpoint {
   defaultConfig() {
-    return mc.patch(super.defaultConfig(), {
+    return {
+      ...super.defaultConfig(),
       url: '/api/v1/users',
-    });
+    };
   }
 
   /**

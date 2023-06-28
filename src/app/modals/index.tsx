@@ -22,7 +22,7 @@ function Modals() {
       const props = {
         ...select.modals?.params,
         close: (result: any) => {
-          return services.store.modals.close(result);
+          return services.store.actions.modals.close(result);
         },
       };
       if (select.modals?.show) {

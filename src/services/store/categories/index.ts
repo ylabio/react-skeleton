@@ -2,7 +2,8 @@ import mc from 'merge-change';
 import listToTree from '@src/utils/list-to-tree';
 import StoreModule from '@src/services/store/module';
 
-class CategoriesState extends StoreModule {
+class CategoriesState extends StoreModule<undefined> {
+
   initState() {
     return {
       items: [],
@@ -20,7 +21,7 @@ class CategoriesState extends StoreModule {
   async load(params: any) {
     this.updateState({ wait: true, errors: null }, 'Статус ожидания');
     try {
-      const response = await this.services.api.get('categories').findMany(params);
+      const response = await this.services.api.endpoints.categories.findMany(params);
       const result = response.data.result;
       this.updateState(
         mc.patch(result, { roots: listToTree(result.items), wait: false, errors: null }),

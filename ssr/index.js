@@ -37,6 +37,7 @@ let template = await initTemplate(isProduction);
 app.get('/ssr/state/:key', async (req, res) => {
   const key = req.params.key;
   const secret = req.cookies.stateSecret;
+  console.log('get state', {key, secret});
   res.json(stateCache.get({key, secret}));
 });
 
@@ -64,7 +65,7 @@ app.get('/*', async (req, res, next) => {
   // Секрет для идентификации стейта
   const secret = stateCache.makeSecretKey();
 
-  const {Root, services, head} = await root({
+  const {Root, servicesManager, head} = await root({
     navigation: {
       // Точка входа для навигации (какую страницу рендерить)
       initialEntries: [req.originalUrl],
@@ -80,7 +81,7 @@ app.get('/*', async (req, res, next) => {
   }
 
   let didError = false;
-  let isCrawler = false;
+  let isCrawler = true;
 
   const sendHeaders = (res) => {
     res.cookie('stateSecret', secret.secret, {httpOnly: true/*, maxAge: 100/*, secure: true*/});
@@ -90,10 +91,11 @@ app.get('/*', async (req, res, next) => {
   const {html, scrips, modules} = wrapTemplate(Root, template);
 
   const {pipe, abort} = renderToPipeableStream(html, {
-    bootstrapScriptContent: `window.stateKey="${secret.key}"`,
+    bootstrapScriptContent: `window.initialKey="${secret.key}"`,
     bootstrapModules: modules,
     bootstrapScripts: scrips,
     onShellReady() {
+      console.log('- shell ready');
       if (!isCrawler) {
         sendHeaders(res);
         pipe(res);
@@ -104,17 +106,19 @@ app.get('/*', async (req, res, next) => {
       res.send('<h1>Something went wrong</h1>');
     },
     onAllReady() {
+      console.log('- all ready');
       if (isCrawler) {
         sendHeaders(res);
         insertHelmet(pipe, head.helmet).pipe(res);
+      } else {
+        //res.end('<h1>Something</h1>');
       }
       // Запоминаем состояние на несколько секунд
-      stateCache.remember(secret, {
-        // Состояние, с которым выполнен рендер
-        state: services.store.getState(),
-        // Ключи исполненных ожиданий (чтобы клиент знал, какие действия были выполнены на сервере)
-        keys: services.ssr.getPrepareKeys()
-      });
+      console.log('remember', secret);
+
+      // Дамп состояния всех сервисов запоминается в stateCache
+      stateCache.remember(secret, servicesManager.collectDump());
+
       console.timeEnd('render');
     },
     onError(error) {

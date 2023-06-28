@@ -1,66 +1,50 @@
-import axios, {AxiosInstance, AxiosRequestConfig, HeadersDefaults} from 'axios';
-import * as allEndpoints from './export';
-import mc from 'merge-change';
-import {IEndpoint} from "@src/services/api/endpoint";
-
-const endpoints: any = allEndpoints;
-
-interface IApiService {
-  config: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
-  services: any;
-  endpoints: {[key: string]: IEndpoint};
-  _axios: AxiosInstance;
-  // createEndpoint(config: AxiosRequestConfig) : void
-  // get(name: string): IEndpoint;
-}
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
+import {TServices} from '@src/services/types';
+import Service from "@src/services/service";
+import * as endpoints from './export';
+import {
+  TApiConfig,
+  TEndpoints, TEndpointsNames,
+} from './types';
 
 /**
  * Сервис HTTP API (REST API) к внешнему серверу
- * Инкапсулиурет настройку библиотеки axios для осуществления http запросов
- * Позволяет декомпозировать работу с АПИ на модули (endpoints)
+ * Обертка над библиотекой axios для осуществления http запросов
+ * Позволяет разнести слой АПИ на модули (endpoints)
  */
-class ApiService {
-  config!: { default: AxiosRequestConfig, endpoints: IEndpoint[] };
-  services: any;
-  endpoints!: {[key: string]: IEndpoint};
-  _axios!: AxiosInstance;
+class ApiService extends Service<TApiConfig, undefined> {
+  private _endpoints: TEndpoints;
+  private _axios: AxiosInstance;
 
-  async init(config: IApiService['config'], services: IApiService['services']) {
-    this.services = services;
-    this.config = config;
+  constructor(config: TApiConfig, services: TServices) {
+    super(config, services);
+    this._endpoints = {} as TEndpoints;
     this._axios = axios.create(this.config.default);
-    // Object.entries(this.config.default).forEach(([name, value]) => {
-    //   this.axios.defaults[name] = value;
-    // });
-    this.endpoints = {};
-    // Создание модулей endpoint
-    Object.entries(endpoints).forEach(([name]) => this.createEndpoint({ name }));
-    return this;
+  }
+
+  init() {
+    // Создание экземпляров endpoint
+    const names = Object.keys(endpoints) as TEndpointsNames[];
+    for (const name of names) this.initEndpoint(name);
   }
 
   /**
    * Инициализация модуля endpoint
-   * Можно использовать для динамического создания модулей на базе существующего. Название базового передаётся в опции from
-   * @param config
-   *   name {String} Название модуля endpoint
-   *   [proto] {String} Название базового модуля (класса endpoint) по умолчанию используется name
-   *   ... другие опции, переопределяющие опции конфига
-   * @return {BaseEndpoint}
+   * @param name Имя модуля API, по которому будет обращение к методам
+   * @param moduleName Название JS модуля. По умолчанию равен name
    */
-  createEndpoint(config: any) {
-    if (!config.name) throw new Error('Undefined endpoint name ');
-    config = mc.merge(this.config.endpoints[config.name], config);
+  initEndpoint<T extends keyof TEndpoints>(name: T, moduleName?: T) {
+    const config = this.config.endpoints[name];
     // Если нет класса сопоставленного с name, то используется класс по умолчанию
-    if (!config.proto) config.proto = config.name;
-    if (!endpoints[config.proto]) throw new Error(`Not found base endpoint "${config.name}"`);
-    const Constructor = endpoints[config.proto];
-    this.endpoints[config.name] = new Constructor(config, this.services);
-    return this.endpoints[config.name];
+    if (!moduleName) moduleName = name;
+    if (!endpoints[moduleName]) throw new Error(`Not found endpoint module "${moduleName}"`);
+    const Constructor = endpoints[moduleName];
+    this._endpoints[name] = new Constructor(config, this.services, name) as TEndpoints[T];
+    this._endpoints[name].init();
   }
 
   /**
    * Экземпляр Axios для выполнения HTTP запросов
-   * @return {AxiosInstance}
    */
   get axios() {
     return this._axios;
@@ -68,10 +52,10 @@ class ApiService {
 
   /**
    * Установка общего заголовка для всех endpoints
-   * @param name {String} Название заголвока
-   * @param value {*} Значение заголовка
+   * @param name Название заголовка
+   * @param value Значение заголовка
    */
-  setHeader(name: keyof HeadersDefaults, value: any) {
+  setHeader(name: string, value?: string) {
     if (value) {
       this.axios.defaults.headers[name] = value;
     } else if (name in this.axios.defaults.headers) {
@@ -81,23 +65,25 @@ class ApiService {
 
   /**
    * Запрос
-   * @return {*}
    */
-  request(options: any) {
+  request(options: AxiosRequestConfig) {
     // Учитываются опции модуля и переданные в аргументах
     return this.axios.request(options);
   }
 
+  get endpoints() {
+    return this._endpoints;
+  }
+
   /**
    * Endpoint по названию
-   * @param name {String} Название модуля endpoint
-   * @returns {BaseEndpoint}
+   * @param name Название модуля endpoint
    */
-  get(name: string) {
-    if (!this.endpoints[name]) {
+  get<T extends TEndpointsNames>(name: T): TEndpoints[T] {
+    if (!this._endpoints[name]) {
       throw new Error(`Not found endpoint "${name}"`);
     }
-    return this.endpoints[name];
+    return this._endpoints[name];
   }
 }
 

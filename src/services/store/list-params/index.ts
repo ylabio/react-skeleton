@@ -1,5 +1,6 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
+import { InitListParamsStateType } from './types';
 
 /**
  * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
@@ -7,36 +8,35 @@ import StoreModule from '@src/services/store/module';
  */
 class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
   validator: any;
-  api: any;
+  //api: any;
 
-  constructor(config: any, services: any) {
-    super(config, services);
-    this.validator = this.services.spec.createValidator(this.schemaParams());
-    this.api = this.services.api.get(this.config.apiEndpoint);
+  init() {
+    this.validator = this.services.validator.make(this.schemaParams());
+    //this.api = this.services.api.get(this.config.apiEndpoint);
   }
 
   /**
    * Конфигурация по умолчанию
    * @return {Object}
    */
-  defaultConfig() {
-    return mc.patch(super.defaultConfig(), {
-      apiEndpoint: 'crud', // абстрактный endpoint
-    });
-  }
+  // defaultConfig() {
+  //   return mc.patch(super.defaultConfig(), {
+  //     apiEndpoint: 'crud', // абстрактный endpoint
+  //   });
+  // }
 
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitListParamsStateType {
     return {
       items: [],
       count: 0,
       params: {
         limit: 20,
         page: 1,
-        sort: { date: 'asc' },
+        sort: '',
         fields: `items(*), count`,
         filter: {
           query: undefined, // поиск по строке
@@ -58,7 +58,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       properties: {
         limit: { type: 'integer', minimum: 1 },
         page: { type: 'integer', minimum: 1 },
-        sort: { type: 'object', additionalProperties: { enum: ['asc', 'desc'] } },
+        sort: { type: 'string' },
         filter: {
           type: 'object',
           properties: {
@@ -98,9 +98,9 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    */
   async resetParams(params = {}, options = {}) {
     return this.setParams(
-      // мержим параметры с начальными
+      // Слияние параметров с начальными
       mc.merge(this.initState().params, params),
-      // мержить параметры с текущими и загружать данные не надо, но надо сбросить данные
+      // Слияние параметров с текущими. Без загрузки данных, но со сбросом данных
       mc.merge({ merge: false, remember: 'replace', load: false, clear: true }, options),
     );
   }
@@ -120,7 +120,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
     try {
       // 1. ПАРАМЕТРЫ
       // Новые параметры (нужно ли учитывать текущие?)
-      let newParams = options.merge ? mc.merge(this.getState().params, params) : params;
+      const newParams = options.merge ? mc.merge(this.getState()?.params, params) : params;
       if (options.clear) {
         // Сброс текущих данных, установка новых параметров
         // Если данные будут загружаться, то установка состояние ожидания
@@ -154,11 +154,10 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
         // Параметры для API запроса (конвертация из всех параметров состояния с учётом новых)
         const apiParams = this.apiParams(newParams);
         // Выборка данных из АПИ
-        const response = await this.api.findMany(apiParams);
-        // Установка полученных данных в состояние
-        const result = response.data.result;
+        const result = await this.load(apiParams);
         this.updateState(mc.patch(result, { wait: false, errors: null }), 'Список загружен');
       }
+
       return true;
     } catch (e: any) {
       if (e.response?.data?.error?.data) {
@@ -202,6 +201,22 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       filter: params.filter,
     };
   }
+
+  /**
+   * Загрузка данных
+   * @param apiParams
+   */
+  async load(apiParams: any) {
+    // const response = await this.api.findMany(apiParams);
+    // // Установка полученных данных в состояние
+    // return response.data.result;
+
+    return {
+      items: [],
+      count: 0,
+    };
+  }
+
 }
 
 export default ListParamsState;

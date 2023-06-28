@@ -22,7 +22,7 @@ function RequireAuth(props: Props) {
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации
     // Вызов происходит при переходе в роут с друго пути
-    await services.store.session.remind();
+    await services.store.actions.session.remind();
   });
 
   if (select.session.wait) {

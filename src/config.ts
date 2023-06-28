@@ -1,7 +1,8 @@
 const isSSR = import.meta.env.SSR;
 const isProduction = import.meta.env.PROD;
 
-let config = {
+const config = {
+
   // Сервис с методами API
   api: {
     default: {
@@ -10,27 +11,24 @@ let config = {
       //headers: {},
       //auth:{} base auth
     },
-    // Настройки для конкретных модулей api по их названиям
+    // Настройки для конкретных модулей api по их названию
     endpoints:{
-      users: {
+      users: {},
 
-      },
-      ssr: {
-        baseURL: ''
-      }
     }
   },
 
   // Сервис состояний и действий (redux)
   store: {
+
     log: !isSSR && !isProduction, // false,
-    preloadState: {},
     // Настройки для конкретных модулей состояния по их названиям
     states: {
       session: {
         tokenHeader: 'X-Token'
       },
       articles: {},
+
     }
   },
 
@@ -62,9 +60,6 @@ let config = {
 
   // Сервис рендера на сервере
   // Также используется на клиенте для учёта результатов серверного рендера
-  ssr: {
-    maxDepth: 10
-  }
 };
 
 export default config;

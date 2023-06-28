@@ -15,10 +15,10 @@ function Login() {
 
   const callbacks = {
     onChangeForm: useCallback(async (data: any) => {
-      await services.store.formLogin.change(data);
+      await services.store.actions.formLogin.change(data);
     }, []),
     onSubmitForm: useCallback(async (data: any) => {
-      await services.store.formLogin.submit(data);
+      await services.store.actions.formLogin.submit(data);
       // @todo перейти на страницу, с которой был редирект или по умолчанию в приватный раздел
       services.navigation.goPrivate();
     }, []),

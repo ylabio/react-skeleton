@@ -1,55 +1,74 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import useServices from '@src/utils/hooks/use-services';
 
-/**
- * Хук для асинхронных расчётов, которые будут исполнены при первом рендере или изменении inputs.
- * Так же вызывается при рендере на сервере, добавляя ожидание асинхронного callback в сервис ssr.
- * @param callback {Function} Пользовательская функция
- * @param inputs {Array} Значения при смене которых callback снова исполнится.
- * @param options {{backForward, ssrForce, ssr}}
- */
+export type TInitFunction = () => Promise<unknown> | unknown;
 
-interface initOptions {
+export type TInitOptions = {
+  /**
+   * Ключ для выполнения fn на сервере. Если не указан, то fn не выполняется при SSR.
+   * Можно указать строку, например "Load articles".
+   * По ключу на клиенте определяется, выполнялась ли инициализация на сервере.
+   * Ключ также используется для логики Suspense
+   */
+  ssr?: string;
+  /**
+   * Перевыполнить fn на клиенте, если была выполнена инициализация на сервере.
+   */
+  force?: boolean;
+  /**
+   * Выполнять fn при переходе по истории навигации.
+   * Используется, если нужно отреагировать на переход назад/вперед в браузере, а не на смену/установку параметров адреса.
+   * Например, когда search-парметры адреса установлены напрямую
+   */
   onBackForward?: boolean;
-  ssr: null | string;
-  ssrForce?: boolean;
 }
 
+/**
+ * Хук для асинхронной инициализации
+ * По умолчанию исполняется при первом рендере или изменении зависимостей deps.
+ * На сервере используется логика Suspense для ожидания fn
+ * @param fn Асинхронная пользовательская функция
+ * @param deps Значения, при смене которых fn снова исполнится.
+ * @param options Опции выполнения fn
+ */
 export default function useInit(
-  callback: () => void,
-  inputs: any[] = [],
-  options: initOptions = { onBackForward: false, ssr: null, ssrForce: false },
+  fn: TInitFunction,
+  deps: unknown[] = [],
+  options: TInitOptions = {},
 ) {
-  const services = useServices();
-  // Рендер на сервере.
-  // На сервере вызов callback если передан ключ ssr и с этим ключом ещё не вызывался
 
-  if (services.env.SSR) {
-    if (options.ssr) {
-      return services.ssr.prepare(callback, options.ssr);
+  const services = useServices();
+
+  if (import.meta.env.SSR && options.ssr) {
+    if (services.suspense.has(options.ssr)) {
+      if (services.suspense.waiting(options.ssr)) {
+        // Ожидание инициализации на логике Suspense (ожидание обработкой исключения)
+        services.suspense.throw(options.ssr);
+      }
     } else {
-      return callback();
+      // Инициализация ещё не выполнялась
+      services.suspense.wait(options.ssr, fn());
+      services.suspense.throw(options.ssr);
     }
-  } else {
-    // На клиенте используется хук эффекта по умолчанию один раз, если не переданы зависимости inputs
-    useEffect(() => {
-      // a) Если нет начальных данных от SSR по ключу ssr, то вызывается callback
-      // b) Если ssrForce==true, то клиент заново вызывает callback, деже если результат вызова есть от серверного рендера
-      if (options.ssrForce || !services.ssr.hasPrepare(options.ssr)) {
-        callback();
-      } else {
-        // Удаляем ключ ssr, чтобы при последующих рендерах хук работал
-        services.ssr.deletePrepare(options.ssr);
-      }
-      // Если в истории браузера меняются только query-параметры, то react-router не оповестит
-      // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
-      // браузера (если нужно отреагировать на изменения query-параметров при переходе по истории)
-      if (options.onBackForward) {
-        window.addEventListener('popstate', callback);
-        return () => {
-          window.removeEventListener('popstate', callback);
-        };
-      }
-    }, inputs);
   }
+
+  useEffect(() => {
+    // Хук работает только на клиенте
+    // Функция выполняется, если не было инициализации на сервере или требуется перезагрузка
+    if (!options.ssr || !services.suspense.has(options.ssr) || options.force) {
+      fn();
+    } else {
+      // Удаляем инициализацию от ssr, чтобы при последующих рендерах хук работал
+      services.suspense.delete(options.ssr);
+    }
+    // Если в истории браузера меняются только query-параметры, то react-router не оповестит
+    // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
+    // браузера (когда нужно отреагировать на изменения query-параметров при переходе по истории)
+    if (options.onBackForward) {
+      window.addEventListener('popstate', fn);
+      return () => {
+        window.removeEventListener('popstate', fn);
+      };
+    }
+  }, deps);
 }

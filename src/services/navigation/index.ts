@@ -1,20 +1,20 @@
 import { BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
+import { TServices} from '../types';
+import Service from "@src/services/service";
+import {TNavigationConfig} from "@src/services/navigation/types";
 
 /**
  * Сервис навигации (History API)
- * Используется библиотекой react-router и для прямого управления историей навигации в браузере
+ * Используется библиотекой react-router и для прямого управления навигации в браузере.
  * Учитывает режим работы для SSR
  */
-class NavigationService implements NavigationService {
-  config: any;
-  services: any;
-  _history!: MemoryHistory | BrowserHistory;
+class NavigationService extends Service<TNavigationConfig, undefined> {
+  private _history: MemoryHistory | BrowserHistory;
 
-  init(config: any, services: any) {
-    this.services = services;
-    this.config = config;
+  constructor(config: TNavigationConfig, services: TServices) {
+    super(config, services);
     switch (this.config.type) {
       case 'memory':
         this._history = createMemoryHistory(this.config);
@@ -24,7 +24,6 @@ class NavigationService implements NavigationService {
         this._history = createBrowserHistory(this.config);
         break;
     }
-    return this;
   }
 
   get location() {
@@ -43,11 +42,11 @@ class NavigationService implements NavigationService {
     return this.config.basename;
   }
 
-  push(path: string, state: any) {
+  push(path: string, state?: unknown) {
     return this._history.push(path, state);
   }
 
-  replace(path: string, state: any) {
+  replace(path: string, state?: unknown) {
     return this._history.replace(path, state);
   }
 
@@ -63,11 +62,11 @@ class NavigationService implements NavigationService {
     return this._history.forward();
   }
 
-  block(prompt: any) {
+  block(prompt: () => void) {
     return this._history.block(prompt);
   }
 
-  listen(listener: any) {
+  listen(listener: () => void) {
     return this._history.listen(listener);
   }
 
@@ -81,7 +80,7 @@ class NavigationService implements NavigationService {
   makeHref(path: string, searchParams = {}, clearSearch = false) {
     const currentParams = this.getSearchParams();
     const newParams = clearSearch ? searchParams : mc.update(currentParams, searchParams);
-    let search = qs.stringify(newParams, {
+    const search = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,
@@ -115,10 +114,10 @@ class NavigationService implements NavigationService {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams(params: any, push = true, clear = false, path: string) {
+  setSearchParams(params: unknown, push = true, clear = false, path?: string) {
     const currentParams = this.getSearchParams();
     const newParams = clear ? params : mc.update(currentParams, params);
-    let newSearch = qs.stringify(newParams, {
+    const newSearch = qs.stringify(newParams, {
       addQueryPrefix: true,
       arrayFormat: 'comma',
       encode: false,

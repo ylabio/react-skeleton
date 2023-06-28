@@ -1,9 +1,10 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import {TServices} from './types';
 
 /**
  * Контекст для Service
- * @type {React.Context<{}>}
+ * @type {React.Context<TServices>}
  */
 export const ServicesContext = React.createContext({});
 
@@ -12,9 +13,11 @@ export const ServicesContext = React.createContext({});
  * Подключает контекст к приложению для доступа к сервисам.
  * Провайдер не обрабатывает изменения в services.
  */
-function ServicesProvider({ services, children }: { services: any, children: React.ReactNode }) {
-  // В провайдер передаётся объект services,
-  // после чего services можно получить через useContext(ServicesContext) в любом компоненте
+function ServicesProvider({services, children}: {
+  services: TServices,
+  children: React.ReactNode
+}) {
+  // В провайдер передаётся точка доступа на все сервисы - services.
   return <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>;
 }
 

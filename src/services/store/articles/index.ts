@@ -6,11 +6,6 @@ import ListParamsState from '@src/services/store/list-params';
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список товаров.
  */
 class ArticlesState extends ListParamsState {
-  defaultConfig() {
-    return mc.patch(super.defaultConfig(), {
-      apiEndpoint: 'articles', // Если endpoint не реализован, то, возможно, он создаётся динамически
-    });
-  }
 
   initState() {
     return mc.patch(super.initState(), {
@@ -32,6 +27,7 @@ class ArticlesState extends ListParamsState {
   schemaParams() {
     return mc.patch(super.schemaParams(), {
       properties: {
+        sort: {enum: ['-date', 'date']},
         filter: {
           properties: {
             category: { type: 'string' },
@@ -40,6 +36,16 @@ class ArticlesState extends ListParamsState {
         },
       },
     });
+  }
+
+  /**
+   * Загрузка данных
+   * @param apiParams
+   */
+  async load(apiParams: any) {
+    const response = await this.services.api.endpoints.articles.findMany(apiParams);
+    // Установка полученных данных в состояние
+    return response.data.result;
   }
 }
 

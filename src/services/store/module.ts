@@ -1,37 +1,46 @@
 import mc from 'merge-change';
 import StoreService from '@src/services/store/index';
+import { TStoreNames } from './types';
+import { TServices } from '../types';
 
 /**
  * Базовый класс модуля хранилища
  */
-class StoreModule<Config = {}> {
+class StoreModule<Config> {
   store: StoreService;
-  services: any;
-  config: { name: string } & Config;
+  services: TServices;
+  config: Config;
+  name: TStoreNames;
 
   /**
-   * @param config {Object} Конфиг модуля
-   * @param services {Services}
+   * @param config Конфиг модуля
+   * @param services Менеджер сервисов
+   * @param name Название модуля
    */
-  constructor(config: any, services: any) {
+  constructor(config: Config | unknown, services: TServices, name: TStoreNames) {
     this.services = services;
     this.store = this.services.store;
+    this.name = name;
     this.config = mc.patch(this.defaultConfig(), config);
   }
 
   /**
+   * Инициализация после создания экземпляра.
+   * Вызывается автоматически.
+   * Используется, чтобы не переопределять конструктор
+   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  init(){}
+
+  /**
    * Конфигурация по умолчанию
-   * @return {Object}
    */
   defaultConfig() {
-    return {
-      name: 'base', //поменяется сервисом при создании экземпляра
-    };
+    return {x: true};
   }
 
   /**
    * Начальное состояние
-   * @return {Object}
    */
   initState() {
     return {};
@@ -39,22 +48,21 @@ class StoreModule<Config = {}> {
 
   /**
    * Текущее своё состояние
-   * @return {*}
    */
   getState() {
-    return this.store.getState()[this.config.name];
+    return this.store.getState()[this.name];
   }
 
   /**
    * Установка (замена) состояния
-   * @param state {*}
-   * @param description {String} Описание действия для логирования
+   * @param state Новое состояние модуля
+   * @param description Описание действия для логирования
    */
   setState(state: any, description = 'Установка') {
     this.store.setState(
       {
         ...this.store.getState(),
-        [this.config.name]: state,
+        [this.name]: state,
       },
       description,
     );
@@ -62,8 +70,8 @@ class StoreModule<Config = {}> {
 
   /**
    * Обновление состояния
-   * @param update {Object} Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
-   * @param description {String} Описание действия для логирования
+   * @param update Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
+   * @param [description] Описание действия для логирования
    */
   updateState(update = {}, description = 'Обновление') {
     const state = mc.update(this.getState(), update);
@@ -74,8 +82,8 @@ class StoreModule<Config = {}> {
 
   /**
    * Сброс состояния в начальное с возможностью подмешать изменения
-   * @param update {Object} Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
-   * @param description {String} Описание действия для логирования
+   * @param update Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
+   * @param description Описание действия для логирования
    */
   resetState(update = {}, description = 'Сброс') {
     this.setState(mc.update(this.initState(), update), description);

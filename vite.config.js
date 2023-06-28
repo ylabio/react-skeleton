@@ -31,6 +31,7 @@ export default defineConfig({
   ],
   server: {
     port: 8050,
-    proxy: proxyConfig
+    proxy: proxyConfig,
+    hmr: true
   }
 });
