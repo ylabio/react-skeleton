@@ -16,7 +16,7 @@ export default {
   },
 
   proxy: {
-    enabled: PROD,
+    enabled: PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
     routes: proxyRoutes
   },
 };

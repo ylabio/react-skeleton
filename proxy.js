@@ -5,10 +5,4 @@ export default {
     secure: false,
     changeOrigin: true,
   },
-  // Формат для прокси в ssr
-  '/api/**': {
-    target: 'http://example.front.ylab.io',
-    secure: false,
-    changeOrigin: true,
-  },
 };
