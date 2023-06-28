@@ -1,5 +1,3 @@
-import proxyRoutes from '../proxy.js';
-
 process.env.TARGET = process.env.TARGET || 'node';
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 const PROD = process.env.NODE_ENV === 'production';
@@ -12,11 +10,18 @@ export default {
   // HTTP сервер для рендера
   server: {
     host: 'localhost',
-    port: 8132,
+    port: 8050,
   },
 
   proxy: {
     enabled: PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
-    routes: proxyRoutes
+    routes: {
+      // Формат для прокси в vite
+      '/api': {
+        target: 'http://example.front.ylab.io',
+        secure: false,
+        changeOrigin: true,
+      },
+    }
   },
 };

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import reactPlugin from '@vitejs/plugin-react';
 import path from "path";
-import proxyConfig from './proxy.js';
+import serverConfig from './ssr/config.js';
 
 export default defineConfig({
   root: 'src',
@@ -30,8 +30,8 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 8050,
-    proxy: proxyConfig,
+    port: serverConfig.server.port,
+    proxy: serverConfig.proxy.routes,
     hmr: true
   }
 });

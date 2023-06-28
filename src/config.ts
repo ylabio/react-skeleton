@@ -5,7 +5,7 @@ const config = {
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
-      baseURL: SSR ? 'http://localhost:8132' : '',
+      baseURL: SSR ? 'http://localhost:8050' : '',
       //headers: {},
       //auth:{} base auth
     },
