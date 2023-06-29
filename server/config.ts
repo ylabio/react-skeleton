@@ -7,7 +7,7 @@ export default {
   PROD,
   DEV,
 
-  // HTTP сервер для рендера
+  // HTTP сервер для рендера. Параметры также используются для dev сервера Vite
   server: {
     host: 'localhost',
     port: 8050,
@@ -16,7 +16,6 @@ export default {
   proxy: {
     enabled: PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
     routes: {
-      // Формат для прокси в vite
       '/api': {
         target: 'http://example.front.ylab.io',
         secure: false,

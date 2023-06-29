@@ -2,8 +2,9 @@ import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import {fileURLToPath} from "url";
+import {IRouteContext} from "../../types";
 
-export default async ({app, config}) => {
+export default async ({app, config}: IRouteContext) => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   // Отдача файлов кроме index.html
   if (config.PROD) {

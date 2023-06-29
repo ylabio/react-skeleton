@@ -5,7 +5,7 @@ import {TWaitDump, TWaitRecord, TWaitState} from "./types";
 
 /**
  * Сервис для обработки ожиданий.
- * Используется в хуке useInit совместно с компонентов <Suspense> для ожидания инициализации при SSR
+ * Используется в хуке useInit совместно с компонентом <Suspense>
  */
 class SuspenseService extends Service<unknown, TWaitDump> {
   private state: TWaitState;

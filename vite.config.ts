@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import reactPlugin from '@vitejs/plugin-react';
 import path from "path";
-import serverConfig from './server/config.js';
+import serverConfig from './server/config';
 
 export default defineConfig({
   root: 'src',

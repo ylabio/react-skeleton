@@ -1,14 +1,14 @@
 /**
  * HTTP server for render
  */
-import express from "express";
-import InitialStore from "./utils/initial-store.js";
-import routers from './routers/index.js';
-import config from "./config.js";
+import express, {Application} from "express";
+import InitialStore from "./utils/initial-store";
+import routers from './routers/index';
+import config from "./config";
 
 (async () => {
   const initialStore = new InitialStore();
-  const app = express();
+  const app:Application = express();
   for (const route of routers) {
     await route({app, initialStore, config});
   }
