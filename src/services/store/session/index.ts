@@ -1,7 +1,8 @@
 import mc from 'merge-change';
 import StoreModule from '@src/services/store/module';
+import {SessionStateConfig} from "@src/services/store/session/types";
 
-class SessionState extends StoreModule<{ tokenHeader: string }> {
+class SessionState extends StoreModule<SessionStateConfig> {
   initState() {
     return {
       user: {},
@@ -14,7 +15,7 @@ class SessionState extends StoreModule<{ tokenHeader: string }> {
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig() {
+  defaultConfig(): SessionStateConfig {
     return {
       tokenHeader: 'XToken',
     };

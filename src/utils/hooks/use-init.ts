@@ -38,32 +38,33 @@ export default function useInit(
 ) {
 
   const services = useServices();
+  const suspense = services.suspense;
 
-  if (import.meta.env.SSR && options.ssr) {
-    if (services.suspense.has(options.ssr)) {
-      if (services.suspense.waiting(options.ssr)) {
+  if (suspense.enabled.useInit && options.ssr) {
+    if (suspense.has(options.ssr)) {
+      if (suspense.waiting(options.ssr)) {
         // Ожидание инициализации на логике Suspense (ожидание обработкой исключения)
-        services.suspense.throw(options.ssr);
+        suspense.throw(options.ssr);
       }
     } else {
       try {
         // Инициализация ещё не выполнялась
-        services.suspense.wait(options.ssr, fn());
+        suspense.wait(options.ssr, fn());
       } catch (e) {
         console.error(e);
       }
-      services.suspense.throw(options.ssr);
+      suspense.throw(options.ssr);
     }
   }
 
   useEffect(() => {
-    // Хук работает только на клиенте
-    // Функция выполняется, если не было инициализации на сервере или требуется перезагрузка
-    if (!options.ssr || !services.suspense.has(options.ssr) || options.force) {
+    // Хук работает на клиенте.
+    // Функция выполняется, если выключен suspense для useInit, не было инициализации на сервере или требуется перезагрузка
+    if (!suspense.enabled.useInit && (!options.ssr || !suspense.has(options.ssr) || options.force)) {
       fn();
     } else {
       // Удаляем инициализацию от ssr, чтобы при последующих рендерах хук работал
-      services.suspense.delete(options.ssr);
+      if (options.ssr) suspense.delete(options.ssr);
     }
     // Если в истории браузера меняются только query-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории

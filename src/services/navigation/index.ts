@@ -26,6 +26,14 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
     }
   }
 
+  defaultConfig(): TNavigationConfig {
+    return {
+      ...super.defaultConfig(),
+      type: import.meta.env.SSR ? 'memory' : 'browser',
+      basename: '/'
+    };
+  }
+
   get location() {
     return this._history.location;
   }

@@ -24,6 +24,6 @@ export type TServices = {
 /**
  * Настройки всех сервисов
  */
-export type TServiceConfig = {
+export type TServicesConfig = {
   [P in TServicesNames]?: ReturnType<TServices[P]['defaultConfig']>
 }

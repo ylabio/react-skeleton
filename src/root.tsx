@@ -5,13 +5,14 @@ import Services from '@src/services';
 import App from '@src/app';
 import ServicesProvider from '@src/services/provider';
 import defaultConfig from '@src/config';
+import {TServicesConfig} from "@src/services/types";
 
-export default async function root(config = {}) {
+export default async function root(config: TServicesConfig = {}) {
   // Инициализация менеджера сервисов
   const servicesManager = new Services();
   // Через services получаем доступ к store, api, navigation и всем другим сервисам
   const services = await servicesManager.init([defaultConfig, config]);
-
+  // Контекст для метаданных html
   const head = {};
 
   const Root = () => (

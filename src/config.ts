@@ -1,7 +1,9 @@
+import {TServicesConfig} from "@src/services/types";
+
 const SSR = import.meta.env.SSR;
 const PROD = import.meta.env.PROD;
 
-const config = {
+const config:TServicesConfig = {
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
@@ -20,7 +22,7 @@ const config = {
     // Настройки для конкретных модулей состояния по их названиям
     states: {
       session: {
-        tokenHeader: 'X-Token'
+        tokenHeader:'X-Token',
       },
       articles: {},
     }
@@ -28,7 +30,6 @@ const config = {
   // Сервис навигации
   navigation: {
     basename: '/', // если фронт доступен по вложенному пути
-    type: SSR ? 'memory' : 'browser',
   },
 };
 

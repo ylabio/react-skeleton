@@ -28,3 +28,12 @@ export type TWaitState = Map<string, TWaitRecord>
 export type TWaitDump = {
   [key: string]: Pick<TWaitRecord, 'waiting'>
 }
+
+/**
+ * Настройки сервиса ожиданий
+ */
+export type TSuspenseConfig = {
+  enabled: {
+    useInit: boolean
+  }
+}

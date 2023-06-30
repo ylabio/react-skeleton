@@ -7,15 +7,14 @@ interface BaseQuery {
   skip?: number;
 }
 
-class CRUDEndpoint extends Endpoint<{url: string}> {
+class CRUDEndpoint extends Endpoint {
   /**
    * Выбор списка
-   * @param search {Object} Параметры поиска
-   * @param fields {String} Какие поля выбирать
-   * @param limit {Number} Количество
-   * @param skip {Number} Сдвиг выборки от 0
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
+   * @param search Параметры поиска
+   * @param fields Какие поля выбирать
+   * @param limit Количество
+   * @param skip Сдвиг выборки от 0
+   * @param other  Другие параметры апи
    */
   findMany({
     filter,
@@ -33,10 +32,9 @@ class CRUDEndpoint extends Endpoint<{url: string}> {
 
   /**
    * Выбор одного
-   * @param id {String} Идентификатор ресурса
-   * @param fields {String} Какие поля выбирать
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
+   * @param id Идентификатор ресурса
+   * @param fields Какие поля выбирать
+   * @param other Другие параметры апи
    */
   findOne({ id, fields = '*', ...other }: BaseQuery & { id: string }) {
     return this.request({
@@ -48,11 +46,10 @@ class CRUDEndpoint extends Endpoint<{url: string}> {
 
   /**
    * Создание ресурса
-   * @param data {Object} Свойства ресурса
-   * @param fields {String} Какие поля выбирать в ответ
-   * @param path {String} Путь в url
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
+   * @param data Свойства ресурса
+   * @param fields Какие поля выбирать в ответ
+   * @param path Путь в url
+   * @param other Другие параметры апи
    */
   create({ data, fields = '*', ...other }: BaseQuery & { data: any }) {
     return this.request({
@@ -65,11 +62,10 @@ class CRUDEndpoint extends Endpoint<{url: string}> {
 
   /**
    * Изменение ресурса
-   * @param id {String} Идентификатор ресурса
-   * @param data {Object}изменяемые свойства ресурса
-   * @param fields {String} Какие поля выбирать в ответ
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
+   * @param id Идентификатор ресурса
+   * @param data Изменяемые свойства ресурса
+   * @param fields Какие поля выбирать в ответ
+   * @param other Другие параметры апи
    */
   update({ id, data, fields = '*', ...other }: BaseQuery & { id: string, data: any }) {
     return this.request({
@@ -82,10 +78,9 @@ class CRUDEndpoint extends Endpoint<{url: string}> {
 
   /**
    * Удаление ресурса
-   * @param id {String} Идентификатор ресурса
-   * @param fields {String} Какие поля выбирать
-   * @param other {Object} Другие параметры апи
-   * @returns {Promise}
+   * @param id Идентификатор ресурса
+   * @param fields Какие поля выбирать
+   * @param other Другие параметры апи
    */
   delete({ id, fields = '*', ...other }: { id: string, fields: string }) {
     return this.request({

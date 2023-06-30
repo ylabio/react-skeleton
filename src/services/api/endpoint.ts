@@ -6,7 +6,7 @@ import {IApiService, TEndpointsNames} from "./types";
 /**
  * Базовый (абстрактный) класс точки доступа к АПИ
  */
-abstract class Endpoint<Config> {
+abstract class Endpoint<Config = AxiosRequestConfig> {
   services: TServices;
   api: IApiService;
   config: Config;
@@ -30,9 +30,8 @@ abstract class Endpoint<Config> {
   /**
    * Конфигурация по умолчанию.
    * Переопределяется общими параметрами сервиса api и параметрами из конфига экземпляра
-   * @return {Object}
    */
-  defaultConfig() {
+  defaultConfig(): Config | AxiosRequestConfig {
     return {
       url: `/api/v1/${this.name}`,
       //baseURL: '',

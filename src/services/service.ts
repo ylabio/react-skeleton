@@ -29,7 +29,7 @@ abstract class Service<Config, Dump> {
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig() {
+  defaultConfig(): Config | object {
     return {};
   }
 

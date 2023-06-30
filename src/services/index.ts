@@ -5,20 +5,20 @@ import {
   TServicesImports,
   TServicesConstructors,
   TServices,
-  TServiceConfig
+  TServicesConfig
 } from './types';
 
 export const services: TServicesImports = allServices;
 
 class Services {
   private list: TServices;
-  private configs: TServiceConfig;
+  private configs: TServicesConfig;
   private classes: TServicesConstructors;
   private proxy: TServices;
   private initialState: Map<TServicesNames, unknown>;
 
   constructor() {
-    this.configs = {} as TServiceConfig;
+    this.configs = {} as TServicesConfig;
     this.list = {} as TServices;
     this.classes = {} as TServicesConstructors;
     this.initialState = new Map();
@@ -41,7 +41,7 @@ class Services {
    * @param configs Общая конфигурация на все сервисы
    * @returns {Services} Возвращается прокси на доступ к сервисам по их названию
    */
-  async init(configs: TServiceConfig | TServiceConfig[]) {
+  async init(configs: TServicesConfig | TServicesConfig[]) {
     this.configure(configs);
     // Подготовка начального состояния сервисов, если оно есть
     await this.initInitialState();
@@ -65,7 +65,7 @@ class Services {
    * @param configs {Object|Array<Object>} Массив с объектами опций.
    * @returns {Services}
    */
-  configure(configs: TServiceConfig | TServiceConfig[]) {
+  configure(configs: TServicesConfig | TServicesConfig[]) {
     if (!Array.isArray(configs)) configs = [configs];
     for (let i = 0; i < configs.length; i++) {
       this.configs = mc.merge(this.configs, configs[i]);

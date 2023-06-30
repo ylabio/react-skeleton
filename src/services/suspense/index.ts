@@ -1,18 +1,34 @@
 import {TServices} from "@src/services/types";
 import Service from "@src/services/service";
 import isPromise from "@src/utils/is-promise";
-import {TWaitDump, TWaitRecord, TWaitState} from "./types";
+import {TSuspenseConfig, TWaitDump, TWaitRecord, TWaitState} from "./types";
 
 /**
  * Сервис для обработки ожиданий.
  * Используется в хуке useInit совместно с компонентом <Suspense>
  */
-class SuspenseService extends Service<unknown, TWaitDump> {
+class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
   private state: TWaitState;
 
   constructor(config: unknown, services: TServices) {
     super(config, services);
     this.state = new Map();
+  }
+
+  defaultConfig() {
+    return {
+      ...super.defaultConfig(),
+      enabled: {
+        useInit: import.meta.env.SSR // useInit использует suspense для рендера на сервере
+      }
+    };
+  }
+
+  /**
+   * Включенные режимы
+   */
+  get enabled() {
+    return this.config.enabled;
   }
 
   /**

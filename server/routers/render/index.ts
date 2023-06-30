@@ -55,10 +55,10 @@ export default async ({app, initialStore, config}: IRouteContext) => {
       return;
     }
 
-    // @todo кэшировать рендер и раздавать его
-    // @todo задержки в основном из-за обращения к АПИ (~400ms) чисто рендер (~20ms)
-    // @todo применить заголовки HTTP для кэширования в браузере
-    // @todo браузер указывает в запросе на страницу no-cache в целях безопасности, т.е. кэширования html не будет выполнять и заставит прокси сервера взять свежие данные
+    // @todo Кэшировать целесообразно в режиме полного рендера (config.render.partial = false)
+    // @todo Задержки в основном из-за обращения к АПИ.
+    // @todo Возможно, нужно кэшировать дамп сервисов, чтобы рендерить с предустановленным состоянием.
+    // @todo Если кэшируется документ (весь рендер), то все равно нужно и дамп сервисов кэшировать и раздавать его пока есть кэш документа
 
     // Секрет для идентификации дампа от всех сервисов
     const secret = initialStore.makeSecretKey();
@@ -69,10 +69,12 @@ export default async ({app, initialStore, config}: IRouteContext) => {
         // Точка входа для навигации (какую страницу рендерить)
         initialEntries: [req.originalUrl],
       },
+      suspense: {
+        enabled: {
+          useInit: !config.render.partial // Если рендер частями, то данные ждать не будем (так как не сможем корректно передать их браузеру)
+        }
+      }
     });
-
-    // Режим ожидания всех данных перед отдачей потока
-    const isCrawler = true;
 
     // HTML шаблон конвертирует в ReactNode со вставкой в него компонента приложения.
     // Из шаблона вычленяются скрипты, чтобы отдать их в потоке, но после html разметки.
@@ -94,7 +96,7 @@ export default async ({app, initialStore, config}: IRouteContext) => {
       bootstrapModules: modules,
       bootstrapScripts: scripts,
       onShellReady() {
-        if (!isCrawler) {
+        if (config.render.partial) {
           sendHeaders(res);
           pipe(res);
         }
@@ -106,7 +108,7 @@ export default async ({app, initialStore, config}: IRouteContext) => {
         console.error(error);
       },
       onAllReady() {
-        if (isCrawler) {
+        if (!config.render.partial) {
           sendHeaders(res);
           streamHelmet(pipe, head.helmet).pipe(res);
         }
@@ -117,7 +119,7 @@ export default async ({app, initialStore, config}: IRouteContext) => {
         didError = true;
         if (vite) vite.ssrFixStacktrace(error as Error);
         console.error(error);
-      }
+      },
     });
     // Timeout
     setTimeout(() => abort(), 10000);

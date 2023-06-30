@@ -10,14 +10,18 @@ export interface IServerConfig {
     port: number,
   },
   proxy: {
+    // Включить прокси на сервере рендара
     enabled: boolean
+    // Пути перенаправления запросов.
     routes: {
       [path: string]: ServerOptions
     }
   },
   render: {
     // SSR или отдать SPA? Можно использовать для включения рендера только для поисковых ботов
-    enabled: boolean
+    enabled: boolean,
+    // Рендер без ожидания асинхронного импорта и инициализации данных. Готовые фрагменты будут отдаваться в потоке частями.
+    partial: boolean
   }
 };
 

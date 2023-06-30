@@ -27,7 +27,7 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
     this.modules = {} as TStoreModules;
   }
 
-  defaultConfig() {
+  defaultConfig(): TStoreConfig {
     return {
       ...super.defaultConfig(),
       log: false,

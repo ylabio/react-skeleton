@@ -28,7 +28,7 @@ export type TStoreState = {
  * Настройки Store и его модулей
  */
 export type TStoreConfig = {
-  log: boolean,
+  log?: boolean,
   states: {
     [P in TStoreNames]?: ReturnType<TStoreModules[P]['defaultConfig']>
   }
