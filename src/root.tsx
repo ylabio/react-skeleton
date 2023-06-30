@@ -7,7 +7,6 @@ import ServicesProvider from '@src/services/provider';
 import defaultConfig from '@src/config';
 
 export default async function root(config = {}) {
-
   // Инициализация менеджера сервисов
   const servicesManager = new Services();
   // Через services получаем доступ к store, api, navigation и всем другим сервисам

@@ -1,16 +1,15 @@
 {
   "name": "react-skeleton",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "YLab React Skeleton",
   "main": "index.tsx",
   "scripts": {
     "start": "vite serve",
     "start:server": "cross-env NODE_ENV=development ts-node ./server/index.ts",
-    "build": "npm run build:client & npm run build:server",
-    "build:client": "vite build --outDir ../dist/client",
-    "build:server": "vite build --outDir ../dist/server --ssr root.tsx",
-    "preview:client": "npm run build:client && vite preview",
-    "preview:server": "npm run build && ts-node ./server/index.ts",
+    "build": "vite build",
+    "build:server": "npm run build && vite build --ssr root.tsx",
+    "preview": "npm run build && vite preview",
+    "preview:server": "npm run build:server && ts-node ./server/index.ts",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:eslint": "./node_modules/.bin/eslint ./",
     "lint": "eslint ./src"

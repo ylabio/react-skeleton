@@ -23,4 +23,8 @@ export default {
       },
     }
   },
+
+  render: {
+    enabled: false
+  }
 };

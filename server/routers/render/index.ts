@@ -17,7 +17,7 @@ export default async ({app, initialStore, config}: IRouteContext) => {
   // Сборщик Vite для рендера в режиме разработки
   const vite = config.DEV ? await createViteServer({
     server: {middlewareMode: true},
-    appType: 'custom'
+    appType: 'custom',
   }) : undefined;
   if (vite) app.use(vite.middlewares);
 
@@ -34,16 +34,31 @@ export default async ({app, initialStore, config}: IRouteContext) => {
 
   // Рендер
   app.get('/*', async (req: Request, res: Response) => {
-    // Запрос на файл, которого нет (чтобы не ренлерить приложение из-за этого)
+    // Запрос на файл, которого нет (чтобы не рендерить приложение из-за этого)
     // Если файл есть, то он бы отправился обработчиком статический файлов
     if (req.originalUrl.match(/\.[a-z0-9]+$/u)) {
       res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
       res.end('Not Found');
       return;
     }
+
+    // В режиме разработки в шаблон вставляются скрипты Vite для горячего обновления
+    const template = vite
+      // Apply Vite HTML transforms. This injects the Vite HMR client
+      ? await vite.transformIndexHtml(req.originalUrl, rootTemplate)
+      : rootTemplate;
+
+    // Вместо рендера отдаём собранный index.html
+    if (!config.render.enabled){
+      res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+      res.end(template);
+      return;
+    }
+
     // @todo кэшировать рендер и раздавать его
     // @todo задержки в основном из-за обращения к АПИ (~400ms) чисто рендер (~20ms)
     // @todo применить заголовки HTTP для кэширования в браузере
+    // @todo браузер указывает в запросе на страницу no-cache в целях безопасности, т.е. кэширования html не будет выполнять и заставит прокси сервера взять свежие данные
 
     // Секрет для идентификации дампа от всех сервисов
     const secret = initialStore.makeSecretKey();
@@ -55,12 +70,6 @@ export default async ({app, initialStore, config}: IRouteContext) => {
         initialEntries: [req.originalUrl],
       },
     });
-
-    // В режиме разработки в шаблон вставляются скрипты Vite для горячего обновления
-    const template = vite
-      // Apply Vite HTML transforms. This injects the Vite HMR client
-      ? await vite.transformIndexHtml(req.originalUrl, rootTemplate)
-      : rootTemplate;
 
     // Режим ожидания всех данных перед отдачей потока
     const isCrawler = true;
@@ -74,7 +83,10 @@ export default async ({app, initialStore, config}: IRouteContext) => {
 
     const sendHeaders = (res: Response) => {
       res.cookie('stateSecret', secret.secret, {httpOnly: true/*, maxAge: 100/*, secure: true*/});
-      res.writeHead(didError ? 500 : 200, {'Content-Type': 'text/html; charset=utf-8'});
+      res.writeHead(didError ? 500 : 200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public,max-age=300,s-maxage=900'
+      });
     };
 
     const {pipe, abort} = renderToPipeableStream(jsx, {

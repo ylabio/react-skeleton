@@ -9,7 +9,6 @@ import root from "@src/root";
  * а также устанавливается состояние, с которым выполнялся рендер на сервере.
  */
 (async function () {
-
   const {Root, servicesManager} = await root();
 
   const dom = document.getElementById('app');

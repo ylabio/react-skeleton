@@ -2,13 +2,14 @@
   "apps": [
     {
       "name": "SSR",
-      "script": "server/index.js",
+      "script": "server/index.ts",
       "instances" : "1",
       "exec_mode" : "cluster",
       "watch": false,
       "node_args": "",
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "NODE_OPTION": "--loader ts-node/esm"
       }
     }
   ]
