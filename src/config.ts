@@ -3,7 +3,7 @@ import {TServicesConfig} from "@src/services/types";
 const SSR = import.meta.env.SSR;
 const PROD = import.meta.env.PROD;
 
-const config:TServicesConfig = {
+const config: TServicesConfig = {
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
@@ -13,16 +13,16 @@ const config:TServicesConfig = {
       //auth:{} base auth
     },
     // Настройки для конкретных модулей api по их названию
-    endpoints:{
+    endpoints: {
       users: {},
     }
   },
   store: {
     log: !PROD && !SSR, // false,
     // Настройки для конкретных модулей состояния по их названиям
-    states: {
+    modules: {
       session: {
-        tokenHeader:'X-Token',
+        tokenHeader: 'X-Token',
       },
       articles: {},
     }

@@ -2,13 +2,17 @@ import StoreModule from "@src/services/store/module";
 
 class ModalsState extends StoreModule<undefined> {
 
-  initState() {
+  defaultState() {
     return {
       show: false,
       name: null,
       params: null,
       result: null,
     };
+  }
+
+  zz(){
+    return true;
   }
 
   async open(name: string, params: unknown) {

@@ -1,10 +1,10 @@
-import React, { Fragment, useCallback } from 'react';
-import LayoutPage from '@src/components/layouts/layout-page';
-import HeaderContainer from '@src/containers/header-container';
-import LayoutContent from '@src/components/layouts/layout-content';
+import React, {Fragment, useCallback} from 'react';
 import FormLogin from '@src/components/forms/form-login';
 import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
 function Login() {
   const select: any = useSelector((state: any) => ({
@@ -15,30 +15,30 @@ function Login() {
 
   const callbacks = {
     onChangeForm: useCallback(async (data: any) => {
-      await services.store.actions.formLogin.change(data);
+      await services.store.modules.formLogin.change(data);
     }, []),
     onSubmitForm: useCallback(async (data: any) => {
-      await services.store.actions.formLogin.submit(data);
+      await services.store.modules.formLogin.submit(data);
       // @todo перейти на страницу, с которой был редирект или по умолчанию в приватный раздел
       services.navigation.goPrivate();
     }, []),
   };
 
   return (
-    <LayoutPage header={<HeaderContainer />}>
-      <LayoutContent>
-        <Fragment>
-          <h1>Login page</h1>
-          <FormLogin
-            data={select.formLogin.data}
-            errors={select.formLogin.errors}
-            wait={select.formLogin.wait}
-            onChange={callbacks.onChangeForm}
-            onSubmit={callbacks.onSubmitForm}
-          />
-        </Fragment>
-      </LayoutContent>
-    </LayoutPage>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <Fragment>
+        <h2>Login page</h2>
+        <FormLogin
+          data={select.formLogin.data}
+          errors={select.formLogin.errors}
+          wait={select.formLogin.wait}
+          onChange={callbacks.onChangeForm}
+          onSubmit={callbacks.onSubmitForm}
+        />
+      </Fragment>
+    </PageLayout>
   );
 }
 

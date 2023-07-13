@@ -1,37 +1,27 @@
 import * as modules from './exports';
-import {
-  TStoreNames,
-  TStoreState,
-  TStoreModules,
-  TStoreListener,
-  TStoreConfig,
-} from './types';
-import {TServices} from '@src/services/types';
 import Service from "@src/services/service";
+import {IObservable} from "@src/utils/observable";
+import {
+  TStoreModuleName, TStoreModuleKey, TStoreState, TStoreModules, TStoreModulesConfig,
+  TStoreListener, TStoreConfig
+} from './types';
 
 /**
  * Хранилище состояния приложения
  */
-class StoreService extends Service<TStoreConfig, TStoreState> {
-  private state: TStoreState;
-  private listeners: TStoreListener[];
-  private modules: TStoreModules;
-
-  constructor(config: TStoreConfig | unknown, services: TServices) {
-    super(config, services);
-    // Состояние приложения (данные всех модулей)
-    this.state = {} as TStoreState;
-    // Подписчики на изменение state
-    this.listeners = [];
-    // Модули
-    this.modules = {} as TStoreModules;
-  }
+class StoreService extends Service<TStoreConfig, TStoreState> implements IObservable<TStoreState> {
+  // Состояние приложения (данные всех модулей)
+  private state: TStoreState = {} as TStoreState;
+  // Подписчики на изменение state
+  private listeners: TStoreListener[] = [];
+  // Модули состояния
+  readonly modules: TStoreModules = {} as TStoreModules;
 
   defaultConfig(): TStoreConfig {
     return {
       ...super.defaultConfig(),
       log: false,
-      states: {}
+      modules: {}
     };
   }
 
@@ -39,31 +29,37 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
    * Инициализация сервиса
    * @param initialState Предустановленное начальное состояние. Обычно использует при SSR
    */
-  init(initialState?: unknown) {
-    const names = Object.keys(modules) as TStoreNames[];
+  init(initialState: Partial<TStoreState> = {}) {
+    const names = Object.keys(modules) as TStoreModuleName[];
     for (const name of names) {
-      this.initModule(name, name, initialState ? (initialState as TStoreState)[name] : undefined);
+      this.initModule(name, name, undefined, initialState[name]);
     }
   }
 
   /**
-   * Инициализация модуля хранилища
-   * @param name Имя модуля, по которому будет обращение к действиям и состоянию
-   * @param moduleName Название JS модуля. По умолчанию равен name
-   * @param initialState Предустановленное начальное состояние модуля. Обычно использует при SSR
+   * Инициализация модуля хранилища, если его ещё нет в store.modules
+   * @param name Название базового модуля.
+   * @param key Ключ нового модуля, по которому будет обращение к действиям и состоянию. Должно начинаться с имени базового модуля.
+   * @param config Настройки модуля. По умолчанию используются настройки базового модуля.
+   * @param initialState Предустановленное начальное состояние модуля. Обычно используется после рендера на сервере.
    */
-  initModule<T extends keyof TStoreModules>(name: T, moduleName?: T, initialState?: TStoreState[T]) {
-    const config = this.config.states;
-    // Если нет класса сопоставленного с name, то используется класс по умолчанию
-    if (!moduleName) moduleName = name;
-    if (!modules[moduleName]) throw new Error(`Not found store module "${moduleName}"`);
-    const constructor = modules[moduleName];
-    // Экземпляр модуля
-    this.modules[name] = new constructor(config[name], this.services, name) as TStoreModules[T];
-    this.modules[name].init();
-    // Состояние по умолчанию от модуля
-    if (!this.state[name]) {
-      this.state[name] = initialState || this.modules[name].initState();
+  initModule<Name extends TStoreModuleName>(
+    name: Name,
+    key: TStoreModuleKey<Name>,
+    config?: TStoreModulesConfig[TStoreModuleKey<Name>],
+    initialState?: TStoreState[TStoreModuleKey<Name>]
+  ) {
+    if (!this.modules[key]) {
+      if (!modules[name]) throw new Error(`Not found store module "${name}"`);
+      const stateConfig = config ? config : this.config.modules[key];
+      const constructor = modules[name];
+      // Экземпляр модуля
+      this.modules[key] = new constructor(stateConfig, this.services, key) as TStoreModules[TStoreModuleKey<Name>];
+      this.modules[key].init();
+      // Состояние по умолчанию от модуля
+      if (!this.state[key]) {
+        this.state[key] = initialState || this.modules[key].defaultState();
+      }
     }
   }
 
@@ -75,24 +71,23 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
     this.listeners.push(callback);
     // Возвращаем функцию для отписки
     return () => {
-      this.listeners = this.listeners.filter((item: any) => item !== callback);
+      this.listeners = this.listeners.filter(item => item !== callback);
     };
   }
 
   /**
-   * Всё состояние
+   * Вызываем всех слушателей
+   * @param state
    */
-  getState(): TStoreState {
+  notify(state: TStoreState) {
+    for (const listener of this.listeners) listener(state);
+  }
+
+  get(): TStoreState {
     return this.state;
   }
 
-  /**
-   * Установка state.
-   * Необходимо учитывать иммутабельность.
-   * @param newState Новое состояния всех модулей
-   * @param [description] Описание действия для логирования
-   */
-  setState(newState: TStoreState, description = 'Установка') {
+  set(newState: TStoreState, description = 'Установка') {
     if (this.config.log) {
       console.group(
         `%c${'store.setState'} %c${description}`,
@@ -104,25 +99,24 @@ class StoreService extends Service<TStoreConfig, TStoreState> {
       console.groupEnd();
     }
     this.state = newState;
-    // Оповещаем всех подписчиков об изменении стейта
-    for (const lister of this.listeners) {
-      lister(this.state);
-    }
+    this.notify(this.state);
   }
 
   /**
-   * Доступ к модулям состояния
+   * Всё состояние
    */
-  get actions() {
-    return this.modules;
+  getState(): TStoreState {
+    return this.get();
   }
 
   /**
-   * Доступ к модулю состояния по названию
-   * @param name  Название модуля
+   * Установка state.
+   * Необходимо учитывать иммутабельность.
+   * @param newState Новое состояния всех модулей
+   * @param [description] Описание действия для логирования
    */
-  get<T extends keyof TStoreModules>(name: T): TStoreModules[T] {
-    return this.modules[name];
+  setState(newState: TStoreState, description = 'Установка') {
+    this.set(newState, description);
   }
 
   /**

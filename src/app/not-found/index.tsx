@@ -1,22 +1,19 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import LayoutContent from '@src/components/layouts/layout-content';
-import { Helmet } from 'react-helmet-async';
+import {memo} from "react";
+import {Link} from 'react-router-dom';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
 function NotFound() {
   return (
-    <Fragment>
-      <Helmet>
-        <title>404</title>
-        <meta name="status" content="404" />
-      </Helmet>
-      <LayoutContent>
-        <h1>404</h1>
-        <p>Страница не найдена</p>
-        <Link to="/">На главную</Link>
-      </LayoutContent>
-    </Fragment>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <h2>404</h2>
+      <p>Страница не найдена</p>
+      <Link to="/">На главную</Link>
+    </PageLayout>
   );
 }
 
-export default React.memo(NotFound);
+export default memo(NotFound);

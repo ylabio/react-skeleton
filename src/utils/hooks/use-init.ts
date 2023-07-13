@@ -37,9 +37,7 @@ export default function useInit(
   options: TInitOptions = {},
 ) {
 
-  const services = useServices();
-  const suspense = services.suspense;
-
+  const suspense = useServices().suspense;
   if (suspense.enabled.useInit && options.ssr) {
     if (suspense.has(options.ssr)) {
       if (suspense.waiting(options.ssr)) {
@@ -59,7 +57,7 @@ export default function useInit(
 
   useEffect(() => {
     // Хук работает на клиенте.
-    // Функция выполняется, если выключен suspense для useInit, не было инициализации на сервере или требуется перезагрузка
+    // Функция выполняется, если выключен suspense для useInit и не было инициализации на сервере или требуется перезагрузка
     if (!suspense.enabled.useInit && (!options.ssr || !suspense.has(options.ssr) || options.force)) {
       fn();
     } else {

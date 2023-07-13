@@ -1,24 +1,25 @@
 import React, {Fragment, lazy, Suspense} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import Modals from '@src/app/modals';
+import Modals from '@src/modals/container';
 import Loading from '@src/app/loading';
 import RequireAuth from '@src/containers/require-auth';
+import ModalsExample from "@src/app/modals-example";
 
 // import Main from '@src/app/main';
-import Login from '@src/app/login';
-import About from '@src/app/about';
+// import Login from '@src/app/login';
+// import About from '@src/app/about';
 // import Catalog from '@src/app/catalog';
-import Private from '@src/app/private';
-import NotFound from '@src/app/not-found';
+// import Private from '@src/app/private';
+// import NotFound from '@src/app/not-found';
 
-// Динамический импорт
+// Динамический импорт станиц
 const Main = lazy(() => import('@src/app/main'));
-// const Login = lazy(() => import('@src/app/login'));
-// const About = lazy(() => import('@src/app/about'));
+const Login = lazy(() => import('@src/app/login'));
+const About = lazy(() => import('@src/app/about'));
 const Catalog = lazy(() => import('@src/app/catalog'));
-// const Private = lazy(() => import('@src/app/private'));
-// const NotFound = lazy(() => import('@src/app/not-found'));
+const Private = lazy(() => import('@src/app/private'));
+const NotFound = lazy(() => import('@src/app/not-found'));
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" index element={<Main />} />
+          <Route path="/modals-example" index element={<ModalsExample />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/:categoryId" element={<Catalog />} />
           <Route path="/about" element={<About />} />

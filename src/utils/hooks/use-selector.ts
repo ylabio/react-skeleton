@@ -1,22 +1,12 @@
-import {useEffect, useMemo, useState} from "react";
-import shallowequal from 'shallowequal';
 import useServices from "@src/utils/hooks/use-services";
+import useObservable from "@src/utils/hooks/use-observable";
 import { TStoreState } from "@src/services/store/types";
 
 /**
  * Хук для выборки данных из store
+ * @param selector Функция для выборки только нужных данных и отслеживания их изменения
+ * @return Выбранные данные функцией selector
  */
-export default function useSelector<T>(selector: (state: TStoreState) => T): T {
-  const store = useServices().store;
-  const [state, setState] = useState(() => selector(store.getState()));
-  const unsubscribe = useMemo(() => {
-    return store.subscribe(() => {
-      const newState: T = selector(store.getState());
-      setState((prevState: T)  => {
-        return shallowequal(prevState, newState) ? prevState : newState;
-      });
-    });
-  }, []);
-  useEffect(() => unsubscribe, [unsubscribe]);
-  return state;
+export default function useSelector<Result>(selector: (state: TStoreState) => Result): Result {
+  return useObservable(useServices().store, selector);
 }

@@ -5,9 +5,12 @@ import useInit from '@src/utils/hooks/use-init';
 import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
 import { NavigateProps } from 'react-router';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
 interface Props {
-  children?: JSX.Element;
+  children?: React.ReactNode;
   redirect: NavigateProps['to']
 }
 
@@ -22,15 +25,17 @@ function RequireAuth(props: Props) {
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации
     // Вызов происходит при переходе в роут с друго пути
-    await services.store.actions.session.remind();
+    await services.store.modules.session.remind();
   });
 
   if (select.session.wait) {
     // Ожидание инициализации сессии
     return (
-      <div>
+      <PageLayout>
+        <Head title="React Skeleton"></Head>
+        <Navigation/>
         <i>Проверка сессии...</i>
-      </div>
+      </PageLayout>
     );
   } else if (select.session.exists) {
     // Есть доступ

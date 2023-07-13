@@ -4,42 +4,44 @@ import * as modules from './exports';
  * Конструкторы модулей Store
  */
 export type TStoreContructors = typeof modules;
-
 /**
  * Названия модулей Store
  */
-export type TStoreNames = keyof TStoreContructors;
-
+export type TStoreModuleName = keyof TStoreContructors;
+/**
+ * Ключи для модулей Store (на основе названий, чтобы динамически создать временные модули)
+ */
+export type TStoreModuleKey<Name extends string> = Name | `${Name}${string}`;
 /**
  * Модули Store
  */
 export type TStoreModules = {
-  [P in TStoreNames]: InstanceType<TStoreContructors[P]>
+  [P in TStoreModuleName as TStoreModuleKey<P>]: InstanceType<TStoreContructors[P]>
 }
-
+/**
+ * Настройки модулей Store
+ */
+export type TStoreModulesConfig = {
+  [P in TStoreModuleName as TStoreModuleKey<P>]: ReturnType<TStoreModules[P]['defaultConfig']>
+}
+/**
+ * Настройки сервиса Store
+ */
+export type TStoreConfig = {
+  log?: boolean,
+  modules: Partial<TStoreModulesConfig>
+}
 /**
  * Всё состояние в Store
  */
 export type TStoreState = {
-  [P in TStoreNames]: ReturnType<TStoreModules[P]['initState']>
+  [P in TStoreModuleName as TStoreModuleKey<P>]: ReturnType<TStoreModules[P]['defaultState']>
 }
-
-/**
- * Настройки Store и его модулей
- */
-export type TStoreConfig = {
-  log?: boolean,
-  states: {
-    [P in TStoreNames]?: ReturnType<TStoreModules[P]['defaultConfig']>
-  }
-}
-
 /**
  * Функция-слушатель изменений в store
  * Для подписки в subscribe
  */
 export type TStoreListener = (state: TStoreState) => void;
-
 /**
  * Проверка на TStoreState
  */

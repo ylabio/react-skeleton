@@ -29,7 +29,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    * Начальное состояние
    * @return {Object}
    */
-  initState(): InitListParamsStateType {
+  defaultState(): InitListParamsStateType {
     return {
       items: [],
       count: 0,
@@ -78,7 +78,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    */
   async initParams(params = {}) {
     // В основе начальные параметры
-    const defaultParams = this.initState().params;
+    const defaultParams = this.defaultState().params;
     // Параметры из URL (query string)
     const queryParams = this.validateParams(this.services.navigation.getSearchParams());
     // Сливаем все параметры
@@ -99,7 +99,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
   async resetParams(params = {}, options = {}) {
     return this.setParams(
       // Слияние параметров с начальными
-      mc.merge(this.initState().params, params),
+      mc.merge(this.defaultState().params, params),
       // Слияние параметров с текущими. Без загрузки данных, но со сбросом данных
       mc.merge({ merge: false, remember: 'replace', load: false, clear: true }, options),
     );
@@ -182,7 +182,7 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    */
   validateParams(params: any) {
     if (!this.validator(params)) {
-      params = this.initState().params;
+      params = this.defaultState().params;
     }
     return params;
   }

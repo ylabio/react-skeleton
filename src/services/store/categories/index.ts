@@ -4,7 +4,7 @@ import StoreModule from '@src/services/store/module';
 
 class CategoriesState extends StoreModule<undefined> {
 
-  initState() {
+  defaultState() {
     return {
       items: [],
       roots: [],

@@ -4,7 +4,7 @@ import {TServices} from "@src/services/types";
 /**
  * Базовый класс модуля хранилища
  */
-abstract class Service<Config, Dump> {
+abstract class Service<Config = undefined, Dump = undefined> {
   protected services: TServices;
   protected config: Config;
 
@@ -12,7 +12,7 @@ abstract class Service<Config, Dump> {
    * @param config Конфиг модуля
    * @param services Менеджер сервисов
    */
-  protected constructor(config: Config | unknown, services: TServices) {
+  constructor(config: Config | unknown, services: TServices) {
     this.services = services;
     this.config = mc.patch(this.defaultConfig(), config);
   }

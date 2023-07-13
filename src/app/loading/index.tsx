@@ -1,14 +1,15 @@
 import React from 'react';
-import LayoutContent from '@src/components/layouts/layout-content';
-import LayoutPage from '@src/components/layouts/layout-page';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
 function Loading() {
   return (
-    <LayoutPage>
-      <LayoutContent>
-        <p>Загрузка...</p>
-      </LayoutContent>
-    </LayoutPage>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <p>Загрузка...</p>
+    </PageLayout>
   );
 }
 

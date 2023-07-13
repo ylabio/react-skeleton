@@ -1,18 +1,16 @@
 import React from 'react';
-import LayoutContent from '@src/components/layouts/layout-content';
-import HeaderContainer from '@src/containers/header-container';
-import LayoutPage from '@src/components/layouts/layout-page';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
-interface Props {}
-
-function About(props: Props) {
+function About() {
   return (
-    <LayoutPage header={<HeaderContainer />}>
-      <LayoutContent>
-        <h1>О проекте</h1>
-        <p>Скелет приложения на React с примерами компонент и навигацией</p>
-      </LayoutContent>
-    </LayoutPage>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <h2>О проекте</h2>
+      <p>Скелет приложения на React с примерами компонент и навигацией</p>
+    </PageLayout>
   );
 }
 

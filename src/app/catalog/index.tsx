@@ -1,12 +1,12 @@
 import React from 'react';
-import LayoutContent from '@src/components/layouts/layout-content';
-import HeaderContainer from '@src/containers/header-container';
-import LayoutPage from '@src/components/layouts/layout-page';
 import ArticleList from '@src/containers/article-list';
 import CategoryTree from '@src/containers/category-tree';
 import useInit from '@src/utils/hooks/use-init';
 import {useParams} from 'react-router-dom';
 import useServices from '@src/utils/hooks/use-services';
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
+import PageLayout from "@src/components/layouts/page-layout";
 
 function Catalog() {
   const {categoryId} = useParams<{ categoryId: string }>();
@@ -14,22 +14,22 @@ function Catalog() {
 
   useInit(async () => {
     // Инициализация параметров для начально выборки по ним
-    await services.store.actions.articles.initParams({filter: {category: categoryId}});
+    await services.store.modules.articles.initParams({filter: {category: categoryId}});
   }, [categoryId], {ssr: 'articles.init'});
 
   useInit(async () => {
-    await services.store.actions.categories.load({fields: '*', limit: 1000});
+    await services.store.modules.categories.load({fields: '*', limit: 1000});
   }, [], {ssr: 'categories.load'});
 
   return (
-    <LayoutPage header={<HeaderContainer/>}>
-      <LayoutContent>
-        <h1>Каталог</h1>
-        <CategoryTree/>
-        <hr/>
-        <ArticleList/>
-      </LayoutContent>
-    </LayoutPage>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <h2>Каталог</h2>
+      <CategoryTree/>
+      <hr/>
+      <ArticleList/>
+    </PageLayout>
   );
 }
 

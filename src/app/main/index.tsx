@@ -1,40 +1,21 @@
-import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import LayoutPage from '@src/components/layouts/layout-page';
-import HeaderContainer from '@src/containers/header-container';
-import LayoutContent from '@src/components/layouts/layout-content';
-import Button from '@src/components/elements/button';
-import Accordion from '@src/components/elements/accordion';
-import useServices from '@src/utils/hooks/use-services';
+import {memo} from 'react';
+import {Link} from 'react-router-dom';
+import PageLayout from "@src/components/layouts/page-layout";
+import Head from "@src/components/navigation/head";
+import Navigation from "@src/containers/navigation";
 
 function Main() {
-  const services = useServices();
-
-  const callbacks = {
-    showInfo: useCallback(async () => {
-      await services.store.actions.modals.open('info', {
-        overflowTransparent: false,
-        overflowClose: true,
-      });
-    }, []),
-  };
 
   return (
-    <LayoutPage header={<HeaderContainer />}>
-      <LayoutContent>
-        <h1>Главная страница</h1>
-        <p>
-          <Link to="/private">Раздел для авторизованных</Link>
-        </p>
-        <p>
-          <Button onClick={callbacks.showInfo}>Показать модалку</Button>
-        </p>
-        <Accordion title={'Заголовок'}>
-          text for accordion, with other components, ex. <Button>Button</Button>
-        </Accordion>
-      </LayoutContent>
-    </LayoutPage>
+    <PageLayout>
+      <Head title="React Skeleton"></Head>
+      <Navigation/>
+      <h2>Главная страница</h2>
+      <p>
+        <Link to="/private">Раздел для авторизованных</Link>
+      </p>
+    </PageLayout>
   );
 }
 
-export default React.memo(Main);
+export default memo(Main);

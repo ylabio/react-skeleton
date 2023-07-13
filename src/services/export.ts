@@ -5,4 +5,5 @@ export default {
   store: () => import('@src/services/store'),
   suspense: () => import('@src/services/suspense'),
   validator: () => import('@src/services/validator'),
+  modals: () => import('@src/modals/service'),
 };

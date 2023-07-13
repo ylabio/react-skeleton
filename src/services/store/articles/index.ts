@@ -7,8 +7,8 @@ import ListParamsState from '@src/services/store/list-params';
  */
 class ArticlesState extends ListParamsState {
 
-  initState() {
-    return mc.patch(super.initState(), {
+  defaultState() {
+    return mc.patch(super.defaultState(), {
       params: {
         fields: `items(*,category(title),madeIn(title)), count`,
         filter: {

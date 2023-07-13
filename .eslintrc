@@ -23,6 +23,9 @@
     "no-trailing-spaces": ["error", { "skipBlankLines": true }],
     "no-unused-vars": 1,
     "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }],
-    "function-call-argument-newline": ["error", "consistent"]
+    "function-call-argument-newline": ["error", "consistent"],
+    "@typescript-eslint/no-empty-function": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
   }
 }

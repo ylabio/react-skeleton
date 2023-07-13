@@ -1,6 +1,6 @@
 import mc from 'merge-change';
 import StoreService from '@src/services/store/index';
-import { TStoreNames } from './types';
+import {TStoreModuleKey, TStoreModuleName} from './types';
 import { TServices } from '../types';
 
 /**
@@ -10,14 +10,14 @@ class StoreModule<Config> {
   store: StoreService;
   services: TServices;
   config: Config;
-  name: TStoreNames;
+  name: TStoreModuleKey<TStoreModuleName>;
 
   /**
    * @param config Конфиг модуля
    * @param services Менеджер сервисов
    * @param name Название модуля
    */
-  constructor(config: Config | unknown, services: TServices, name: TStoreNames) {
+  constructor(config: Config | unknown, services: TServices, name: TStoreModuleKey<TStoreModuleName>) {
     this.services = services;
     this.store = this.services.store;
     this.name = name;
@@ -42,7 +42,7 @@ class StoreModule<Config> {
   /**
    * Начальное состояние
    */
-  initState() {
+  defaultState() {
     return {};
   }
 
@@ -50,7 +50,7 @@ class StoreModule<Config> {
    * Текущее своё состояние
    */
   getState() {
-    return this.store.getState()[this.name];
+    return this.store.get()[this.name];
   }
 
   /**
@@ -59,9 +59,9 @@ class StoreModule<Config> {
    * @param description Описание действия для логирования
    */
   setState(state: any, description = 'Установка') {
-    this.store.setState(
+    this.store.set(
       {
-        ...this.store.getState(),
+        ...this.store.get(),
         [this.name]: state,
       },
       description,
@@ -86,7 +86,7 @@ class StoreModule<Config> {
    * @param description Описание действия для логирования
    */
   resetState(update = {}, description = 'Сброс') {
-    this.setState(mc.update(this.initState(), update), description);
+    this.setState(mc.update(this.defaultState(), update), description);
   }
 }
 
