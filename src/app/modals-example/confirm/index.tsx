@@ -1,7 +1,7 @@
 import {memo, ReactNode, useCallback} from 'react';
-import ModalLayout from "@src/components/layouts/modal-layout";
+import ModalLayout from "@src/ui/layout/modal-layout";
 import {ModalClose} from "@src/modals/types";
-import SideLayout from "@src/components/layouts/side-layout";
+import SideLayout from "@src/ui/layout/side-layout";
 
 interface PropsConfirmModal extends ModalClose<boolean> {
   title: string;

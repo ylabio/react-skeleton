@@ -1,30 +1,30 @@
 import React, {useCallback} from 'react';
-import Head from "@src/components/navigation/head";
+import Head from "@src/ui/navigation/head";
 import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/layouts/page-layout";
+import PageLayout from "@src/ui/layout/page-layout";
 import useServices from "@src/utils/hooks/use-services";
 import useSelector from "@src/utils/hooks/use-selector";
 import useInit from "@src/utils/hooks/use-init";
 
-interface PropsModalsExample {
+interface IProps {
   close?: () => void;
 }
 
-function ModalsExample(props: PropsModalsExample) {
+function ModalsExamplePage(props: IProps) {
   const modals = useServices().modals;
 
-  const services = useServices();
-  services.store.initModule('session', 'sessionmession');
-
-  useInit(() => {
-    services.store.modules.sessionmession.remind();
-  });
-
-  const select = useSelector(state => ({
-    list: state.articles1
-  }));
-
-  console.log('select', select);
+  // const services = useServices();
+  // services.store.initModule('session', 'sessionmession');
+  //
+  // useInit(() => {
+  //   services.store.modules.sessionmession.remind();
+  // });
+  //
+  // const select = useSelector(state => ({
+  //   list: state.articles1
+  // }));
+  //
+  // console.log('select', select);
 
   const callbacks = {
     openMessage: useCallback(async () => {
@@ -111,4 +111,4 @@ function ModalsExample(props: PropsModalsExample) {
   );
 }
 
-export default React.memo(ModalsExample);
+export default React.memo(ModalsExamplePage);

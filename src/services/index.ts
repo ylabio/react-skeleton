@@ -1,7 +1,7 @@
 import mc from 'merge-change';
 import allServices from './export';
 import {
-  TServicesNames,
+  TServiceName,
   TServicesImports,
   TServicesConstructors,
   TServices,
@@ -15,12 +15,14 @@ class Services {
   private configs: TServicesConfig;
   private classes: TServicesConstructors;
   private proxy: TServices;
-  private initialState: Map<TServicesNames, unknown>;
+  private initialState: Map<TServiceName, unknown>;
+  private env: ImportMetaEnv;
 
-  constructor() {
+  constructor(env : ImportMetaEnv) {
     this.configs = {} as TServicesConfig;
     this.list = {} as TServices;
     this.classes = {} as TServicesConstructors;
+    this.env = env;
     this.initialState = new Map();
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
@@ -47,7 +49,7 @@ class Services {
     await this.initInitialState();
     // Асинхронная загрузка классов сервисов
     const promises = [];
-    const names = Object.keys(services) as TServicesNames[];
+    const names = Object.keys(services) as TServiceName[];
     for (const name of names) {
       promises.push(
         services[name]().then((module: any) => {
@@ -81,12 +83,12 @@ class Services {
   get<T extends keyof TServices>(name: T, params = {}): TServices[T] {
     if (!this.list[name]) {
       if (!this.classes[name]) {
-        console.log(this.list, this.classes, name);
         throw new Error(`Unknown service name "${name}"`);
       }
       const Constructor = this.classes[name];
-      this.list[name] = new Constructor(mc.merge(this.configs[name], params), this.proxy) as TServices[T];
-      this.list[name].init(this.initialState.get(name));
+      this.list[name] = new Constructor(mc.merge(this.configs[name], params), this.proxy, this.env) as TServices[T];
+      const dump = this.initialState.get(name);
+      this.list[name].init(dump);
     }
     return this.list[name];
   }
@@ -100,7 +102,7 @@ class Services {
       const response = await fetch(`/initial/${window.initialKey}`);
       const json = await response.json();
       for (const [key, value] of Object.entries(json)){
-        this.initialState.set(key as TServicesNames, value);
+        this.initialState.set(key as TServiceName, value);
       }
     }
   }
@@ -110,7 +112,7 @@ class Services {
    * Начальное состояние может быть при серверном рендере, обычно передаётся ключ состояния
    */
   hasInitialState() {
-    return !import.meta.env.SSR && window.initialKey;
+    return !this.env.SSR && window.initialKey;
   }
 
   /**
@@ -119,7 +121,7 @@ class Services {
    */
   collectDump() {
     const result = {} as { [index: string]: unknown };
-    const names = Object.keys(this.list) as TServicesNames[];
+    const names = Object.keys(this.list) as TServiceName[];
     for (const name of names) {
       const service = this.list[name];
       const data = service.dump();

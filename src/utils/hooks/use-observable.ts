@@ -12,7 +12,7 @@ export default function useObservable<Result, State>(
   observer: IObservable<State>,
   selector: (state: State) => Result
 ): Result {
-  const [result, setResult] = useState(() => selector(observer.get()));
+  const [result, setResult] = useState(() => selector(observer.getState()));
   const unsubscribe = useMemo(() => {
     return observer.subscribe((state) => {
       const newResult = selector(state);

@@ -29,7 +29,7 @@ class SessionState extends StoreModule<SessionStateConfig> {
   async set(data: any, description = 'Установка сессии') {
     this.updateState(mc.patch({ exists: true }, data), description);
     // Запоминание токена для восстановления сессии
-    if (!import.meta.env.SSR) localStorage.setItem('token', data.token);
+    if (!this.store.env.SSR) localStorage.setItem('token', data.token);
     // Установка токена в АПИ
     this.services.api.setHeader(this.config.tokenHeader, data.token);
   }
@@ -43,7 +43,7 @@ class SessionState extends StoreModule<SessionStateConfig> {
     if (logoutRequest) {
       await this.services.api.endpoints.users.logout();
     }
-    if (!import.meta.env.SSR) {
+    if (!this.store.env.SSR) {
       localStorage.removeItem('token');
     }
     this.resetState({ wait: false }, description);
@@ -54,7 +54,7 @@ class SessionState extends StoreModule<SessionStateConfig> {
    * Восстановление информации об аккаунте
    */
   async remind() {
-    const token = !import.meta.env.SSR ? localStorage.getItem('token') : undefined;
+    const token = !this.store.env.SSR ? localStorage.getItem('token') : undefined;
     if (token) {
       // Только для установки токена в http
       await this.set({ token, wait: true, exists: false }, 'Установка токена из localStore');

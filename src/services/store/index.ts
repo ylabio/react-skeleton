@@ -17,22 +17,23 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
   // Модули состояния
   readonly modules: TStoreModules = {} as TStoreModules;
 
-  defaultConfig(): TStoreConfig {
+  defaultConfig(env: ImportMetaEnv): TStoreConfig {
     return {
-      ...super.defaultConfig(),
-      log: false,
+      ...super.defaultConfig(env),
+      log: !env.PROD && !env.SSR,
       modules: {}
     };
   }
 
   /**
    * Инициализация сервиса
-   * @param initialState Предустановленное начальное состояние. Обычно использует при SSR
+   * @param dump Предустановленное начальное состояние. Обычно используется при SSR
    */
-  init(initialState: Partial<TStoreState> = {}) {
+  init(dump?: unknown) {
+    const state: Partial<TStoreState> = dump ? dump : {};
     const names = Object.keys(modules) as TStoreModuleName[];
     for (const name of names) {
-      this.initModule(name, name, undefined, initialState[name]);
+      this.initModule(name, name, undefined, state[name]);
     }
   }
 
@@ -41,13 +42,13 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
    * @param name Название базового модуля.
    * @param key Ключ нового модуля, по которому будет обращение к действиям и состоянию. Должно начинаться с имени базового модуля.
    * @param config Настройки модуля. По умолчанию используются настройки базового модуля.
-   * @param initialState Предустановленное начальное состояние модуля. Обычно используется после рендера на сервере.
+   * @param state Предустановленное начальное состояние модуля. Обычно используется после рендера на сервере.
    */
   initModule<Name extends TStoreModuleName>(
     name: Name,
     key: TStoreModuleKey<Name>,
     config?: TStoreModulesConfig[TStoreModuleKey<Name>],
-    initialState?: TStoreState[TStoreModuleKey<Name>]
+    state?: TStoreState[TStoreModuleKey<Name>]
   ) {
     if (!this.modules[key]) {
       if (!modules[name]) throw new Error(`Not found store module "${name}"`);
@@ -58,7 +59,7 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
       this.modules[key].init();
       // Состояние по умолчанию от модуля
       if (!this.state[key]) {
-        this.state[key] = initialState || this.modules[key].defaultState();
+        this.state[key] = state || this.modules[key].defaultState();
       }
     }
   }
@@ -83,11 +84,20 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
     for (const listener of this.listeners) listener(state);
   }
 
-  get(): TStoreState {
+  /**
+   * Всё состояние
+   */
+  getState(): TStoreState {
     return this.state;
   }
 
-  set(newState: TStoreState, description = 'Установка') {
+  /**
+   * Установка state.
+   * Необходимо учитывать иммутабельность.
+   * @param newState Новое состояния всех модулей
+   * @param [description] Описание действия для логирования
+   */
+  setState(newState: TStoreState, description = 'Установка') {
     if (this.config.log) {
       console.group(
         `%c${'store.setState'} %c${description}`,
@@ -100,23 +110,6 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
     }
     this.state = newState;
     this.notify(this.state);
-  }
-
-  /**
-   * Всё состояние
-   */
-  getState(): TStoreState {
-    return this.get();
-  }
-
-  /**
-   * Установка state.
-   * Необходимо учитывать иммутабельность.
-   * @param newState Новое состояния всех модулей
-   * @param [description] Описание действия для логирования
-   */
-  setState(newState: TStoreState, description = 'Установка') {
-    this.set(newState, description);
   }
 
   /**

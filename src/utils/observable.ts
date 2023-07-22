@@ -32,7 +32,7 @@ export interface IObservable<State> {
   /**
    * Выборка текучего состояния
    */
-  get(): State
+  getState(): State
 }
 
 /**
@@ -67,7 +67,7 @@ export abstract class Observable<State> implements IObservable<State> {
   /**
    * Выборка текучего состояния
    */
-  get(): State {
+  getState(): State {
     return undefined as State;
   }
 }

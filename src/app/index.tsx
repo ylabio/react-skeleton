@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import Modals from '@src/modals/container';
 import Loading from '@src/app/loading';
 import RequireAuth from '@src/containers/require-auth';
-import ModalsExample from "@src/app/modals-example";
 
 // import Main from '@src/app/main';
 // import Login from '@src/app/login';
@@ -20,6 +19,8 @@ const About = lazy(() => import('@src/app/about'));
 const Catalog = lazy(() => import('@src/app/catalog'));
 const Private = lazy(() => import('@src/app/private'));
 const NotFound = lazy(() => import('@src/app/not-found'));
+const ModalsExample = lazy(() => import('@src/app/modals-example'));
+const I18nExample = lazy(() => import('@src/app/i18n-example'));
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" index element={<Main />} />
           <Route path="/modals-example" index element={<ModalsExample />} />
+          <Route path="/i18n-example" index element={<I18nExample />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/:categoryId" element={<Catalog />} />
           <Route path="/about" element={<About />} />

@@ -1,9 +1,9 @@
 import {memo, useCallback, useMemo} from "react";
-import {MenuItem} from "@src/components/navigation/menu/types";
+import {MenuItem} from "@src/ui/navigation/menu/types";
 import useServices from "@src/utils/hooks/use-services";
 import useSelector from "@src/utils/hooks/use-selector";
-import SideLayout from "@src/components/layouts/side-layout";
-import Menu from "@src/components/navigation/menu";
+import SideLayout from "@src/ui/layout/side-layout";
+import Menu from "@src/ui/navigation/menu";
 
 function Navigation() {
   const store = useServices().store;
@@ -25,9 +25,10 @@ function Navigation() {
     menu: useMemo(() => ([
       {key: 1, title: 'Главная', link: '/', active: false},
       {key: 2, title: 'Модалки', link: '/modals-example', active: false},
-      {key: 3, title: 'О нас', link: '/about', active: false},
-      {key: 4, title: 'Каталог', link: '/catalog', active: false},
-      {key: 5, title: 'Админка', link: '/private', active: false},
+      {key: 3, title: 'I18n', link: '/i18n-example', active: false},
+      {key: 4, title: 'О нас', link: '/about', active: false},
+      {key: 5, title: 'Каталог', link: '/catalog', active: false},
+      {key: 6, title: 'Админка', link: '/private', active: false},
     ]), [])
   };
 

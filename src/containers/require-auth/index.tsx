@@ -5,9 +5,9 @@ import useInit from '@src/utils/hooks/use-init';
 import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
 import { NavigateProps } from 'react-router';
-import Head from "@src/components/navigation/head";
+import Head from "@src/ui/navigation/head";
 import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/layouts/page-layout";
+import PageLayout from "@src/ui/layout/page-layout";
 
 interface Props {
   children?: React.ReactNode;
@@ -43,7 +43,7 @@ function RequireAuth(props: Props) {
   } else {
     // Нет доступа - редирект
     // @todo Не работает при SSR
-    return <Navigate to={props.redirect} state={{ from: services.navigation.location }} />;
+    return <Navigate to={props.redirect} state={{ from: services.navigation.history.location }} />;
   }
 }
 

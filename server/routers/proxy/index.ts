@@ -1,6 +1,12 @@
 import httpProxy from "http-proxy";
 import {IRouteContext} from "../../types";
 
+/**
+ * Проксирование запросов в соответствии с настройками приложения
+ * Обычно проксируются запросы к АПИ для обхода CORS
+ * @param app
+ * @param config
+ */
 export default async ({app, config}: IRouteContext) => {
 
   if (config.proxy.enabled) {

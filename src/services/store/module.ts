@@ -50,7 +50,7 @@ class StoreModule<Config> {
    * Текущее своё состояние
    */
   getState() {
-    return this.store.get()[this.name];
+    return this.store.getState()[this.name];
   }
 
   /**
@@ -59,9 +59,9 @@ class StoreModule<Config> {
    * @param description Описание действия для логирования
    */
   setState(state: any, description = 'Установка') {
-    this.store.set(
+    this.store.setState(
       {
-        ...this.store.get(),
+        ...this.store.getState(),
         [this.name]: state,
       },
       description,

@@ -1,32 +1,26 @@
 import {IServerConfig} from "./types";
 
-process.env.TARGET = process.env.TARGET || 'node';
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-const PROD = process.env.NODE_ENV === 'production';
-const DEV = process.env.NODE_ENV !== 'production';
-
-const config: IServerConfig = {
-  PROD,
-  DEV,
-  // HTTP сервер для рендера. Параметры также используются для dev сервера Vite
-  server: {
-    host: 'localhost',
-    port: 8050,
-  },
-  proxy: {
-    enabled: PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
-    routes: {
-      '/api': {
-        target: 'http://example.front.ylab.io',
-        secure: false,
-        changeOrigin: true,
-      },
+export default (env: ImportMetaEnv): IServerConfig => {
+  const config: IServerConfig = {
+    // HTTP сервер для рендера. Параметры также используются для dev сервера Vite
+    server: {
+      host: env.HOST || 'localhost',
+      port: env.PORT || 8050,
+    },
+    proxy: {
+      enabled: env.PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
+      routes: {}
+    },
+    render: {
+      enabled: true,
     }
-  },
-  render: {
-    enabled: true,
-    partial: false
+  };
+  if (env.API_PATH) {
+    config.proxy.routes[env.API_PATH] = {
+      target: env.API_URL,
+      secure: false,
+      changeOrigin: true,
+    };
   }
+  return config;
 };
-
-export default config;

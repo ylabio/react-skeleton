@@ -13,8 +13,8 @@ import {TNavigationConfig} from "@src/services/navigation/types";
 class NavigationService extends Service<TNavigationConfig, undefined> {
   private _history: MemoryHistory | BrowserHistory;
 
-  constructor(config: TNavigationConfig, services: TServices) {
-    super(config, services);
+  constructor(config: TNavigationConfig, services: TServices, env: ImportMetaEnv) {
+    super(config, services, env);
     switch (this.config.type) {
       case 'memory':
         this._history = createMemoryHistory(this.config);
@@ -26,20 +26,13 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
     }
   }
 
-  defaultConfig(): TNavigationConfig {
+  defaultConfig(env: ImportMetaEnv): TNavigationConfig {
     return {
-      ...super.defaultConfig(),
-      type: import.meta.env.SSR ? 'memory' : 'browser',
-      basename: '/'
+      ...super.defaultConfig(env),
+      type: env.SSR ? 'memory' : 'browser',
+      basename: '/',
+      initialEntries: env.req ? [env.req.url] : undefined
     };
-  }
-
-  get location() {
-    return this._history.location;
-  }
-
-  get action() {
-    return this._history.action;
   }
 
   get history() {
@@ -48,34 +41,6 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
 
   get basename() {
     return this.config.basename;
-  }
-
-  push(path: string, state?: unknown) {
-    return this._history.push(path, state);
-  }
-
-  replace(path: string, state?: unknown) {
-    return this._history.replace(path, state);
-  }
-
-  go(n: number) {
-    return this._history.go(n);
-  }
-
-  back() {
-    return this._history.back();
-  }
-
-  forward() {
-    return this._history.forward();
-  }
-
-  block(prompt: () => void) {
-    return this._history.block(prompt);
-  }
-
-  listen(listener: () => void) {
-    return this._history.listen(listener);
   }
 
   /**

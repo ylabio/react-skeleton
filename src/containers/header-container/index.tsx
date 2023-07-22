@@ -35,7 +35,7 @@ function HeaderContainer() {
 
   const callbacks = {
     onClickLogin: useCallback(() => {
-      services.navigation.push('/login');
+      services.navigation.history.push('/login');
     }, []),
 
     onClickLogout: useCallback(() => {

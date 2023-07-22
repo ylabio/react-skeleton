@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route, Routes, Link} from 'react-router-dom';
-import Head from "@src/components/navigation/head";
+import Head from "@src/ui/navigation/head";
 import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/layouts/page-layout";
+import PageLayout from "@src/ui/layout/page-layout";
 
 function Private() {
 

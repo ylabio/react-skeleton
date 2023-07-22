@@ -16,7 +16,7 @@ class ModalsService extends Service implements IObservable<TModalsStack> {
   /**
    * Стек открытых окон
    */
-  private stack: TModalsStack = [];
+  private state: TModalsStack = [];
   /**
    * Слушатели изменений стека
    */
@@ -31,7 +31,7 @@ class ModalsService extends Service implements IObservable<TModalsStack> {
    * @param name Название модалки
    * @param params Параметры модалки
    */
-  async open<Name extends TModalName>(name: Name, params?: TModalsParams[Name]): Promise<TModalsResult[Name]> {
+  open = async<Name extends TModalName>(name: Name, params?: TModalsParams[Name]): Promise<TModalsResult[Name]> => {
     return new Promise(resolve => {
       const key = this.keyGenerator();
       const state = {
@@ -40,16 +40,16 @@ class ModalsService extends Service implements IObservable<TModalsStack> {
         props: {
           ...(params || {}),
           close: (result: TModalsResult[Name]) => {
-            this.stack = this.stack.filter(state => state.key !== key);
-            this.notify(this.stack);
+            this.state = this.state.filter(state => state.key !== key);
+            this.notify(this.state);
             resolve(result);
           } ,
         } as TModalsProps[Name]
       } as TModalState<Name>;
-      this.stack = [...this.stack, state];
-      this.notify(this.stack);
+      this.state = [...this.state, state];
+      this.notify(this.state);
     });
-  }
+  };
 
   /**
    * Закрытие модалки
@@ -57,11 +57,11 @@ class ModalsService extends Service implements IObservable<TModalsStack> {
    * @param result Результат модалки
    * @param key Ключ модалки. Если не указан, то закрывается последняя открытая.
    */
-  close<Name extends TModalName>(key: number, result: TModalsResult[Name]) {
+  close = <Name extends TModalName>(key: number, result: TModalsResult[Name])=> {
     // Находим модалку в стеке и вызываем её close()
     let modalState: TModalState<Name> | undefined;
     if (key) {
-      this.stack = this.stack.filter(state => {
+      this.state = this.state.filter(state => {
         if (state.key === key) {
           modalState = state as TModalState<Name>;
           return false;
@@ -69,29 +69,29 @@ class ModalsService extends Service implements IObservable<TModalsStack> {
         return true;
       });
     } else {
-      modalState = this.stack.at(-1) as TModalState<Name>;
+      modalState = this.state.at(-1) as TModalState<Name>;
     }
     if (modalState) {
       const close = modalState.props.close as ModalClose<TModalsResult[Name]>['close'];
       close(result);
     }
-    this.notify(this.stack);
-  }
+    this.notify(this.state);
+  };
 
-  subscribe(callback: TListener<TModalsStack>) {
+  subscribe = (callback: TListener<TModalsStack>) => {
     this.listeners.push(callback);
     return () => {
       this.listeners = this.listeners.filter((item: TListener<TModalsStack>) => item !== callback);
     };
-  }
+  };
 
-  notify(state: TModalsStack) {
+  notify = (state: TModalsStack) => {
     for (const listener of this.listeners) listener(state);
-  }
+  };
 
-  get(){
-    return this.stack;
-  }
+  getState = () => {
+    return this.state;
+  };
 }
 
 export default ModalsService;

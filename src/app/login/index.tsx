@@ -2,9 +2,9 @@ import React, {Fragment, useCallback} from 'react';
 import FormLogin from '@src/components/forms/form-login';
 import useSelector from '@src/utils/hooks/use-selector';
 import useServices from '@src/utils/hooks/use-services';
-import Head from "@src/components/navigation/head";
+import Head from "@src/ui/navigation/head";
 import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/layouts/page-layout";
+import PageLayout from "@src/ui/layout/page-layout";
 
 function Login() {
   const select: any = useSelector((state: any) => ({

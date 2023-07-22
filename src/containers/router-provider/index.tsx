@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Router } from 'react-router-dom';
+import {BrowserRouter, Router} from 'react-router-dom';
 
 /**
  * Провайдер для роутера вместо <BrowserRouter> <MemoryRouter> для использования services.navigation
@@ -9,13 +9,13 @@ import { Router } from 'react-router-dom';
  */
 function RouterProvider({ navigation, children }: { navigation: any, children: React.ReactNode }) {
   const [state, setState] = useState({
-    location: navigation.location,
-    action: navigation.action,
+    location: navigation.history.location,
+    action: navigation.history.action,
   });
 
   // // Подписка на изменение навигации
   useEffect(() => {
-    return navigation.listen((newState: any) => {
+    return navigation.history.listen((newState: any) => {
       setState(newState);
     });
   }, []);

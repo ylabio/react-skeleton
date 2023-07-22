@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
 import useServices from '@src/utils/hooks/use-services';
+import isPromise from "@src/utils/is-promise";
 
 export type TInitFunction = () => Promise<unknown> | unknown;
 
@@ -37,8 +38,9 @@ export default function useInit(
   options: TInitOptions = {},
 ) {
 
+  // Suspense используется только на сервере для ожидания инициализации перед рендером
   const suspense = useServices().suspense;
-  if (suspense.enabled.useInit && options.ssr) {
+  if (suspense.env.SSR && options.ssr) {
     if (suspense.has(options.ssr)) {
       if (suspense.waiting(options.ssr)) {
         // Ожидание инициализации на логике Suspense (ожидание обработкой исключения)
@@ -47,7 +49,8 @@ export default function useInit(
     } else {
       try {
         // Инициализация ещё не выполнялась
-        suspense.wait(options.ssr, fn());
+        const result = fn();
+        if (isPromise(result)) suspense.add(options.ssr, result);
       } catch (e) {
         console.error(e);
       }
@@ -55,23 +58,14 @@ export default function useInit(
     }
   }
 
+  // Хук работает только в браузере.
   useEffect(() => {
-    // Хук работает на клиенте.
-    // Функция выполняется, если выключен suspense для useInit и не было инициализации на сервере или требуется перезагрузка
-    if (!suspense.enabled.useInit && (!options.ssr || !suspense.has(options.ssr) || options.force)) {
+    // Функция выполняется, если не было инициализации на сервере или требуется перезагрузка
+    if (!options.ssr || !suspense.has(options.ssr) || options.force) {
       fn();
     } else {
-      // Удаляем инициализацию от ssr, чтобы при последующих рендерах хук работал
+      // Удаляем инициализацию от ssr, чтобы при последующих рендерах fn() работала
       if (options.ssr) suspense.delete(options.ssr);
-    }
-    // Если в истории браузера меняются только query-параметры, то react-router не оповестит
-    // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
-    // браузера (когда нужно отреагировать на изменения query-параметров при переходе по истории)
-    if (options.onBackForward) {
-      window.addEventListener('popstate', fn);
-      return () => {
-        window.removeEventListener('popstate', fn);
-      };
     }
   }, deps);
 }

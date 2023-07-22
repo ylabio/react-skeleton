@@ -8,14 +8,22 @@ import path from "path";
 import {IRouteContext} from "../../types";
 import {Request, Response} from "express";
 import {fileURLToPath} from "url";
+import {HelmetServerState} from "react-helmet-async";
 
-export default async ({app, initialStore, config}: IRouteContext) => {
+/**
+ * SSR - рендер React приложения в HTML
+ * @param app Express приложение
+ * @param initialStore Хранилище для запоминания состояния сервисов
+ * @param config Настройки сервера
+ * @param env Переменные окружения
+ */
+export default async ({app, initialStore, config, env}: IRouteContext) => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   // Fix for render;
   React.useLayoutEffect = React.useEffect;
 
   // Сборщик Vite для рендера в режиме разработки
-  const vite = config.DEV ? await createViteServer({
+  const vite = env.DEV ? await createViteServer({
     server: {middlewareMode: true},
     appType: 'custom',
   }) : undefined;
@@ -28,14 +36,16 @@ export default async ({app, initialStore, config}: IRouteContext) => {
 
   // HTML шаблон
   const rootTemplate = fs.readFileSync(
-    path.resolve(__dirname, config.DEV ? '../../../src/index.html' : '../../../dist/client/index.html'),
+    path.resolve(__dirname, env.DEV
+      ? '../../../src/index.html'
+      : '../../../dist/client/index.html'),
     'utf-8',
   );
 
   // Рендер
   app.get('/*', async (req: Request, res: Response) => {
     // Запрос на файл, которого нет (чтобы не рендерить приложение из-за этого)
-    // Если файл есть, то он бы отправился обработчиком статический файлов
+    // Если файл есть, то он бы отправился обработчиком файлов
     if (req.originalUrl.match(/\.[a-z0-9]+$/u)) {
       res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
       res.end('Not Found');
@@ -44,35 +54,28 @@ export default async ({app, initialStore, config}: IRouteContext) => {
 
     // В режиме разработки в шаблон вставляются скрипты Vite для горячего обновления
     const template = vite
-      // Apply Vite HTML transforms. This injects the Vite HMR client
       ? await vite.transformIndexHtml(req.originalUrl, rootTemplate)
       : rootTemplate;
 
-    // Вместо рендера отдаём собранный index.html
-    if (!config.render.enabled){
+    // Если рендер отключен, то отдаём index.html (шаблон)
+    if (!config.render.enabled) {
       res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
       res.end(template);
       return;
     }
 
-    // @todo Кэшировать целесообразно в режиме полного рендера (config.render.partial = false)
-    // @todo Задержки в основном из-за обращения к АПИ.
-    // @todo Возможно, нужно кэшировать дамп сервисов, чтобы рендерить с предустановленным состоянием.
-    // @todo Если кэшируется документ (весь рендер), то все равно нужно и дамп сервисов кэшировать и раздавать его пока есть кэш документа
+    // @todo Если есть кэш, то отдать его. Предусмотреть, что состояние тоже было запомнено (возможно, отдельно и временно помещается в initialStore)
 
     // Секрет для идентификации дампа от всех сервисов
     const secret = initialStore.makeSecretKey();
 
     // Корневой React компонент, сервис менеджер приложения и контекст с мета-данными html
     const {Root, servicesManager, head} = await root({
-      navigation: {
-        // Точка входа для навигации (какую страницу рендерить)
-        initialEntries: [req.originalUrl],
-      },
-      suspense: {
-        enabled: {
-          useInit: !config.render.partial // Если рендер частями, то данные ждать не будем (так как не сможем корректно передать их браузеру)
-        }
+      ...env,
+      req: {
+        url: req.originalUrl,
+        headers: req.headers,
+        cookies: req.cookies
       }
     });
 
@@ -95,23 +98,28 @@ export default async ({app, initialStore, config}: IRouteContext) => {
       bootstrapScriptContent: `window.initialKey="${secret.key}"`,
       bootstrapModules: modules,
       bootstrapScripts: scripts,
-      onShellReady() {
-        if (config.render.partial) {
-          sendHeaders(res);
-          pipe(res);
-        }
-      },
-      onShellError(error) {
-        res.writeHead(500, {'Content-Type': 'text/html; charset=utf-8'});
-        res.send('<h1>Something went wrong</h1>');
-        if (vite) vite.ssrFixStacktrace(error as Error);
-        console.error(error);
-      },
+      // Частичный рендер требует отдачи состояния вместе с каждым патчем (не реализовано)
+      // onShellReady() {
+      //   if (config.render.partial) {
+      //     sendHeaders(res);
+      //     pipe(res);
+      //   }
+      // },
+      // onShellError(error) {
+      //   res.writeHead(500, {'Content-Type': 'text/html; charset=utf-8'});
+      //   res.send('<h1>Something went wrong</h1>');
+      //   if (vite) vite.ssrFixStacktrace(error as Error);
+      //   console.error(error);
+      // },
       onAllReady() {
-        if (!config.render.partial) {
-          sendHeaders(res);
-          streamHelmet(pipe, head.helmet).pipe(res);
+        // if (!config.render.partial) {
+        sendHeaders(res);
+        if ('helmet' in head) {
+          streamHelmet(pipe, head.helmet as HelmetServerState).pipe(res);
         }
+        // @todo Если нужно кэшировать, то понадобится читать поток рендера
+        // @todo Дамп также кэшируется, а не запомианется надолго в initialStore
+        /// }
         // Дамп всех сервисов запоминается в initialStore
         initialStore.remember(secret, servicesManager.collectDump());
       },

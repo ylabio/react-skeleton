@@ -1,11 +1,13 @@
-import {defineConfig} from 'vite';
+import {defineConfig, loadEnv} from 'vite';
 import reactPlugin from '@vitejs/plugin-react';
 import path from "path";
-import serverConfig from './server/config';
+import typedVariables from 'dotenv-parse-variables';
 
 export default defineConfig(params => {
+  const env = typedVariables(loadEnv(params.mode, process.cwd(), '')) as Env;
   return {
     root: 'src',
+    base: env.BASE_URL,
     build: {
       outDir: params.ssrBuild ? '../dist/server' : '../dist/client',
       emptyOutDir: true,
@@ -21,9 +23,18 @@ export default defineConfig(params => {
       }),
     ],
     server: {
-      port: serverConfig.server.port,
-      proxy: serverConfig.proxy.routes,
+      port: env.PORT,
+      proxy: {
+        [env.API_PATH]: {
+          target: env.API_URL,
+          secure: false,
+          changeOrigin: true,
+        }
+      },
       hmr: true
-    }
+    },
+    preview: {
+      port: env.PORT,
+    },
   };
 });

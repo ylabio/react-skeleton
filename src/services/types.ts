@@ -5,25 +5,25 @@ export type TServicesImports = typeof services
 /**
  * Названия сервисов
  */
-export type TServicesNames = keyof TServicesImports;
+export type TServiceName = keyof TServicesImports;
 
 /**
  * Конструкторы сервисов
  */
 export type TServicesConstructors = {
-  [P in TServicesNames]: Awaited<ReturnType<TServicesImports[P]>>["default"]
+  [P in TServiceName]: Awaited<ReturnType<TServicesImports[P]>>["default"]
 }
 
 /**
  * Сервисы
  */
 export type TServices = {
-  [P in TServicesNames]: InstanceType<TServicesConstructors[P]>
+  [P in TServiceName]: InstanceType<TServicesConstructors[P]>
 }
 
 /**
  * Настройки всех сервисов
  */
 export type TServicesConfig = {
-  [P in TServicesNames]?: ReturnType<TServices[P]['defaultConfig']>
+  [P in TServiceName]?: ReturnType<TServices[P]['defaultConfig']>
 }

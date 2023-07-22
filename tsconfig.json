@@ -1,5 +1,5 @@
 {
-  "include": ["./typings", "src", "server", "vite.config.ts"],
+  "include": ["./typings", "./src", "./server", "./vite.config.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
@@ -7,6 +7,7 @@
       "@src": ["./src/index"],
       "@src/*": ["./src/*"],
     },
+
     "lib": ["dom", "dom.iterable", "esnext"],
     "target": "ES6",
     "jsx": "react-jsx",
@@ -20,9 +21,14 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
+  "files": [
+    "./typings/env.d.ts"
+  ],
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "experimentalSpecifierResolution": "node",
+    "files": true
   },
 }

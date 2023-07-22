@@ -33,7 +33,5 @@ export type TWaitDump = {
  * Настройки сервиса ожиданий
  */
 export type TSuspenseConfig = {
-  enabled: {
-    useInit: boolean
-  }
+  enabled: Record<string, boolean>
 }

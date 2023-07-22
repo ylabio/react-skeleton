@@ -7,14 +7,17 @@ import {TServices} from "@src/services/types";
 abstract class Service<Config = undefined, Dump = undefined> {
   protected services: TServices;
   protected config: Config;
+  readonly env: ImportMetaEnv;
 
   /**
    * @param config Конфиг модуля
    * @param services Менеджер сервисов
+   * @param env
    */
-  constructor(config: Config | unknown, services: TServices) {
+  constructor(config: Config | unknown, services: TServices, env: ImportMetaEnv) {
     this.services = services;
-    this.config = mc.patch(this.defaultConfig(), config);
+    this.env = env;
+    this.config = mc.patch(this.defaultConfig(env), config);
   }
 
   /**
@@ -29,7 +32,7 @@ abstract class Service<Config = undefined, Dump = undefined> {
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig(): Config | object {
+  defaultConfig(env: ImportMetaEnv): Config | object {
     return {};
   }
 

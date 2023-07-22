@@ -11,7 +11,7 @@ export type TStoreModuleName = keyof TStoreContructors;
 /**
  * Ключи для модулей Store (на основе названий, чтобы динамически создать временные модули)
  */
-export type TStoreModuleKey<Name extends string> = Name | `${Name}${string}`;
+export type TStoreModuleKey<Name extends TStoreModuleName> = Name | `${Name}${string}`;
 /**
  * Модули Store
  */
@@ -45,6 +45,6 @@ export type TStoreListener = (state: TStoreState) => void;
 /**
  * Проверка на TStoreState
  */
-export default function isStoreState(state: TStoreState | unknown): state is TStoreState {
+export function isStoreState(state: TStoreState | unknown): state is TStoreState {
   return !!state || typeof state === 'object';
 }
