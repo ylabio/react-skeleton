@@ -1,0 +1,9 @@
+{
+  "main-menu": {
+    "main": "Главная",
+    "example-modals": "Модалки",
+    "example-i18n": "I18n",
+    "catalog": "Каталог",
+    "profile": "Профиль"
+  }
+}

@@ -1,6 +1,6 @@
 import {memo, useCallback} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {useTranslate} from "@src/features/i18n/use-i18n";
+import {useTranslate} from "@src/services/i18n/use-i18n";
 import useServices from "@src/services/use-services";
 import useSelector from "@src/services/store/use-selector";
 import SideLayout from "@src/ui/layout/side-layout";

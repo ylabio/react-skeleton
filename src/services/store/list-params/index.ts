@@ -79,7 +79,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
     // В основе начальные параметры
     const defaultParams = this.defaultState().params;
     // Параметры из URL (query string)
-    const queryParams = this.validateParams(this.services.navigation.getSearchParams());
+    const queryParams = this.validateParams(this.services.router.getSearchParams());
     // Сливаем все параметры
     const newParams = mc.merge(defaultParams, queryParams, params);
     // Установка параметров и загрузка данных по ним
@@ -144,7 +144,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       }
       //  Сохранить параметры в location.search
       if (options.remember) {
-        this.services.navigation.setSearchParams(newParams, options.remember === 'push');
+        this.services.router.setSearchParams(newParams, options.remember === 'push');
       }
 
       // 2. ДАННЫЕ

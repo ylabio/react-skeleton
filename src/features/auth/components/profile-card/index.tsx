@@ -1,6 +1,6 @@
 import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
-import {TTranslateFn} from "@src/features/i18n/types";
+import {TTranslateFn} from "@src/services/i18n/types";
 import './style.less';
 
 interface Props {

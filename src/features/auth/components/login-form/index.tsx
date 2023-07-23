@@ -1,6 +1,6 @@
 import useSelector from "@src/services/store/use-selector";
 import {FormEvent, memo, useCallback, useState} from "react";
-import {useTranslate} from "@src/features/i18n/use-i18n";
+import {useTranslate} from "@src/services/i18n/use-i18n";
 import {useLocation, useNavigate} from "react-router-dom";
 import useServices from "@src/services/use-services";
 import Field from "@src/ui/elements/field";

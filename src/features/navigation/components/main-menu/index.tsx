@@ -4,17 +4,18 @@ import SideLayout from "@src/ui/layout/side-layout";
 import Menu from "@src/ui/navigation/menu";
 import {Link, useLocation} from "react-router-dom";
 import detectActive from "@src/features/navigation/detect-active";
+import {useTranslate} from "@src/services/i18n/use-i18n";
 
 function MainMenu() {
-
+  const t = useTranslate();
   const location = useLocation();
   const options = {
     menu: useMemo(() => detectActive([
-      {key: 1, title: 'Главная', link: '/', active: false},
-      {key: 2, title: 'Модалки', link: '/modals-example', active: false},
-      {key: 3, title: 'I18n', link: '/i18n-example', active: false},
-      {key: 5, title: 'Каталог', link: '/catalog', active: false},
-      {key: 6, title: 'Профиль', link: '/profile', active: false},
+      {key: 1, title: t('navigation.main-menu.main'), link: '/', active: false},
+      {key: 2, title: t('navigation.main-menu.example-modals'), link: '/example-modals', active: false},
+      {key: 3, title: t('navigation.main-menu.example-i18n'), link: '/example-i18n', active: false},
+      {key: 5, title: t('navigation.main-menu.catalog'), link: '/catalog', active: false},
+      {key: 6, title: t('navigation.main-menu.profile'), link: '/profile', active: false},
     ], location), [location.pathname])
   };
 
