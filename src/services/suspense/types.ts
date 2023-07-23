@@ -35,3 +35,4 @@ export type TWaitDump = {
 export type TSuspenseConfig = {
   enabled: Record<string, boolean>
 }
+

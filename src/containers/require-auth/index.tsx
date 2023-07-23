@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
-import useInit from '@src/utils/hooks/use-init';
-import useSelector from '@src/utils/hooks/use-selector';
-import useServices from '@src/utils/hooks/use-services';
+import useInit from '@src/services/use-init';
+import useSelector from '@src/services/store/use-selector';
+import useServices from '@src/services/use-services';
 import { NavigateProps } from 'react-router';
 import Head from "@src/ui/navigation/head";
-import Navigation from "@src/containers/navigation";
+import Navigation from "@src/features/navigation/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 
 interface Props {

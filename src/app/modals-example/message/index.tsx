@@ -1,6 +1,6 @@
 import {memo, ReactNode} from 'react';
 import ModalLayout from "@src/ui/layout/modal-layout";
-import {ModalClose} from "@src/modals/types";
+import {ModalClose} from "@src/features/modals/types";
 import SideLayout from "@src/ui/layout/side-layout";
 
 interface PropsMessageModal extends ModalClose<void> {

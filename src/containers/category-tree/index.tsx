@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Tree from '@src/components/elements/tree';
-import useSelector from '@src/utils/hooks/use-selector';
+import useSelector from '@src/services/store/use-selector';
 
 function CategoryTree() {
   const select = useSelector((state: any) => ({

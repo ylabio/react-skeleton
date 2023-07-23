@@ -1,5 +1,5 @@
-import useServices from "@src/utils/hooks/use-services";
-import useObservable from "@src/utils/hooks/use-observable";
+import useServices from "@src/services/use-services";
+import useObservable from "@src/utils/observable/use-observable";
 import { TStoreState } from "@src/services/store/types";
 
 /**

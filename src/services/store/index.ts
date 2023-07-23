@@ -1,6 +1,6 @@
 import * as modules from './exports';
 import Service from "@src/services/service";
-import {IObservable} from "@src/utils/observable";
+import {IObservable} from "@src/utils/observable/types";
 import {
   TStoreModuleName, TStoreModuleKey, TStoreState, TStoreModules, TStoreModulesConfig,
   TStoreListener, TStoreConfig

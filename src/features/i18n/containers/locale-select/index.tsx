@@ -1,7 +1,7 @@
 import {memo, useCallback, useMemo} from "react";
 import Select from "@src/ui/elements/select";
-import useI18n from "@src/i18n/use-i18n.js";
-import {TLocale, TLocaleReal} from "@src/i18n/types";
+import useI18n from "@src/features/i18n/use-i18n.js";
+import {TLocale, TLocaleReal} from "@src/features/i18n/types";
 
 function LocaleSelect() {
 
@@ -9,7 +9,7 @@ function LocaleSelect() {
 
   const options = useMemo(
     () => {
-      return locales.map(locale => ({value: locale, title: t(`example.i18n.${locale}`, {})}));
+      return locales.map(locale => ({value: locale, title: t(`i18n.locales.${locale}`, {})}));
     },
     [locale, t]
   );

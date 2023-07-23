@@ -1,6 +1,6 @@
 import {useSyncExternalStore} from "react";
-import useServices from "@src/utils/hooks/use-services";
-import {TLocaleReal, TTranslationKey, useI18nReturn} from "@src/i18n/types";
+import useServices from "@src/services/use-services";
+import {TLocaleReal, TTranslationKey, useI18nReturn} from "@src/features/i18n/types";
 
 /**
  * Хук возвращает функцию для локализации текстов, текущую локали, доступные локали и функцию смены локали.

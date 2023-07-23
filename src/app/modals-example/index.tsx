@@ -1,10 +1,9 @@
 import React, {useCallback} from 'react';
 import Head from "@src/ui/navigation/head";
-import Navigation from "@src/containers/navigation";
+import MainMenu from "@src/features/navigation/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
-import useServices from "@src/utils/hooks/use-services";
-import useSelector from "@src/utils/hooks/use-selector";
-import useInit from "@src/utils/hooks/use-init";
+import useServices from "@src/services/use-services";
+import LocaleSelect from "@src/features/i18n/containers/locale-select";
 
 interface IProps {
   close?: () => void;
@@ -12,19 +11,6 @@ interface IProps {
 
 function ModalsExamplePage(props: IProps) {
   const modals = useServices().modals;
-
-  // const services = useServices();
-  // services.store.initModule('session', 'sessionmession');
-  //
-  // useInit(() => {
-  //   services.store.modules.sessionmession.remind();
-  // });
-  //
-  // const select = useSelector(state => ({
-  //   list: state.articles1
-  // }));
-  //
-  // console.log('select', select);
 
   const callbacks = {
     openMessage: useCallback(async () => {
@@ -70,9 +56,9 @@ function ModalsExamplePage(props: IProps) {
   return (
     <PageLayout>
       <Head title="React Skeleton">
-        {props.close && <button onClick={callbacks.onClose}>Закрыть</button>}
+        {props.close ? <button onClick={callbacks.onClose}>Закрыть</button> : <LocaleSelect/>}
       </Head>
-      <Navigation/>
+      <MainMenu/>
       <h2>Модальные окна</h2>
       <p>
         Модальные окна отображаются поверх текущей страницы, делая её элементы недоступными пока

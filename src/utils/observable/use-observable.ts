@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
-import {IObservable} from "@src/utils/observable";
+import {IObservable} from "@src/utils/observable/types";
 
 /**
  * Хук для выборки и подписки на изменения данных объекта, реализующего интерфейс наблюдателя

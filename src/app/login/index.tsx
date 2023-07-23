@@ -1,10 +1,11 @@
 import React, {Fragment, useCallback} from 'react';
 import FormLogin from '@src/components/forms/form-login';
-import useSelector from '@src/utils/hooks/use-selector';
-import useServices from '@src/utils/hooks/use-services';
+import useSelector from '@src/services/store/use-selector';
+import useServices from '@src/services/use-services';
 import Head from "@src/ui/navigation/head";
-import Navigation from "@src/containers/navigation";
+import MainMenu from "@src/features/navigation/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
+import LocaleSelect from "@src/features/i18n/containers/locale-select";
 
 function Login() {
   const select: any = useSelector((state: any) => ({
@@ -26,8 +27,8 @@ function Login() {
 
   return (
     <PageLayout>
-      <Head title="React Skeleton"></Head>
-      <Navigation/>
+      <Head title="React Skeleton"><LocaleSelect/></Head>
+      <MainMenu/>
       <Fragment>
         <h2>Login page</h2>
         <FormLogin

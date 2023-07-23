@@ -8,8 +8,8 @@ import Service from "@src/services/service";
 class ValidatorService extends Service<unknown, undefined>{
   private ajv: Ajv;
 
-  constructor(config: unknown, services: TServices) {
-    super(config, services);
+  constructor(config: unknown, services: TServices, env: ImportMetaEnv) {
+    super(config, services, env);
     this.ajv = new Ajv({
       //strict: false,
       removeAdditional: true, // Если в схеме явно указано additionalProperties: false, то удалять все не описанные свойства,

@@ -1,8 +1,8 @@
 import {memo, ReactNode, useCallback} from 'react';
 import ModalLayout from "@src/ui/layout/modal-layout";
-import {ModalClose} from "@src/modals/types";
+import {ModalClose} from "@src/features/modals/types";
 import SideLayout from "@src/ui/layout/side-layout";
-import useServices from "@src/utils/hooks/use-services";
+import useServices from "@src/services/use-services";
 import plural from "@src/utils/plural";
 
 interface PropsCascadeModal extends ModalClose<void> {

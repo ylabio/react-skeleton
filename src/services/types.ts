@@ -1,4 +1,4 @@
-import services from './export';
+import services from './imports';
 
 export type TServicesImports = typeof services
 

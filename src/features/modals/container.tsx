@@ -1,6 +1,6 @@
 import {memo, useSyncExternalStore} from 'react';
-import * as modalsComponents from '@src/modals/imports';
-import useServices from '@src/utils/hooks/use-services';
+import * as modalsComponents from '@src/features/modals/imports';
+import useServices from '@src/services/use-services';
 /**
  * Отображает все открытье модальные окна
  */

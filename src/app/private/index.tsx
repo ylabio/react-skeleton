@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Routes, Link} from 'react-router-dom';
 import Head from "@src/ui/navigation/head";
-import Navigation from "@src/containers/navigation";
+import MainMenu from "@src/features/navigation/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 
 function Private() {
@@ -9,7 +9,7 @@ function Private() {
   return (
     <PageLayout>
       <Head title="React Skeleton"></Head>
-      <Navigation/>
+      <MainMenu/>
       <h2>Page 1</h2>
       <p>Внутренняя страница для авторизованных</p>
       <p>

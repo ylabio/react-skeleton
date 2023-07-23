@@ -1,5 +1,5 @@
 import mc from 'merge-change';
-import allServices from './export';
+import allServices from './imports';
 import {
   TServiceName,
   TServicesImports,

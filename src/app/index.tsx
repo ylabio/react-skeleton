@@ -1,7 +1,7 @@
 import React, {Fragment, lazy, Suspense} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import Modals from '@src/modals/container';
+import Modals from '@src/features/modals/container';
 import Loading from '@src/app/loading';
 import RequireAuth from '@src/containers/require-auth';
 
@@ -15,7 +15,6 @@ import RequireAuth from '@src/containers/require-auth';
 // Динамический импорт станиц
 const Main = lazy(() => import('@src/app/main'));
 const Login = lazy(() => import('@src/app/login'));
-const About = lazy(() => import('@src/app/about'));
 const Catalog = lazy(() => import('@src/app/catalog'));
 const Private = lazy(() => import('@src/app/private'));
 const NotFound = lazy(() => import('@src/app/not-found'));
@@ -37,7 +36,6 @@ function App() {
           <Route path="/i18n-example" index element={<I18nExample />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/:categoryId" element={<Catalog />} />
-          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/private/*"

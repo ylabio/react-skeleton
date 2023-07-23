@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import Head from "@src/ui/navigation/head";
-import Navigation from "@src/containers/navigation";
+import MainMenu from "@src/features/navigation/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
-import useServices from "@src/utils/hooks/use-services";
-import LocaleSelect from "@src/i18n/containers/locale-select";
+import useServices from "@src/services/use-services";
+import LocaleSelect from "@src/features/i18n/containers/locale-select";
 
 interface IProps {
   close?: () => void;
@@ -21,7 +21,7 @@ function I18nExamplePage(props: IProps) {
       <Head title="React Skeleton">
         <LocaleSelect/>
       </Head>
-      <Navigation/>
+      <MainMenu/>
       <h2>Интернационализация (i18n)</h2>
       <p>
 

@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import useServices from '@src/utils/hooks/use-services';
+import useServices from '@src/services/use-services';
 import isPromise from "@src/utils/is-promise";
 
 export type TInitFunction = () => Promise<unknown> | unknown;

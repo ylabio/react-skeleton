@@ -1,5 +1,5 @@
 import Service from "@src/services/service";
-import {IObservable, TListener} from "@src/utils/observable";
+import {IObservable, TListener} from "@src/utils/observable/types";
 import codeGenerator from "@src/utils/code-generator";
 import {
   ModalClose,
@@ -7,7 +7,7 @@ import {
   TModalsParams, TModalsProps,
   TModalsResult,
   TModalsStack, TModalState,
-} from "@src/modals/types";
+} from "@src/features/modals/types";
 
 /**
  * Сервис модальных окон

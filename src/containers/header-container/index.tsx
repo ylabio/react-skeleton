@@ -5,8 +5,8 @@ import MenuTop from '@src/components/menus/menu-top';
 import Button from '@src/components/elements/button';
 import Logo from '@src/components/elements/logo';
 import { useLocation } from 'react-router-dom';
-import useSelector from '@src/utils/hooks/use-selector';
-import useServices from '@src/utils/hooks/use-services';
+import useSelector from '@src/services/store/use-selector';
+import useServices from '@src/services/use-services';
 
 function HeaderContainer() {
   const select: any = useSelector((state: any) => ({

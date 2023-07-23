@@ -1,27 +1,27 @@
 import { BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory } from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
-import { TServices} from '../types';
+import { TServices} from '@src/services/types';
 import Service from "@src/services/service";
-import {TNavigationConfig} from "@src/services/navigation/types";
+import {TNavigationConfig} from "@src/features/navigation/types";
 
 /**
  * Сервис навигации (History API)
- * Используется библиотекой react-router и для прямого управления навигации в браузере.
- * Учитывает режим работы для SSR
+ * Определят вспомогательные методы для создания ссылок и изменениям query параметров адреса.
+ * Создаёт объект навигации для React Router с учётом режима рендера (браузер/сервер)
  */
 class NavigationService extends Service<TNavigationConfig, undefined> {
-  private _history: MemoryHistory | BrowserHistory;
+  readonly history: MemoryHistory | BrowserHistory;
 
   constructor(config: TNavigationConfig, services: TServices, env: ImportMetaEnv) {
     super(config, services, env);
     switch (this.config.type) {
       case 'memory':
-        this._history = createMemoryHistory(this.config);
+        this.history = createMemoryHistory(this.config);
         break;
       case 'browser':
       default:
-        this._history = createBrowserHistory(this.config);
+        this.history = createBrowserHistory(this.config);
         break;
     }
   }
@@ -30,13 +30,9 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
     return {
       ...super.defaultConfig(env),
       type: env.SSR ? 'memory' : 'browser',
-      basename: '/',
+      basename: env.BASE_URL,
       initialEntries: env.req ? [env.req.url] : undefined
     };
-  }
-
-  get history() {
-    return this._history;
   }
 
   get basename() {
@@ -69,7 +65,7 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
    * @returns {*}
    */
   getPath() {
-    return this._history.location.pathname;
+    return this.history.location.pathname;
   }
 
   /**
@@ -77,7 +73,7 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
    * @returns {*}
    */
   getSearchParams() {
-    return qs.parse(this._history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
+    return qs.parse(this.history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
   }
 
   /**
@@ -121,7 +117,7 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
    * @param push Способ обновления истории роутера. Если false, то используется history.replace()
    */
   goPrivate(push = true) {
-    push ? this._history.push('/private') : this._history.replace('/private');
+    push ? this.history.push('/private') : this.history.replace('/private');
   }
 }
 

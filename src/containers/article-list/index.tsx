@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import useSelector from '@src/utils/hooks/use-selector';
+import useSelector from '@src/services/store/use-selector';
 // import { DatePicker } from 'antd';
 
 function ArticleList() {

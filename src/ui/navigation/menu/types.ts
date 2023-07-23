@@ -1,3 +1,5 @@
+import {ReactNode} from "react";
+
 export interface MenuItem {
   key: number,
   link: string,
@@ -5,6 +7,7 @@ export interface MenuItem {
 }
 
 export interface Props {
-  items?: MenuItem[];
+  items: MenuItem[];
+  linkRender: (item: MenuItem, index: number) => ReactNode
   onNavigate?: (item: MenuItem) => void;
 }

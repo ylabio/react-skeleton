@@ -1,9 +1,9 @@
 import Service from "@src/services/service";
-import {IObservable, TListener} from "@src/utils/observable";
+import {IObservable, TListener} from "@src/utils/observable/types";
 import {
   TDictionary, TTranslation, TTranslationKey, TLocale, TLocaleReal, TLocaleNamespace,
   TI18nState, isI18nState, INumberOptions, TI18nConfig, ITranslateOptions
-} from "@src/i18n/types";
+} from "@src/features/i18n/types";
 import dictionaries from './imports';
 import flat from "@src/utils/flat";
 import acceptLang from 'accept-language-parser';
