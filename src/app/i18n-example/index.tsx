@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import {memo} from 'react';
 import Head from "@src/ui/navigation/head";
-import MainMenu from "@src/features/navigation/main-menu";
+import MainMenu from "@src/features/navigation/components/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 import useServices from "@src/services/use-services";
-import LocaleSelect from "@src/features/i18n/containers/locale-select";
+import LocaleSelect from "@src/features/i18n/components/locale-select";
 
 interface IProps {
   close?: () => void;
@@ -30,4 +30,4 @@ function I18nExamplePage(props: IProps) {
   );
 }
 
-export default React.memo(I18nExamplePage);
+export default memo(I18nExamplePage);

@@ -5,7 +5,7 @@ import './style.less';
 interface Props {
   children?: React.ReactNode;
   side?: 'start' | 'end' | 'between';
-  padding?: 'small' | 'medium';
+  padding?: 'small' | 'medium' | 'none';
 }
 
 function SideLayout({children, side, padding}: Props) {

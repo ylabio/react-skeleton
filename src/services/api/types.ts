@@ -1,4 +1,4 @@
-import * as endpoints from './export';
+import * as endpoints from './imports';
 import {Axios, AxiosRequestConfig, AxiosResponse} from "axios";
 
 /**

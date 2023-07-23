@@ -12,7 +12,7 @@ function Menu(props: Props) {
   return (
     <ul className={cn()}>
       {items.map((item, index) => (
-        <li key={item.key} className={cn('item')}>
+        <li key={item.key} className={cn('item', {active: item.active})}>
           {props.linkRender(item, index)}
         </li>
       ))}

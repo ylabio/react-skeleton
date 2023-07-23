@@ -3,7 +3,8 @@ import {ReactNode} from "react";
 export interface MenuItem {
   key: number,
   link: string,
-  title: string
+  title: string,
+  active?: boolean
 }
 
 export interface Props {

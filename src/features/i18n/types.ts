@@ -71,6 +71,9 @@ export interface INumberOptions extends Intl.NumberFormatOptions {
   locale?: TLocaleReal;
 }
 
+
+export type TTranslateFn = <L extends TLocale>(key: TTranslationKey, options?: ITranslateOptions<L>) => string;
+export type TNumberFormatFn = (value: number, options?: INumberOptions) => string;
 /**
  * Результат хука к i18n
  */
@@ -82,9 +85,9 @@ export type useI18nReturn = {
   // Функция для смены локали
   setLocale: (locale: TLocaleReal) => void,
   // Функция для локализации текстов
-  t: <L extends TLocale>(key: TTranslationKey, options?: ITranslateOptions<L>) => string,
+  t: TTranslateFn,
   // Форматирования числа с учётом локали
-  n: (value: number, options?: INumberOptions) => string,
+  n: TNumberFormatFn,
 }
 
 /**

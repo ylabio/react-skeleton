@@ -1,0 +1,16 @@
+{
+  "signIn": "Вход",
+  "signOut": "Выход",
+  "loginForm": {
+    "title": "Вход",
+    "login": "Логин",
+    "password": "Пароль",
+    "signIn": "Войти"
+  },
+  "profile": {
+    "title": "Профиль",
+    "name": "Имя",
+    "phone": "Телефон",
+    "email": "Email"
+  }
+}

@@ -1,8 +1,8 @@
-import React, {memo} from 'react';
+import {memo} from 'react';
 import PageLayout from "@src/ui/layout/page-layout";
 import Head from "@src/ui/navigation/head";
-import MainMenu from "@src/features/navigation/main-menu";
-import LocaleSelect from "@src/features/i18n/containers/locale-select";
+import MainMenu from "@src/features/navigation/components/main-menu";
+import LocaleSelect from "@src/features/i18n/components/locale-select";
 
 function Main() {
 

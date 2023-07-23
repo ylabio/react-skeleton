@@ -24,7 +24,6 @@ abstract class Endpoint<Config = AxiosRequestConfig> {
    * Вызывается автоматически.
    * Используется, чтобы не переопределять конструктор
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   init(){}
 
   /**

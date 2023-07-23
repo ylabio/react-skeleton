@@ -39,6 +39,7 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     if (locale && this.state.locales.includes(locale)) this.state = {...this.state, locale};
     // Установка состояния после рендера на сервере
     if (isI18nState(dump)) this.state = {...this.state, ...dump};
+    this.setDependencies(this.state.locale);
   }
 
   dump() {
@@ -71,6 +72,7 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
    */
   setLocale = async (locale: TLocaleReal) => {
     if (this.config.remember) this.rememberLocale(locale);
+    this.setDependencies(locale);
     this.setState({locale});
   };
 
@@ -250,6 +252,10 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     if (!this.env.SSR) {
       cookie.set('locale', locale, {expires: 30});
     }
+  }
+
+  setDependencies(locale: TLocaleReal){
+    this.services.api.setHeader('X-Lang', locale);
   }
 }
 

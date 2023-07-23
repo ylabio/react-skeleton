@@ -1,6 +1,6 @@
 import React from "react";
 import {HelmetProvider, HelmetServerState} from "react-helmet-async";
-import RouterProvider from '@src/containers/router-provider';
+import RouterProvider from '@src/features/navigation/components/router-provider';
 import Services from '@src/services';
 import App from '@src/app';
 import ServicesProvider from '@src/services/provider';

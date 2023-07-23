@@ -1,6 +1,6 @@
-import React from 'react';
+import {memo} from 'react';
 import Head from "@src/ui/navigation/head";
-import MainMenu from "@src/features/navigation/main-menu";
+import MainMenu from "@src/features/navigation/components/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 
 /**
@@ -19,4 +19,4 @@ function Loading() {
   );
 }
 
-export default React.memo(Loading);
+export default memo(Loading);

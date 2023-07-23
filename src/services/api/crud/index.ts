@@ -1,5 +1,5 @@
-import params from '@src/utils/query-params';
-import Endpoint from '@src/services/api/endpoint';
+import params from '../query-params';
+import Endpoint from '../endpoint';
 
 interface BaseQuery {
   fields?: string;

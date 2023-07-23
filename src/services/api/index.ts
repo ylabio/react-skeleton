@@ -1,7 +1,7 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 import {TServices} from '@src/services/types';
 import Service from "@src/services/service";
-import * as endpoints from './export';
+import * as endpoints from './imports';
 import {
   TApiConfig,
   TEndpoints, TEndpointsNames,
@@ -16,8 +16,8 @@ class ApiService extends Service<TApiConfig, undefined> {
   private _endpoints: TEndpoints;
   private _axios: AxiosInstance;
 
-  constructor(config: TApiConfig, services: TServices) {
-    super(config, services);
+  constructor(config: TApiConfig, services: TServices, env: ImportMetaEnv) {
+    super(config, services, env);
     this._endpoints = {} as TEndpoints;
     this._axios = axios.create(this.config.default);
   }
@@ -55,7 +55,7 @@ class ApiService extends Service<TApiConfig, undefined> {
    * @param name Название заголовка
    * @param value Значение заголовка
    */
-  setHeader(name: string, value?: string) {
+  setHeader(name: string, value?: string | null) {
     if (value) {
       this.axios.defaults.headers[name] = value;
     } else if (name in this.axios.defaults.headers) {

@@ -2,6 +2,7 @@ import {memo, ReactNode, useCallback, useState} from 'react';
 import ModalLayout from "@src/ui/layout/modal-layout";
 import {ModalClose} from "@src/features/modals/types";
 import SideLayout from "@src/ui/layout/side-layout";
+import {useTranslate} from "@src/features/i18n/use-i18n";
 
 interface PropsConfirmModal extends ModalClose<string | null> {
   title: string;
@@ -9,9 +10,8 @@ interface PropsConfirmModal extends ModalClose<string | null> {
 }
 
 function PromptModal(props: PropsConfirmModal): ReactNode {
-
+  const t = useTranslate();
   const [value, setValue] = useState('');
-
   const callbacks = {
     onSuccess: useCallback(() => props.close(value), [value]),
     onCancel: useCallback(() => props.close(null), []),
@@ -25,8 +25,8 @@ function PromptModal(props: PropsConfirmModal): ReactNode {
       </p>
       <p>{props.message}</p>
       <SideLayout side="end">
-        <button onClick={callbacks.onSuccess}>Ок</button>
-        <button onClick={callbacks.onCancel}>Отмена</button>
+        <button onClick={callbacks.onSuccess}>{t('common.modals.ok')}</button>
+        <button onClick={callbacks.onCancel}>{t('common.modals.cancel')}</button>
       </SideLayout>
     </ModalLayout>
   );

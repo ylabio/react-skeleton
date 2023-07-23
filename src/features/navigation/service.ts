@@ -111,14 +111,6 @@ class NavigationService extends Service<TNavigationConfig, undefined> {
       window.history.replaceState({}, '', url);
     }
   }
-
-  /**
-   * Custom navigations
-   * @param push Способ обновления истории роутера. Если false, то используется history.replace()
-   */
-  goPrivate(push = true) {
-    push ? this.history.push('/private') : this.history.replace('/private');
-  }
 }
 
 export default NavigationService;

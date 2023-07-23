@@ -3,16 +3,15 @@ import StoreModule from '@src/services/store/module';
 import { InitListParamsStateType } from './types';
 
 /**
- * Модуль спика с параметрами и методами добавления, удаления, редактирования элемента в списке.
+ * Модуль списка с параметрами и методами добавления, удаления, редактирования элемента в списке.
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список.
  */
-class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
+abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
   validator: any;
   //api: any;
 
   init() {
     this.validator = this.services.validator.make(this.schemaParams());
-    //this.api = this.services.api.get(this.config.apiEndpoint);
   }
 
   /**
@@ -210,7 +209,6 @@ class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
     // const response = await this.api.findMany(apiParams);
     // // Установка полученных данных в состояние
     // return response.data.result;
-
     return {
       items: [],
       count: 0,

@@ -1,4 +1,4 @@
-import * as modules from './exports';
+import * as modules from './imports';
 
 /**
  * Конструкторы модулей Store

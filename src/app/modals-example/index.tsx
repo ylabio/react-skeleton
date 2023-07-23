@@ -1,15 +1,17 @@
-import React, {useCallback} from 'react';
+import {memo, useCallback} from 'react';
 import Head from "@src/ui/navigation/head";
-import MainMenu from "@src/features/navigation/main-menu";
+import MainMenu from "@src/features/navigation/components/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 import useServices from "@src/services/use-services";
-import LocaleSelect from "@src/features/i18n/containers/locale-select";
+import LocaleSelect from "@src/features/i18n/components/locale-select";
+import {useTranslate} from "@src/features/i18n/use-i18n";
 
 interface IProps {
   close?: () => void;
 }
 
 function ModalsExamplePage(props: IProps) {
+  const t = useTranslate();
   const modals = useServices().modals;
 
   const callbacks = {
@@ -59,7 +61,7 @@ function ModalsExamplePage(props: IProps) {
         {props.close ? <button onClick={callbacks.onClose}>Закрыть</button> : <LocaleSelect/>}
       </Head>
       <MainMenu/>
-      <h2>Модальные окна</h2>
+      <h2>{t('common.modals.title')}</h2>
       <p>
         Модальные окна отображаются поверх текущей страницы, делая её элементы недоступными пока
         окно не закроется.
@@ -97,4 +99,4 @@ function ModalsExamplePage(props: IProps) {
   );
 }
 
-export default React.memo(ModalsExamplePage);
+export default memo(ModalsExamplePage);

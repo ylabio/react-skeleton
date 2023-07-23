@@ -14,8 +14,8 @@ export default function listToTree(
   parentKey = 'parent._id',
   childrenKey = 'children',
 ) {
-  let trees: any = {};
-  let roots: any = {};
+  const trees: any = {};
+  const roots: any = {};
   for (const item of list) {
     // В индекс узлов
     if (!trees[item[privateKey]]) {
