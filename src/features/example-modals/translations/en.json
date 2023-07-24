@@ -6,8 +6,8 @@
     "title": "Windows cascade",
     "message": "Open another window without closing the current one",
     "messageCount": {
-      "one": "{{count}} window open.",
-      "other": "{{count}} windows open."
+      "one": "{{plural}} window open.",
+      "other": "{{plural}} windows open."
     },
     "openMore": "Open more"
   }

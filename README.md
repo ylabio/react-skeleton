@@ -28,6 +28,8 @@
 
 Конфигурация приложения определяется в файле `src/config.js`. 
 По умолчанию определены параметры АПИ, навигации, модулей состояния и других сервисов.
+Некоторые параметры передаются через переменные окружения. Можно создать файл `.env.local`,
+чтобы изменить под себя переменные окружения.
 
 Приложение доступно по адресу `http://localhost:8050`.
 Порт меняется в файле конфигурации сервера `server/config.js`.
@@ -118,24 +120,24 @@ server {
   server_name react-skeleton.com;
   client_max_body_size 10M;
   
-  # # Прокси к АПИ 
-  # location /api/ {
-  #     proxy_redirect off;
-  #     proxy_set_header Host api.react-skeleton.com; 
-  #     proxy_set_header X-Real-IP $remote_addr;
-  #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  #     proxy_set_header X-Forwarded-Proto $scheme;
-  #     proxy_set_header X-Frame-Options SAMEORIGIN;
-  #     proxy_pass https://api.react-skeleton.com;
-  #  }
+  # Прокси к АПИ (в соотв. с настройками приложения)
+  location /api/ {
+    proxy_redirect off;
+    proxy_set_header Host api.react-skeleton.com; 
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Frame-Options SAMEORIGIN;
+    proxy_pass https://api.react-skeleton.com;
+  }
   
-  # # Запросы к файлам 
-  # location /assets/ {
-  #   root /var/www/newsite/dist/client/;
-  #   try_files $uri $uri/ =404; 
-  # }
+  # Запросы к файлам сборки (скрипты, стили, картинки..)
+  location /assets/ {
+    root /var/www/newsite/dist/client/;
+    try_files $uri $uri/ =404; 
+  }
 
-  # Рендер - проксирование запроса в приложение
+  # Рендер - проксирование запроса в серверное приложение на 127.0.0.1:8050
   location / {
     proxy_redirect off;
     proxy_set_header Host $host;

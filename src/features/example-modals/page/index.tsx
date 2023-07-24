@@ -41,7 +41,7 @@ function ModalsExamplePage(props: IProps) {
     openCascade: useCallback(async () => {
       const result = await modals.open('cascade', {
         title: t('example-modals.cascade.title'),
-        message: `${t('example-modals.cascade.messageCount', {plural: 1, values: {count: 1}})} ${t('example-modals.cascade.message')}`
+        message: `${t('example-modals.cascade.messageCount', {plural: 1})} ${t('example-modals.cascade.message')}`
       });
       console.log('cascade', result);
     }, []),

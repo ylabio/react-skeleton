@@ -118,7 +118,10 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     } = options || {};
 
     // Добавление в окончание кода счисления (.zero .one .two .few .many .other)
-    if (plural !== undefined) key += `.${new Intl.PluralRules(locale).select(plural)}` as TTranslationKey;
+    if (plural !== undefined) {
+      key += `.${new Intl.PluralRules(locale).select(plural)}` as TTranslationKey;
+      values.plural = plural;
+    }
     // Название словаря
     const namespace = key.split('.').shift() as TLocaleNamespace<L>;
 

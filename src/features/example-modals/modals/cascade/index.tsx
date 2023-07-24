@@ -18,7 +18,7 @@ function CascadeModal(props: PropsCascadeModal): ReactNode {
   const openCascade = useCallback(() => {
     modals.open('cascade', {
       title: t('example-modals.cascade.title'),
-      message: `${t('example-modals.cascade.messageCount', {plural: level+1, values: {count: level+1}})} ${t('example-modals.cascade.message')}`,
+      message: `${t('example-modals.cascade.messageCount', {plural: level+1})} ${t('example-modals.cascade.message')}`,
       level: level+1
     });
   }, [level, t]);
