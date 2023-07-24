@@ -29,7 +29,7 @@ function AuthHead() {
   };
 
   return (
-    <SideLayout side="end" padding="none">
+    <SideLayout side="end">
       {select.user ? <Link to="/profile">{select.user.profile.name}</Link> : ''}
       {select.user
         ? <button onClick={callbacks.onSignOut}>{t('auth.signOut')}</button>

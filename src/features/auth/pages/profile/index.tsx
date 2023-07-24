@@ -14,10 +14,13 @@ import SideLayout from "@src/ui/layout/side-layout";
 function ProfilePage() {
 
   const store = useServices().store;
+
   useInit(() => {
     store.modules.profile.load();
   }, []);
+
   const select = useSelector(state => state.profile);
+
   const t = useTranslate();
 
   return (
