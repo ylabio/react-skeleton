@@ -22,9 +22,10 @@
     "semi": ["error", "always"],
     "no-trailing-spaces": ["error", { "skipBlankLines": true }],
     "no-unused-vars": 1,
-    "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }],
     "function-call-argument-newline": ["error", "consistent"],
     "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/prop-types": ["error", { "ignore": ["dispatch"], "skipUndeclared":true }],
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off"
   }

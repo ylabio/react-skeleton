@@ -2,7 +2,8 @@ import {memo} from 'react';
 import useSelector from '@src/services/store/use-selector';
 
 function ArticleList() {
-  const select: any = useSelector((state: any) => ({
+
+  const select = useSelector(state => ({
     items: state.articles.items,
     wait: state.articles.wait,
   }));

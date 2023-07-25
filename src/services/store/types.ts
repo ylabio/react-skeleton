@@ -11,7 +11,7 @@ export type TStoreModuleName = keyof TStoreContructors;
 /**
  * Ключи для модулей Store (на основе названий, чтобы динамически создать временные модули)
  */
-export type TStoreModuleKey<Name extends TStoreModuleName> = Name | `${Name}${string}`;
+export type TStoreModuleKey<Name extends TStoreModuleName> = Name | `${Name}${number}`;
 /**
  * Модули Store
  */
