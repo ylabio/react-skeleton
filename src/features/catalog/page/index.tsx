@@ -21,6 +21,7 @@ function CatalogPage() {
   }, [categoryId, locale], {ssr: 'articles.init'});
 
   useInit(async () => {
+    // await services.store.modules.categories.load({fields: '*', limit: 1000});
     await services.store.modules.categories.load({fields: '*', limit: 1000});
   }, [locale], {ssr: 'categories.load'});
 

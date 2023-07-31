@@ -1,93 +1,126 @@
 import mc from 'merge-change';
-import StoreService from '@src/services/store/index';
-import {TStoreModuleKey, TStoreModuleName} from './types';
-import { TServices } from '../types';
+import {TServices} from '../types';
+import {TStoreModuleKey, TStoreModuleName} from "@src/services/store/types";
 
 /**
- * Базовый класс модуля хранилища
+ * Базовый класс модуля состояния.
+ * Реализует паттерн наблюдателя
  */
-class StoreModule<Config> {
-  store: StoreService;
-  services: TServices;
-  config: Config;
-  name: TStoreModuleKey<TStoreModuleName>;
+abstract class StoreModule<State, Config = object> {
+  // Ссылка на сервисы
+  protected readonly services: TServices;
+  // Подписчики на изменение state
+  protected readonly listeners: Set<() => void> = new Set();
+  // Настройки
+  protected readonly config: Config;
+  // Название модуля
+  protected readonly name: TStoreModuleKey<TStoreModuleName>;
+  // Состояние (данные)
+  protected state: State;
 
   /**
    * @param config Конфиг модуля
    * @param services Менеджер сервисов
+   * @param env Переменные окружения
    * @param name Название модуля
    */
-  constructor(config: Config | unknown, services: TServices, name: TStoreModuleKey<TStoreModuleName>) {
+  constructor(
+    config: PartialRecursive<Config>,
+    services: TServices,
+    env: ImportMetaEnv,
+    name: TStoreModuleKey<TStoreModuleName>,
+  ) {
     this.services = services;
-    this.store = this.services.store;
+    this.config = mc.patch(this.defaultConfig(env), config);
     this.name = name;
-    this.config = mc.patch(this.defaultConfig(), config);
+    this.state = this.defaultState();
   }
 
-  /**
-   * Инициализация после создания экземпляра.
-   * Вызывается автоматически.
-   * Используется, чтобы не переопределять конструктор
-   */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  init(){}
+  setS(v: State) {
+    this.state = v;
+  }
 
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig(): Config | object {
-    return {};
+  defaultConfig(env?: ImportMetaEnv): Config {
+    return {} as Config;
   }
 
   /**
    * Начальное состояние
    */
-  defaultState() {
-    return {};
+  defaultState(): State {
+    return {} as State;
   }
 
   /**
-   * Текущее своё состояние
+   * Выбор состояние
    */
-  getState() {
-    return this.store.getState()[this.name];
-  }
+  getState = (): State => {
+    return this.state;
+  };
 
   /**
-   * Установка (замена) состояния
-   * @param state Новое состояние модуля
-   * @param description Описание действия для логирования
+   * Установка state.
+   * Необходимо учитывать иммутабельность.
+   * @param newState Новое состояния всех модулей
+   * @param [description] Описание действия для логирования
    */
-  setState(state: any, description = 'Установка') {
-    this.store.setState(
-      {
-        ...this.store.getState(),
-        [this.name]: state,
-      },
-      description,
-    );
-  }
+  setState = (newState: State, description = 'Установка') => {
+    if (this.services.store.config.log) {
+      console.group(
+        `%c${this.name} %c${description}`,
+        `color: ${'#777'}; font-weight: normal`,
+        `color: ${'#333'}; font-weight: bold`,
+      );
+      console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
+      console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
+      console.groupEnd();
+    }
+    this.state = newState;
+    this.notify();
+  };
 
   /**
    * Обновление состояния
    * @param update Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param [description] Описание действия для логирования
    */
-  updateState(update = {}, description = 'Обновление') {
+  updateState = (update: PartialRecursive<State>, description = 'Обновление') => {
     const state = mc.update(this.getState(), update);
     if (state !== this.getState()) {
       this.setState(state, description);
     }
-  }
+  };
 
   /**
    * Сброс состояния в начальное с возможностью подмешать изменения
    * @param update Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description Описание действия для логирования
    */
-  resetState(update = {}, description = 'Сброс') {
+  resetState = (update: PartialRecursive<State>, description = 'Сброс') => {
     this.setState(mc.update(this.defaultState(), update), description);
-  }
+  };
+
+  /**
+   * Подписка на изменение state.
+   * Возвращается функция для отписки
+   * @param listener Функция, которая будет вызываться после установки состояния
+   */
+  subscribe = (listener: () => void): () => void => {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  };
+
+  /**
+   * Вызываем всех слушателей
+   */
+  protected notify = () => {
+    this.listeners.forEach(listener => listener());
+  };
 }
 
 export default StoreModule;

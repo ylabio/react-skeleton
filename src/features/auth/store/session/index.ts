@@ -1,11 +1,11 @@
-import StoreModule from '@src/services/store/module';
 import {ISessionState, ISessionStateConfig} from "@src/features/auth/store/session/types";
 import {SignInBody} from "@src/features/auth/api/types";
-import {AxiosError} from "axios";
+import StoreModule from "@src/services/store/module";
+import {ApiError} from "@src/services/api/types";
 
-class SessionState extends StoreModule<ISessionStateConfig> {
+class SessionState extends StoreModule<ISessionState, ISessionStateConfig> {
 
-  defaultState(): ISessionState {
+  override defaultState(): ISessionState {
     return {
       user: null,
       token: null,
@@ -18,9 +18,10 @@ class SessionState extends StoreModule<ISessionStateConfig> {
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig(): ISessionStateConfig {
+  override defaultConfig(env: ImportMetaEnv): ISessionStateConfig {
     return {
       tokenHeader: 'XToken',
+      saveToLocalStorage: !env.SSR
     };
   }
 
@@ -40,7 +41,7 @@ class SessionState extends StoreModule<ISessionStateConfig> {
         waiting: false
       }, 'Успешная авторизация');
 
-      if (!this.store.env.SSR) {
+      if (this.config.saveToLocalStorage) {
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
         window.localStorage.setItem('token', res.data.result.token);
       }
@@ -48,7 +49,7 @@ class SessionState extends StoreModule<ISessionStateConfig> {
       this.services.api.setHeader(this.config.tokenHeader, res.data.result.token);
       return true;
     } catch (e) {
-      if (e instanceof AxiosError) {
+      if (e instanceof ApiError) {
         if (e.response?.data?.error) {
           this.setState({
             ...this.getState(),
@@ -56,8 +57,9 @@ class SessionState extends StoreModule<ISessionStateConfig> {
             waiting: false
           }, 'Ошибка авторизации');
         }
+      } else {
+        console.error(e);
       }
-      console.error(e);
     }
     return false;
   }
@@ -70,7 +72,9 @@ class SessionState extends StoreModule<ISessionStateConfig> {
     try {
       await this.services.api.endpoints.users.signOut();
       // Удаляем токен
-      window.localStorage.removeItem('token');
+      if (this.config.saveToLocalStorage) {
+        window.localStorage.removeItem('token');
+      }
       // Удаляем заголовок
       this.services.api.setHeader(this.config.tokenHeader, null);
     } catch (error) {
@@ -84,7 +88,7 @@ class SessionState extends StoreModule<ISessionStateConfig> {
    * @return {Promise<void>}
    */
   async remind() {
-    const token = this.store.env.SSR ? undefined : localStorage.getItem('token');
+    const token = this.config.saveToLocalStorage ? localStorage.getItem('token') : null;
     if (token) {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);

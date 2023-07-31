@@ -71,7 +71,6 @@ export interface INumberOptions extends Intl.NumberFormatOptions {
   locale?: TLocaleReal;
 }
 
-
 export type TTranslateFn = <L extends TLocale>(key: TTranslationKey, options?: ITranslateOptions<L>) => string;
 export type TNumberFormatFn = (value: number, options?: INumberOptions) => string;
 /**
@@ -101,21 +100,6 @@ export type TI18nConfig = {
   // Запоминать выбор локали в куке
   remember?: boolean
 }
-
-/**
- * Формирует пути на свойства объекта с учётом вложенности
- * Например NestedKeyOf<typeof {a: {b: {c: 100}}, d: 1 }> => type "a.b.c" | "d"
- */
-type NestedKeyOf<Obj extends object> = {
-  [Name in keyof Obj & string]: // Перебираем ключи объекта
-  Obj[Name] extends unknown[]
-    ? Name // Массивы не обрабатываются в глубину - берем название массива
-    : (
-      Obj[Name] extends object
-        ? Name | `${Name}.${NestedKeyOf<Obj[Name]>}` // Объект смотрим в глубину. Берем название объекта и "пути" на все его свойства
-        : Name // Для остальных типов берем их название
-      )
-}[keyof Obj & string]; // Вытаскиваем типы всех свойств - это строковые литералы (пути на свойства)
 
 /**
  * Проверка на TI18nState

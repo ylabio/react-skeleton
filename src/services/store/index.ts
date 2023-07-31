@@ -1,26 +1,20 @@
 import * as modules from './imports';
 import Service from "@src/services/service";
-import {IObservable} from "@src/utils/observable/types";
 import {
-  TStoreModuleName, TStoreModuleKey, TStoreState, TStoreModules, TStoreModulesConfig,
-  TStoreListener, TStoreConfig
-} from './types';
+  TStoreConfig, TStoreModuleKey, TStoreModuleName,
+  TStoreModules, TStoreModulesConfig, TStoreModulesState
+} from "@src/services/store/types";
 
 /**
  * Хранилище состояния приложения
  */
-class StoreService extends Service<TStoreConfig, TStoreState> implements IObservable<TStoreState> {
-  // Состояние приложения (данные всех модулей)
-  private state: TStoreState = {} as TStoreState;
-  // Подписчики на изменение state
-  private listeners: TStoreListener[] = [];
+class StoreService extends Service<TStoreConfig, TStoreModulesState> {
   // Модули состояния
   readonly modules: TStoreModules = {} as TStoreModules;
 
-  defaultConfig(env: ImportMetaEnv): TStoreConfig {
+  override defaultConfig(env: ImportMetaEnv): TStoreConfig {
     return {
-      ...super.defaultConfig(env),
-      log: !env.PROD && !env.SSR,
+      log: env.DEV,
       modules: {}
     };
   }
@@ -29,99 +23,65 @@ class StoreService extends Service<TStoreConfig, TStoreState> implements IObserv
    * Инициализация сервиса
    * @param dump Предустановленное начальное состояние. Обычно используется при SSR
    */
-  init(dump?: unknown) {
-    const state: Partial<TStoreState> = dump ? dump : {};
+  override init(dump?: unknown) {
+    const state: Partial<TStoreModulesState> = dump ? dump : {};
     const names = Object.keys(modules) as TStoreModuleName[];
     for (const name of names) {
-      this.initModule(name, name, undefined, state[name]);
+      this.create(name, name, undefined, state[name]);
     }
   }
 
   /**
-   * Инициализация модуля хранилища, если его ещё нет в store.modules
+   * Дамп текущего состояния всех модулей состояния.
+   * Используется на сервере, чтобы передать состояние клиенту после SSR
+   */
+  override dump(): TStoreModulesState {
+    const result = {} as TStoreModulesState;
+    const keys = Object.keys(this.modules) as TStoreModuleName[];
+    const put = <Key extends TStoreModuleName>(key: Key, value: TStoreModulesState[Key]) => {
+      result[key] = value;
+    };
+    for (const key of keys) put(key, this.modules[key].getState());
+    return result;
+  };
+
+  /**
+   * Инициализация модуля состояния, если его ещё нет в this.modules
    * @param name Название базового модуля.
    * @param key Ключ нового модуля, по которому будет обращение к действиям и состоянию. Должно начинаться с имени базового модуля.
    * @param config Настройки модуля. По умолчанию используются настройки базового модуля.
    * @param state Предустановленное начальное состояние модуля. Обычно используется после рендера на сервере.
    */
-  initModule<Name extends TStoreModuleName>(
+  create<Name extends TStoreModuleName, Key extends TStoreModuleKey<Name>>(
     name: Name,
-    key: TStoreModuleKey<Name>,
-    config?: TStoreModulesConfig[TStoreModuleKey<Name>],
-    state?: TStoreState[TStoreModuleKey<Name>]
+    key: Key,
+    config?: TStoreModulesConfig[Key],
+    state?: TStoreModulesState[Key]
   ) {
     if (!this.modules[key]) {
       if (!modules[name]) throw new Error(`Not found store module "${name}"`);
-      const stateConfig = config ? config : this.config.modules[key];
       const constructor = modules[name];
-      // Экземпляр модуля
-      this.modules[key] = new constructor(stateConfig, this.services, key) as TStoreModules[TStoreModuleKey<Name>];
-      this.modules[key].init();
-      // Состояние по умолчанию от модуля
-      if (!this.state[key]) {
-        this.state[key] = state || this.modules[key].defaultState();
-      }
+      this.modules[key] = new constructor(
+        config || this.config.modules[key] as TStoreModulesConfig[Key],
+        this.services,
+        this.env,
+        name
+      ) as TStoreModules[Key];
+      if (state) this.modules[key].setState(state as any);
+      // if (state) this.modules[key].state = state;
     }
   }
 
   /**
-   * Подписка на изменение state
-   * @param callback Функция, которая будет вызываться после установки состояния
+   * Удаление модуля состояния.
+   * Применяется для динамически созданных модулей
+   * @param key
    */
-  subscribe(callback: TStoreListener) {
-    this.listeners.push(callback);
-    // Возвращаем функцию для отписки
-    return () => {
-      this.listeners = this.listeners.filter(item => item !== callback);
-    };
-  }
-
-  /**
-   * Вызываем всех слушателей
-   * @param state
-   */
-  notify(state: TStoreState) {
-    for (const listener of this.listeners) listener(state);
-  }
-
-  /**
-   * Всё состояние
-   */
-  getState(): TStoreState {
-    return this.state;
-  }
-
-  /**
-   * Установка state.
-   * Необходимо учитывать иммутабельность.
-   * @param newState Новое состояния всех модулей
-   * @param [description] Описание действия для логирования
-   */
-  setState(newState: TStoreState, description = 'Установка') {
-    if (this.config.log) {
-      console.group(
-        `%c${'store.setState'} %c${description}`,
-        `color: ${'#777'}; font-weight: normal`,
-        `color: ${'#333'}; font-weight: bold`,
-      );
-      console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
-      console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
-      console.groupEnd();
+  delete(key: TStoreModuleKey<TStoreModuleName>) {
+    if (this.modules[key]) {
+      delete this.modules[key];
     }
-    this.state = newState;
-    this.notify(this.state);
-  }
-
-  /**
-   * Дамп текущего состояния.
-   * Используется на сервере, чтобы передать состояние клиенту после SSR
-   */
-  dump(): TStoreState {
-    return this.getState();
   }
 }
 
 export default StoreService;
-
-
-

@@ -1,5 +1,6 @@
 export interface ISessionStateConfig {
-  tokenHeader: string
+  tokenHeader: string,
+  saveToLocalStorage: boolean
 }
 
 export interface ISessionState {

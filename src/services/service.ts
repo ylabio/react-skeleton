@@ -4,9 +4,9 @@ import {TServices} from "@src/services/types";
 /**
  * Базовый класс модуля хранилища
  */
-abstract class Service<Config = undefined, Dump = undefined> {
-  protected services: TServices;
-  protected config: Config;
+abstract class Service<Config = object, Dump = undefined> {
+  readonly services: TServices;
+  readonly config: Config;
   readonly env: ImportMetaEnv;
 
   /**
@@ -17,7 +17,7 @@ abstract class Service<Config = undefined, Dump = undefined> {
   constructor(config: Config | unknown, services: TServices, env: ImportMetaEnv) {
     this.services = services;
     this.env = env;
-    this.config = mc.patch(this.defaultConfig(env), config);
+    this.config = mc.patch(this.defaultConfig(env), config) as Config;
   }
 
   /**
@@ -32,15 +32,15 @@ abstract class Service<Config = undefined, Dump = undefined> {
   /**
    * Конфигурация по умолчанию
    */
-  defaultConfig(env: ImportMetaEnv): Config | object {
-    return {};
+  defaultConfig(env: ImportMetaEnv): Config {
+    return {} as Config;
   }
 
   /**
    * Дамп состояния сервиса, чтобы применить дамп при инициализации.
    * Вызывается после рендера на сервере у каждого сервисов
    */
-  dump() {
+  dump(){
     return undefined as Dump;
   };
 }

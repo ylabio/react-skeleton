@@ -1,10 +1,11 @@
 import mc from 'merge-change';
 import listToTree from '@src/utils/list-to-tree';
-import StoreModule from '@src/services/store/module';
+import StoreModule from "@src/services/store/module";
+import {TCategoriesState} from "@src/features/catalog/store/categories/types";
 
-class CategoriesState extends StoreModule<undefined> {
+class CategoriesState extends StoreModule<TCategoriesState> {
 
-  defaultState() {
+  override defaultState(): TCategoriesState {
     return {
       items: [],
       roots: [],
@@ -19,7 +20,7 @@ class CategoriesState extends StoreModule<undefined> {
    * @returns {Promise<*>}
    */
   async load(params: any) {
-    this.updateState({ wait: true, errors: null, x: 100 }, 'Статус ожидания');
+    this.updateState({ wait: true, errors: null }, 'Статус ожидания');
     try {
       const response = await this.services.api.endpoints.categories.findMany(params);
       const result = response.data.result;

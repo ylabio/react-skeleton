@@ -2,7 +2,7 @@ import CRUDEndpoint from '@src/services/api/crud';
 
 class CategoriesEndpoint extends CRUDEndpoint{
 
-  defaultConfig() {
+  override defaultConfig() {
     return {
       ...super.defaultConfig(),
       url: '/api/v1/categories',

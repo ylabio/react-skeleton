@@ -13,10 +13,22 @@ class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
    * Инициализация с использованием дампа состояния
    * @param dump
    */
-  init(dump?: unknown) {
+  override init(dump?: unknown) {
     if (dump) {
       this.state = new Map(Object.entries(dump));
     }
+  }
+
+  /**
+   * Дамп состояния
+   * Обычно используется на сервере, чтобы передать состояние рендера клиенту
+   */
+  override dump() {
+    const result = {} as TWaitDump;
+    this.state.forEach((value, key) => {
+      result[key] = {waiting: value.waiting};
+    });
+    return result;
   }
 
   /**
@@ -82,18 +94,6 @@ class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
     if (this.state.get(key)?.promise) {
       throw this.state.get(key)?.promise;
     }
-  }
-
-  /**
-   * Дамп состояния
-   * Обычно используется на сервере, чтобы передать состояние рендера клиенту
-   */
-  dump() {
-    const result = {} as TWaitDump;
-    this.state.forEach((value, key) => {
-      result[key] = {waiting: value.waiting};
-    });
-    return result;
   }
 }
 

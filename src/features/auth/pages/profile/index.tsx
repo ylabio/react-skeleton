@@ -1,15 +1,15 @@
 import {memo} from 'react';
-import Head from "@src/ui/navigation/head";
-import MainMenu from "@src/features/navigation/components/main-menu";
-import PageLayout from "@src/ui/layout/page-layout";
-import ProfileCard from "@src/features/auth/components/profile-card";
+import useStoreState from "@src/services/store/use-store-state";
 import useServices from "@src/services/use-services";
 import useInit from "@src/services/use-init";
-import useSelector from "@src/services/store/use-selector";
 import {useTranslate} from "@src/services/i18n/use-i18n";
 import LocaleSelect from "@src/features/example-i18n/components/locale-select";
 import AuthHead from "@src/features/auth/components/auth-head";
 import SideLayout from "@src/ui/layout/side-layout";
+import Head from "@src/ui/navigation/head";
+import MainMenu from "@src/features/navigation/components/main-menu";
+import PageLayout from "@src/ui/layout/page-layout";
+import ProfileCard from "@src/features/auth/components/profile-card";
 
 function ProfilePage() {
 
@@ -19,8 +19,7 @@ function ProfilePage() {
     store.modules.profile.load();
   }, []);
 
-  const select = useSelector(state => state.profile);
-
+  const profile = useStoreState('profile');
   const t = useTranslate();
 
   return (
@@ -32,7 +31,7 @@ function ProfilePage() {
         </SideLayout>
       </Head>
       <MainMenu/>
-      <ProfileCard t={t} data={select.data || {}}/>
+      <ProfileCard t={t} data={profile.data || {}}/>
     </PageLayout>
   );
 }

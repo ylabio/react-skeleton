@@ -1,20 +1,21 @@
 import mc from 'merge-change';
 import ListParamsState from '@src/services/store/list-params';
+import {TArticleItem, TArticleParams} from "@src/features/catalog/store/articles/types";
+import {TListParamsState} from "@src/services/store/list-params/types";
 
 /**
  * Модуль товаров
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список товаров.
  */
-class ArticlesState extends ListParamsState {
+class ArticlesState extends ListParamsState<TArticleItem, TArticleParams> {
 
-  defaultState() {
+  override defaultState(): TListParamsState<TArticleItem, TArticleParams> {
     return mc.patch(super.defaultState(), {
       params: {
         fields: `items(*,category(title),madeIn(title)), count`,
-        filter: {
-          category: undefined,
-          $unset: ['query'], // параметр query не нужен от базового класса
-        },
+        search: {
+          category5: 6,
+        }
       },
     });
   }
@@ -24,16 +25,11 @@ class ArticlesState extends ListParamsState {
    * Правила преобразования
    * @return {Object}
    */
-  schemaParams() {
+  override schemaParams() {
     return mc.patch(super.schemaParams(), {
       properties: {
         sort: {enum: ['-date', 'date']},
-        filter: {
-          properties: {
-            category: { type: 'string' },
-            $unset: ['query'], // параметр query не нужен от базового класса
-          },
-        },
+        category: { type: 'string' },
       },
     });
   }
@@ -42,7 +38,7 @@ class ArticlesState extends ListParamsState {
    * Загрузка данных
    * @param apiParams
    */
-  async load(apiParams: any) {
+  override async load(apiParams: any): Promise<{items: TArticleItem[], count: number}> {
     const response = await this.services.api.endpoints.articles.findMany(apiParams);
     // Установка полученных данных в состояние
     return response.data.result;

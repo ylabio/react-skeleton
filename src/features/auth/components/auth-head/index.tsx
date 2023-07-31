@@ -2,19 +2,15 @@ import {memo, useCallback} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useTranslate} from "@src/services/i18n/use-i18n";
 import useServices from "@src/services/use-services";
-import useSelector from "@src/services/store/use-selector";
 import SideLayout from "@src/ui/layout/side-layout";
+import useStoreState from "@src/services/store/use-store-state";
 
 function AuthHead() {
   const t = useTranslate();
   const navigate = useNavigate();
   const location = useLocation();
   const store = useServices().store;
-
-  const select = useSelector(state => ({
-    user: state.session.user,
-    exists: state.session.exists
-  }));
+  const session = useStoreState('session');
 
   const callbacks = {
     // Переход к авторизации
@@ -30,8 +26,8 @@ function AuthHead() {
 
   return (
     <SideLayout side="end">
-      {select.user ? <Link to="/profile">{select.user.profile.name}</Link> : ''}
-      {select.user
+      {session.user ? <Link to="/profile">{session.user.profile.name}</Link> : ''}
+      {session.user
         ? <button onClick={callbacks.onSignOut}>{t('auth.signOut')}</button>
         : <button onClick={callbacks.onSignIn}>{t('auth.signIn')}</button>
       }

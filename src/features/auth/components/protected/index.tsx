@@ -1,8 +1,8 @@
 import {memo, ReactNode, useEffect} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import useSelector from "@src/services/store/use-selector";
 import useServices from "@src/services/use-services";
 import useInit from "@src/services/use-init";
+import useStoreState from "@src/services/store/use-store-state";
 
 interface Props {
   children: ReactNode,
@@ -11,10 +11,10 @@ interface Props {
 
 function Protected({children, redirect}: Props) {
 
-  const session = useSelector(state => state.session);
   const navigate = useNavigate();
   const location = useLocation();
   const services = useServices();
+  const session = useStoreState('session');
 
   useInit(async () => {
     // Вызывается даже если есть сессиия в целях её акутализации

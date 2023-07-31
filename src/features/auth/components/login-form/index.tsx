@@ -1,4 +1,3 @@
-import useSelector from "@src/services/store/use-selector";
 import {FormEvent, memo, useCallback, useState} from "react";
 import {useTranslate} from "@src/services/i18n/use-i18n";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -6,6 +5,7 @@ import useServices from "@src/services/use-services";
 import Field from "@src/ui/elements/field";
 import Input from "@src/ui/elements/input";
 import {SignInBody} from "@src/features/auth/api/types";
+import useStoreState from "@src/services/store/use-store-state";
 
 function LoginForm() {
 
@@ -13,11 +13,7 @@ function LoginForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const store = useServices().store;
-
-  const select = useSelector(state => ({
-    waiting: state.session.waiting,
-    errors: state.session.errors
-  }));
+  const session = useStoreState('session');
 
   const [data, setData] = useState<SignInBody>({
     login: '',
@@ -49,13 +45,13 @@ function LoginForm() {
   return (
     <form onSubmit={callbacks.onSubmit}>
       <h2>{t('auth.loginForm.title')}</h2>
-      <Field label={t('auth.loginForm.login')} error={select.errors?.login}>
+      <Field label={t('auth.loginForm.login')} error={session.errors?.login}>
         <Input name="login" value={data.login} onChange={callbacks.onChange}/>
       </Field>
-      <Field label={t('auth.loginForm.password')} error={select.errors?.password}>
+      <Field label={t('auth.loginForm.password')} error={session.errors?.password}>
         <Input name="password" type="password" value={data.password} onChange={callbacks.onChange}/>
       </Field>
-      <Field error={select.errors?.other}/>
+      <Field error={session.errors?.other}/>
       <Field>
         <button type="submit">{t('auth.signIn')}</button>
       </Field>

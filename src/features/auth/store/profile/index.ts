@@ -1,12 +1,12 @@
-import StoreModule from "@src/services/store/module";
 import {IProfileState} from "@src/features/auth/store/profile/types";
+import StoreModule from "@src/services/store/module";
 
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<undefined> {
+class ProfileState extends StoreModule<IProfileState> {
 
-  defaultState(): IProfileState {
+  override defaultState(): IProfileState {
     return {
       data: null,
       waiting: false // признак ожидания загрузки

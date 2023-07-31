@@ -1,34 +1,33 @@
 import mc from 'merge-change';
-import StoreModule from '@src/services/store/module';
-import { InitListParamsStateType } from './types';
+import {TListParamsState} from './types';
+import StoreModule from "@src/services/store/module";
+import {SchemaObject} from "ajv/lib/types";
+import {TServices} from "@src/services/types";
+import {TStoreModuleKey, TStoreModuleName} from "@src/services/store/types";
+import {ValidateFunction} from "ajv";
 
 /**
  * Модуль списка с параметрами и методами добавления, удаления, редактирования элемента в списке.
  * Принцип работы: меняются параметры выборки (фильтры, сортировка...) -> меняется список.
  */
-abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
-  validator: any;
-  //api: any;
+class ListParamsState<Item, Params, Config = object> extends StoreModule<TListParamsState<Item, Params>, Config> {
+  validator: ValidateFunction;
 
-  init() {
+  constructor(
+    config: PartialRecursive<Config>,
+    services: TServices,
+    env: ImportMetaEnv,
+    name: TStoreModuleKey<TStoreModuleName>)
+  {
+    super(config, services, env, name);
     this.validator = this.services.validator.make(this.schemaParams());
   }
-
-  /**
-   * Конфигурация по умолчанию
-   * @return {Object}
-   */
-  // defaultConfig() {
-  //   return mc.patch(super.defaultConfig(), {
-  //     apiEndpoint: 'crud', // абстрактный endpoint
-  //   });
-  // }
 
   /**
    * Начальное состояние
    * @return {Object}
    */
-  defaultState(): InitListParamsStateType {
+  override defaultState(): TListParamsState<Item, Params> {
     return {
       items: [],
       count: 0,
@@ -37,9 +36,9 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
         page: 1,
         sort: '',
         fields: `items(*), count`,
-        filter: {
-          query: undefined, // поиск по строке
-        },
+        search: {
+          //query: undefined, // поиск по строке
+        }
       },
       wait: false,
       errors: null,
@@ -51,20 +50,20 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    * Правила преобразования
    * @return {Object}
    */
-  schemaParams() {
+  schemaParams(): SchemaObject {
     return {
       type: 'object',
       properties: {
-        limit: { type: 'integer', minimum: 1 },
-        page: { type: 'integer', minimum: 1 },
-        sort: { type: 'string' },
-        filter: {
+        limit: {type: 'integer', minimum: 1},
+        page: {type: 'integer', minimum: 1},
+        sort: {type: 'string'},
+        search: {
           type: 'object',
           properties: {
-            query: { type: 'string' },
-          },
-          additionalProperties: { type: 'string' },
-        },
+
+          }
+        }
+        //query: { type: 'string' },
       },
     };
   }
@@ -83,7 +82,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
     // Сливаем все параметры
     const newParams = mc.merge(defaultParams, queryParams, params);
     // Установка параметров и загрузка данных по ним
-    return this.setParams(newParams, { merge: false, remember: false, load: true });
+    return this.setParams(newParams, {merge: false, remember: false, load: true});
   }
 
   /**
@@ -100,7 +99,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       // Слияние параметров с начальными
       mc.merge(this.defaultState().params, params),
       // Слияние параметров с текущими. Без загрузки данных, но со сбросом данных
-      mc.merge({ merge: false, remember: 'replace', load: false, clear: true }, options),
+      mc.merge({merge: false, remember: 'replace', load: false, clear: true}, options),
     );
   }
 
@@ -115,7 +114,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    * @returns {Promise}
    */
   async setParams(params: any = {}, options: any = {}) {
-    options = mc.merge({ merge: true, load: true, clear: false, remember: 'replace' }, options);
+    options = mc.merge({merge: true, load: true, clear: false, remember: 'replace'}, options);
     try {
       // 1. ПАРАМЕТРЫ
       // Новые параметры (нужно ли учитывать текущие?)
@@ -154,7 +153,8 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
         const apiParams = this.apiParams(newParams);
         // Выборка данных из АПИ
         const result = await this.load(apiParams);
-        this.updateState(mc.patch(result, { wait: false, errors: null }), 'Список загружен');
+        const x = mc.patch(result, {wait: false, errors: null});
+        this.updateState(x, 'Список загружен');
       }
 
       return true;
@@ -197,7 +197,6 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
       skip: (params.page - 1) * params.limit,
       fields: params.fields.replace(/\s/g, ''),
       sort: params.sort,
-      filter: params.filter,
     };
   }
 
@@ -205,7 +204,7 @@ abstract class ListParamsState extends StoreModule<{ apiEndpoint: string }> {
    * Загрузка данных
    * @param apiParams
    */
-  async load(apiParams: any) {
+  async load(apiParams: any): Promise<Partial<TListParamsState<Item>>> {
     // const response = await this.api.findMany(apiParams);
     // // Установка полученных данных в состояние
     // return response.data.result;

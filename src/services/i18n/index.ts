@@ -1,5 +1,4 @@
 import Service from "@src/services/service";
-import {IObservable, TListener} from "@src/utils/observable/types";
 import {
   TDictionary, TTranslation, TTranslationKey, TLocale, TLocaleReal, TLocaleNamespace,
   TI18nState, isI18nState, INumberOptions, TI18nConfig, ITranslateOptions
@@ -12,15 +11,17 @@ import cookie from 'js-cookie';
 /**
  * Сервис модальных окон
  */
-class I18nService extends Service<TI18nConfig, TI18nState> implements IObservable<TI18nState> {
-  private state: TI18nState = {
+class I18nService extends Service<TI18nConfig, TI18nState> {
+  // Подписчики на изменение state
+  protected readonly listeners: Set<() => void> = new Set();
+  // Состояние (данные)
+  protected state: TI18nState = {
     locale: 'ru-RU',
     locales: Object.keys(dictionaries).filter(l => l != '*') as TLocaleReal[],
     dictionary: {} as TDictionary,
   };
-  private listeners: TListener<TI18nState>[] = [];
 
-  defaultConfig(env: ImportMetaEnv): TI18nConfig {
+  override defaultConfig(env: ImportMetaEnv): TI18nConfig {
     return {
       locale: 'ru-RU',
       auto: true,
@@ -28,7 +29,7 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     };
   }
 
-  init(dump?: unknown) {
+  override init(dump?: unknown) {
     let locale;
     if (this.config.locale) locale = this.config.locale;
     // Автоопределение локали по заголовку accept-language
@@ -42,29 +43,9 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     this.setDependencies(this.state.locale);
   }
 
-  dump() {
+  override dump() {
     return this.getState();
   }
-
-  subscribe = (callback: TListener<TI18nState>) => {
-    this.listeners.push(callback);
-    return () => {
-      this.listeners = this.listeners.filter((item: TListener<TI18nState>) => item !== callback);
-    };
-  };
-
-  notify = (state: TI18nState) => {
-    for (const listener of this.listeners) listener(state);
-  };
-
-  getState = () => {
-    return this.state;
-  };
-
-  setState = (state: Partial<TI18nState>) => {
-    this.state = {...this.state, ...state};
-    this.notify(this.state);
-  };
 
   /**
    * Установка локали
@@ -75,7 +56,6 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
     this.setDependencies(locale);
     this.setState({locale});
   };
-
 
   /**
    * Установка переводов
@@ -260,6 +240,32 @@ class I18nService extends Service<TI18nConfig, TI18nState> implements IObservabl
   setDependencies(locale: TLocaleReal){
     this.services.api.setHeader('X-Lang', locale);
   }
+
+  setState = (state: Partial<TI18nState>) => {
+    this.state = {...this.state, ...state};
+    this.notify();
+  };
+
+  getState = () => {
+    return this.state;
+  };
+
+  /**
+   * Подписка на изменение state.
+   * Возвращается функция для отписки
+   * @param listener Функция, которая будет вызываться после установки состояния
+   */
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  };
+
+  /**
+   * Вызываем всех слушателей
+   */
+  protected notify = () => {
+    this.listeners.forEach(listener => listener());
+  };
 }
 
 export default I18nService;

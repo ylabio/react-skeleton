@@ -13,6 +13,7 @@ export default (env : ImportMetaEnv): TServicesConfig => ({
     endpoints: {}
   },
   store: {
+    //log: false,
     // Настройки для конкретных модулей состояния по их названиям
     modules: {
       session: {

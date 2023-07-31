@@ -33,6 +33,6 @@ export default async ({app, config}: IRouteContext) => {
       next();
     });
 
-    console.log(`Proxy enabled`);
+    console.log(`Proxy in SSR enabled`);
   }
 };

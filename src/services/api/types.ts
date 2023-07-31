@@ -1,6 +1,7 @@
 import * as endpoints from './imports';
-import {Axios, AxiosRequestConfig, AxiosResponse} from "axios";
+import {Axios, AxiosError as ApiError, AxiosRequestConfig, AxiosResponse} from "axios";
 
+export {ApiError};
 /**
  * Конструкторы модулей АПИ
  */
@@ -39,3 +40,5 @@ export interface IApiService {
   endpoints: TEndpoints;
   axios: Axios;
 }
+
+

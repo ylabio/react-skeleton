@@ -22,7 +22,7 @@ class ApiService extends Service<TApiConfig, undefined> {
     this._axios = axios.create(this.config.default);
   }
 
-  init() {
+  override init() {
     // Создание экземпляров endpoint
     const names = Object.keys(endpoints) as TEndpointsNames[];
     for (const name of names) this.initEndpoint(name);

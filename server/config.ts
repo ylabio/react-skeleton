@@ -8,7 +8,7 @@ export default (env: ImportMetaEnv): IServerConfig => {
       port: env.PORT || 8050,
     },
     proxy: {
-      enabled: env.PROD, // В DEV режиме будет работать прокси Vite, в PROD прокси сервера рендера
+      enabled: true,//env.PROD, //В dev режиме работает прокси Vite(в режиме middleware), но у него ошибка на POST запросы, поэтому включен свой прокси
       routes: {}
     },
     render: {

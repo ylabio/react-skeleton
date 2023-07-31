@@ -6,7 +6,7 @@ import useServices from '@src/services/use-services';
  */
 function ModalsContainer() {
   const modals = useServices().modals;
-  const modalsStack = useSyncExternalStore(modals.subscribe, modals.getState, modals.getState);
+  const modalsStack = useSyncExternalStore(modals.subscribe, modals.getStack, modals.getStack);
   return <>{modalsStack.map(state => {
     const Component = modalsComponents[state.name];
     // Почему-то state.props не сопоставляется с компонентом модалки. Поэтому применён any

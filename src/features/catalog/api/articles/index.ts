@@ -1,7 +1,7 @@
 import CRUDEndpoint from '@src/services/api/crud';
 
 class ArticlesEndpoint extends CRUDEndpoint {
-  defaultConfig() {
+  override defaultConfig() {
     return {
       ...super.defaultConfig(),
       url: '/api/v1/articles',

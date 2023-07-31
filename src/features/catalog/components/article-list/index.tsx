@@ -1,19 +1,16 @@
 import {memo} from 'react';
-import useSelector from '@src/services/store/use-selector';
+import useStoreState from "@src/services/store/use-store-state";
 
 function ArticleList() {
 
-  const select = useSelector(state => ({
-    items: state.articles.items,
-    wait: state.articles.wait,
-  }));
+  const articles = useStoreState('articles');
 
-  if (select.wait || !select.items) {
-    return <div>{select.wait && <i>Загрузка...</i>}</div>;
+  if (articles.wait || !articles.items) {
+    return <div>{articles.wait && <i>Загрузка...</i>}</div>;
   } else {
     return (
       <ul>
-        {select.items.map((item: any) => (
+        {articles.items.map((item: any) => (
           <li key={item._id}>
             {item.title} | {item.madeIn.title} | {item.category.title} | {item.price} руб
           </li>

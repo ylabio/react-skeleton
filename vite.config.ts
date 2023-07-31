@@ -29,6 +29,7 @@ export default defineConfig(params => {
           target: env.API_URL,
           secure: false,
           changeOrigin: true,
+          timeout: 2000
         }
       },
       hmr: true

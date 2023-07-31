@@ -29,7 +29,9 @@ function Input(props: Props) {
   };
 
   // Обновление стейта, если передан новый value
-  useLayoutEffect(() => setValue(props.value), [props.value]);
+  if (!import.meta.env.SSR) {
+    useLayoutEffect(() => setValue(props.value), [props.value]);
+  }
 
   const cn = bem('Input');
   return (

@@ -3,7 +3,7 @@ import CRUDEndpoint from '@src/services/api/crud';
 import {SignInBody} from "@src/features/auth/api/types";
 
 class UsersEndpoint extends CRUDEndpoint {
-  defaultConfig() {
+  override defaultConfig() {
     return {
       ...super.defaultConfig(),
       url: '/api/v1/users',

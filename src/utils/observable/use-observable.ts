@@ -14,8 +14,8 @@ export default function useObservable<Result, State>(
 ): Result {
   const [result, setResult] = useState(() => selector(observer.getState()));
   const subscribe = useCallback(() => {
-    return observer.subscribe((state) => {
-      const newResult = selector(state);
+    return observer.subscribe(() => {
+      const newResult = selector(observer.getState());
       setResult((prevResult) => {
         return shallowequal(prevResult, newResult) ? prevResult : newResult;
       });

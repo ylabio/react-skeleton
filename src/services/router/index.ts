@@ -26,7 +26,7 @@ class RouterService extends Service<TRouterConfig, undefined> {
     }
   }
 
-  defaultConfig(env: ImportMetaEnv): TRouterConfig {
+  override defaultConfig(env: ImportMetaEnv): TRouterConfig {
     return {
       ...super.defaultConfig(env),
       type: env.SSR ? 'memory' : 'browser',
