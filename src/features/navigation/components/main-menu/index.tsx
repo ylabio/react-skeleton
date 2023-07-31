@@ -16,7 +16,7 @@ function MainMenu() {
       {key: 3, title: t('navigation.main-menu.example-i18n'), link: '/example-i18n', active: false},
       {key: 5, title: t('navigation.main-menu.catalog'), link: '/catalog', active: false},
       {key: 6, title: t('navigation.main-menu.profile'), link: '/profile', active: false},
-    ], location), [location.pathname])
+    ], location), [t, location.pathname])
   };
 
   const linkRender = useCallback((item: MenuItem) => (
