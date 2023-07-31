@@ -43,7 +43,7 @@ abstract class Endpoint<Config = AxiosRequestConfig> {
    * Запрос
    * @return {*}
    */
-  request(options: AxiosRequestConfig) {
+  request(options: Config | AxiosRequestConfig) {
     // Учитываются опции модуля и переданные в аргументах
     return this.api.request(mc.merge(this.config, options));
   }

@@ -1,13 +1,12 @@
 {
-  "include": ["./typings", "./src", "./server", "./vite.config.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"],
+  "include": ["typings/**/*", "src/**/*", "server/**/*", "vite.config.ts"],
+  "exclude": ["**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
       "@src": ["./src/index"],
       "@src/*": ["./src/*"],
     },
-
     "lib": ["dom", "esnext"],
     "target": "ES6",
     "jsx": "react-jsx",

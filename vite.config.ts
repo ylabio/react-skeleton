@@ -1,5 +1,6 @@
 import {defineConfig, loadEnv} from 'vite';
 import reactPlugin from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 import path from "path";
 import typedVariables from 'dotenv-parse-variables';
 
@@ -20,6 +21,11 @@ export default defineConfig(params => {
     plugins: [
       reactPlugin({
         include: '**/*.{jsx,tsx}',
+      }),
+      checker({
+        // e.g. use TypeScript check
+        typescript: true,
+        overlay: false
       }),
     ],
     server: {

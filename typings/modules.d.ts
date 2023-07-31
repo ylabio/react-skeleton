@@ -7,9 +7,9 @@ declare module '*.html' {
 
 declare module 'merge-change' {
   interface MergeChange {
-    patch<A>(first: A,...values: (A | PartialRecursive<A>)[]): A;
-    merge<A>(first: A,...values: (A | PartialRecursive<A>)[]): A;
-    update<A>(first: A, ...values: (A | PartialRecursive<A>)[]): A;
+    patch<A>(first: A,...values: (A | Partial<A> | PartialRecursive<A>)[]): any;
+    merge<A>(first: A,...values: (A | Partial<A> | PartialRecursive<A>)[]): any;
+    update<A>(first: A, ...values: (A | Partial<A> | PartialRecursive<A>)[]): any;
   }
   const mc: MergeChange;
   export default mc;

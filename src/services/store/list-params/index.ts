@@ -1,10 +1,9 @@
 import mc from 'merge-change';
 import {TListParamsState} from './types';
 import StoreModule from "@src/services/store/module";
-import {SchemaObject} from "ajv/lib/types";
 import {TServices} from "@src/services/types";
 import {TStoreModuleKey, TStoreModuleName} from "@src/services/store/types";
-import {ValidateFunction} from "ajv";
+import {ValidateFunction, SchemaObject} from "ajv";
 
 /**
  * Модуль списка с параметрами и методами добавления, удаления, редактирования элемента в списке.

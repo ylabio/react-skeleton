@@ -1,4 +1,4 @@
-import Ajv, { Schema} from "ajv";
+import Ajv, {SchemaObject} from "ajv";
 import {TServices} from "@src/services/types";
 import Service from "@src/services/service";
 
@@ -26,7 +26,7 @@ class ValidatorService extends Service<unknown, undefined>{
    * Создание функции валидации по JSONSchema
    * @param schema JSONSchema
    */
-  make(schema: Schema){
+  make(schema: SchemaObject){
     return this.ajv.compile(schema);
   }
 }

@@ -65,7 +65,7 @@ class StoreService extends Service<TStoreConfig, TStoreModulesState> {
         config || this.config.modules[key] as TStoreModulesConfig[Key],
         this.services,
         this.env,
-        name
+        key
       ) as TStoreModules[Key];
       if (state) this.modules[key].setState(state as any);
       // if (state) this.modules[key].state = state;
