@@ -20,6 +20,16 @@ function I18nExamplePage(props: Props) {
       <MainMenu/>
       <h2>{t('example-i18n.title')}</h2>
       <p>
+        {t('example-i18n.content.pLocale')}
+      </p>
+      <p>
+        {t('example-i18n.content.pDic')}
+      </p>
+      <p>
+        {t('example-i18n.content.pDetect')}
+      </p>
+      <p>
+        {t('example-i18n.content.pHook')}
       </p>
     </PageLayout>
   );
