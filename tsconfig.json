@@ -1,6 +1,5 @@
 {
   "include": ["typings/**/*", "src/**/*", "server/**/*", "vite.config.ts"],
-  "exclude": ["**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
