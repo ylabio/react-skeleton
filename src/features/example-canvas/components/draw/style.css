@@ -1,0 +1,7 @@
+.Draw{
+  position: relative;
+  overflow: hidden;
+  height: 600px;
+  /*border: 1px dashed #ccc;*/
+  /*background: #f00;*/
+}

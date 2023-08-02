@@ -4,6 +4,7 @@ import {Helmet} from 'react-helmet-async';
 import Modals from '@src/services/modals/container';
 import Loading from '@src/app/loading';
 import Protected from "@src/features/auth/components/protected";
+import ExampleCanvasPage from "@src/features/example-canvas/page";
 
 // Синхронный импорт
 // import Main from '@src/features/main/page';
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" index element={<Main/>}/>
           <Route path="/example-modals" index element={<ExampleModals/>}/>
           <Route path="/example-i18n" index element={<ExampleI18n/>}/>
+          <Route path="/example-canvas" index element={<ExampleCanvasPage/>}/>
           <Route path="/catalog" element={<Catalog/>}/>
           <Route path="/catalog/:categoryId" element={<Catalog/>}/>
           <Route path="/login" element={<Login/>}/>
