@@ -172,7 +172,7 @@ class Core {
 
   onMouseUp = (e: MouseEvent) => {
     // Сброс активного действия
-    this.action = undefined;
+    this.action = null;
   };
 
   onMouseWheel = (e: WheelEvent) => {
