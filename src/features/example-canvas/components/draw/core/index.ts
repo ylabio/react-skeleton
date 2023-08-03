@@ -2,11 +2,15 @@ import {Action, ScrollParams, ZoomParams} from "@src/features/example-canvas/com
 import Figure from "@src/features/example-canvas/components/draw/core/elements/figure";
 
 class Core {
-  root?: HTMLElement;
+  // DOM элемент, в котором будет создана канва
+  root: HTMLElement | null = null;
+  // DOM элемент канвы
   canvas: HTMLCanvasElement | null = null;
+  // Контекст для 2D рисования
   ctx: CanvasRenderingContext2D | null = null;
   // Элементы для рендера
   elements: Figure[] = [];
+  // Метрики канвы
   metrics = {
     left: 0,
     top: 0,
@@ -17,14 +21,15 @@ class Core {
     scrollY: 0,
     zoom: 1
   };
-  action?: Action;
+  // Активное действие (обычно при зажатой клавиши мышки)
+  action: Action | null = null;
 
   constructor() {
     this.elements.push(new Figure(100,100, 200, 300));
   }
 
   /**
-   * Монтиорвание канвы в DOM элменет (dom)
+   * Монтирование канвы в DOM элемент (dom)
    * @param root
    */
   mount(root: HTMLElement) {
@@ -54,6 +59,9 @@ class Core {
     }
   }
 
+  /**
+   * Демонтирование канвы
+   */
   unmount() {
     // Отписка от всех событий
     if (this.canvas) {
@@ -69,6 +77,9 @@ class Core {
     }
   }
 
+  /**
+   * Обработка изменения размеров/масштаба под канву
+   */
   resize = () => {
     if (this.root && this.canvas && this.ctx) {
       const rect = this.root.getBoundingClientRect();
@@ -76,7 +87,7 @@ class Core {
       this.metrics.top = rect.top;
       this.metrics.width = this.root.offsetWidth;
       this.metrics.height = this.root.offsetHeight;
-      this.metrics.dpr = 1; //window.devicePixelRatio;
+      this.metrics.dpr = window.devicePixelRatio;
       // Физический размер канвы с учётом плотности пикселей (т.е. канва может быть в разы больше)
       this.canvas.width = this.metrics.width * this.metrics.dpr;
       this.canvas.height = this.metrics.height * this.metrics.dpr;
@@ -138,8 +149,8 @@ class Core {
     this.action = {
       name: 'scroll',
       // Координата, с которой начинаем расчёт смещения
-      x: e.offsetX,
-      y: e.offsetY,
+      x: e.clientX - this.metrics.left,
+      y: e.clientY - this.metrics.top,
       // Запоминаем исходное смещение, чтобы к нему добавлять расчётное
       scrollX: this.metrics.scrollX,
       scrollY: this.metrics.scrollY
@@ -149,6 +160,7 @@ class Core {
   onMouseMove = (e: MouseEvent) => {
     // Обработка действия scroll
     if (this.action && this.action.name === 'scroll') {
+      // можно e.offsetY вместо e.clientY - this.metrics.top, но если курсор окажется вне канвы, то будет глюк
       const dx = e.clientX - this.metrics.left - this.action.x;
       const dy = e.clientY - this.metrics.top - this.action.y;
       this.scroll({
@@ -164,20 +176,30 @@ class Core {
   };
 
   onMouseWheel = (e: WheelEvent) => {
+    e.preventDefault();
     const delta = e.deltaY > 0 ? 0.1 : -0.1;
-    if (e.shiftKey) {
+    if (e.ctrlKey) {
       // Масштабирование
       this.zoom({delta, center: {x: e.offsetX, y: e.offsetY}});
     } else {
-      // Прокрутка по верткиали
+      // Прокрутка по вертикали
       this.scroll({dy: delta * 300});
     }
-
   };
 
+  /**
+   * Рисование всего
+   */
   draw = () => {
     if (this.ctx) {
-      //this.needDraw = false;
+      // Область рендера
+      const viewRect = {
+        x1: this.metrics.scrollX / this.metrics.zoom,
+        y1: this.metrics.scrollY / this.metrics.zoom,
+        x2: (this.metrics.width + this.metrics.scrollX) / this.metrics.zoom,
+        y2: (this.metrics.height + this.metrics.scrollY) / this.metrics.zoom
+      };
+
       this.ctx.save();
       // Очистка
       this.ctx.fillStyle = '#ebf4ff';
@@ -187,28 +209,23 @@ class Core {
       // scale
       this.ctx.scale(this.metrics.zoom, this.metrics.zoom);
 
-      // Область рендера, если нужно проверять попадания в неё элемента
-      const viewRect = {
-        x1: this.metrics.scrollX / this.metrics.zoom,
-        y1: this.metrics.scrollY / this.metrics.zoom,
-        x2: (this.metrics.width + this.metrics.scrollX) / this.metrics.zoom,
-        y2: (this.metrics.height + this.metrics.scrollY) / this.metrics.zoom
-      };
-
       // Метка времени, чтобы все элементы рассчитали анимацию относительно неё
       const time = performance.now();
 
       for (const element of this.elements) {
         // Анимация элемента
         element.animate(time);
-        // Рисование элемента
+        // Рисование элемента, если попадает в видимую область
         if (element.isIntersectRect(viewRect)) {
+          this.ctx.save();
           element.draw(this.ctx);
+          this.ctx.restore();
         }
       }
       this.ctx.restore();
+      // Цикл рендера
+      requestAnimationFrame(this.draw);
     }
-    requestAnimationFrame(this.draw);
   };
 }
 

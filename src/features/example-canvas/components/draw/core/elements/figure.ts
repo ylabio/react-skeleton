@@ -20,7 +20,7 @@ class Figure {
     const dtime = (time - this.time);
 
     // Изменение угла без укореняем
-    this.angle += 5;
+    // this.angle += 5;
     if (this.angle > 360 || this.angle < -360) this.angle = 0;
   }
 
@@ -48,10 +48,8 @@ class Figure {
     );
   }
 
-
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.save();
-    // Добавление трансформации
+    // Добавление трансформации поворота
     // Смещение origin в центр фигуры
     ctx.translate((this.x + this.width / 2), (this.y + this.height / 2));
     // Поворот относительно origin
@@ -61,7 +59,6 @@ class Figure {
     // Rect
     ctx.fillStyle = '#777';
     ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.restore();
   }
 }
 
