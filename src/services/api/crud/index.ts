@@ -1,11 +1,6 @@
 import params from '../query-params';
 import Endpoint from '../endpoint';
-
-interface BaseQuery {
-  fields?: string;
-  limit?: number;
-  skip?: number;
-}
+import {DataQuery, FindQuery, GetQuery} from "@src/services/api/crud/types";
 
 class CRUDEndpoint extends Endpoint {
   /**
@@ -22,7 +17,7 @@ class CRUDEndpoint extends Endpoint {
     limit = 20,
     skip = 0,
     ...other
-  }: BaseQuery & { filter: string }) {
+  }: FindQuery) {
     return this.request({
       method: 'GET',
       url: this.config.url,
@@ -36,7 +31,7 @@ class CRUDEndpoint extends Endpoint {
    * @param fields Какие поля выбирать
    * @param other Другие параметры апи
    */
-  findOne({ id, fields = '*', ...other }: BaseQuery & { id: string }) {
+  findOne({ id, fields = '*', ...other }: GetQuery) {
     return this.request({
       method: 'GET',
       url: `${this.config.url}/${id}`,
@@ -51,7 +46,7 @@ class CRUDEndpoint extends Endpoint {
    * @param path Путь в url
    * @param other Другие параметры апи
    */
-  create({ data, fields = '*', ...other }: BaseQuery & { data: any }) {
+  create({ data, fields = '*', ...other }: DataQuery) {
     return this.request({
       method: 'POST',
       url: `${this.config.url}`,
@@ -67,7 +62,7 @@ class CRUDEndpoint extends Endpoint {
    * @param fields Какие поля выбирать в ответ
    * @param other Другие параметры апи
    */
-  update({ id, data, fields = '*', ...other }: BaseQuery & { id: string, data: any }) {
+  update({ id, data, fields = '*', ...other }: DataQuery) {
     return this.request({
       method: 'PATCH',
       url: `${this.config.url}/${id}`,
@@ -82,7 +77,7 @@ class CRUDEndpoint extends Endpoint {
    * @param fields Какие поля выбирать
    * @param other Другие параметры апи
    */
-  delete({ id, fields = '*', ...other }: { id: string, fields: string }) {
+  delete({ id, fields = '*', ...other }: GetQuery) {
     return this.request({
       method: 'DELETE',
       url: `${this.config.url}/${id}`,

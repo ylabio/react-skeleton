@@ -72,7 +72,7 @@ class RouterService extends Service<TRouterConfig, undefined> {
    * Текущие search параметры, распарсенные из строки
    * @returns {*}
    */
-  getSearchParams() {
+  getSearchParams(): any {
     return qs.parse(this.history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
   }
 

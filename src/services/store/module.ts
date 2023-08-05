@@ -25,7 +25,7 @@ abstract class StoreModule<State, Config = object> {
    * @param name Название модуля
    */
   constructor(
-    config: PartialRecursive<Config>,
+    config: PartialDeep<Config>,
     services: TServices,
     env: ImportMetaEnv,
     name: TStoreModuleKey<TStoreModuleName>,
@@ -87,7 +87,7 @@ abstract class StoreModule<State, Config = object> {
    * @param update Изменяемые свойства. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param [description] Описание действия для логирования
    */
-  updateState = (update: PartialRecursive<State>, description = 'Обновление') => {
+  updateState = (update: Partial<State> | Patch<State>, description = 'Обновление') => {
     const state = mc.update(this.getState(), update);
     if (state !== this.getState()) {
       this.setState(state, description);
@@ -99,7 +99,7 @@ abstract class StoreModule<State, Config = object> {
    * @param update Изменяемые свойства у начального состояния. Может содержать операторы $set, $unset и др из https://www.npmjs.com/package/merge-change
    * @param description Описание действия для логирования
    */
-  resetState = (update: PartialRecursive<State>, description = 'Сброс') => {
+  resetState = (update: Partial<State> | Patch<State>, description = 'Сброс') => {
     this.setState(mc.update(this.defaultState(), update), description);
   };
 

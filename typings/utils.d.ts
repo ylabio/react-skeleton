@@ -1,11 +1,34 @@
 /**
  * Partial в глубину для свойств объекта
  */
-type PartialRecursive<T> =
+type PartialDeep<T> =
   T extends (infer U)[] ? U[] :
-    T extends object ? { [K in keyof T]?: PartialRecursive<T[K]> } :
-      T;
+    T extends object ? {
+        [K in keyof T]?: PartialRecursive<T[K]>
+      }
+      : T
+  ;
 
+/**
+ * Операциями для merge-change
+ */
+type PatchOperation<T> = T | {
+  $set?: T,
+  $unset?: (keyof T)[],
+  $leave?: (keyof T)[]
+};
+
+
+/**
+ * Объект-патч с необязательными свойствами в глубину и с операциями для merge-change
+ */
+type Patch<T> = PatchOperation<
+  T extends (infer U)[] ? U[] :
+    T extends object ? {
+        [K in keyof T]?: Patch<T[K]>
+      }
+      : T
+>;
 
 /**
  * Формирует пути на свойства объекта с учётом вложенности

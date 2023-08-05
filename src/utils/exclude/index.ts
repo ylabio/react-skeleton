@@ -7,7 +7,7 @@ import isPlainObject from '../is-plain-object';
  * @returns {Object} Новый объект
  */
 
-export default function exclude<A, B>(objectSrc: A, objectExc: B): A | PartialRecursive<A> {
+export default function exclude<A, B>(objectSrc: A, objectExc: B): A | PartialDeep<A> {
   if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {
     const result = {...objectSrc} as Record<string, any>;
     const keys = Object.keys(objectSrc);
@@ -21,7 +21,7 @@ export default function exclude<A, B>(objectSrc: A, objectExc: B): A | PartialRe
         delete result[key];
       }
     }
-    return result as PartialRecursive<A>;
+    return result as PartialDeep<A>;
   } else {
     return objectSrc;
   }

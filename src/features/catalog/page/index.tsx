@@ -7,8 +7,9 @@ import Head from "@src/ui/navigation/head";
 import MainMenu from "@src/features/navigation/components/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 import LocaleSelect from "@src/features/example-i18n/components/locale-select";
-import ArticleList from '@src/features/catalog/components/article-list';
-import CategoryTree from '@src/features/catalog/components/category-tree';
+import ArticleList from '@src/features/catalog/containers/article-list';
+import CategoryTree from '@src/features/catalog/containers/category-tree';
+import Pagination from "@src/ui/navigation/pagination";
 
 function CatalogPage() {
   const {locale, t} = useI18n();
@@ -17,7 +18,7 @@ function CatalogPage() {
 
   useInit(async () => {
     // Инициализация параметров для начально выборки по ним
-    await services.store.modules.articles.initParams({filter: {category: categoryId}});
+    await services.store.modules.articles.initParams({category: categoryId});
   }, [categoryId, locale], {ssr: 'articles.init'});
 
   useInit(async () => {
@@ -44,6 +45,7 @@ function CatalogPage() {
       <CategoryTree/>
       <hr/>
       <ArticleList/>
+
     </PageLayout>
   );
 }

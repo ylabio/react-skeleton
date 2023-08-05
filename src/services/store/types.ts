@@ -37,6 +37,6 @@ export type TStoreModulesConfig = {
  */
 export type TStoreConfig = {
   log?: boolean,
-  modules: PartialRecursive<TStoreModulesConfig>
+  modules: PartialDeep<TStoreModulesConfig>
 }
 

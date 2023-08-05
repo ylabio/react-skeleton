@@ -16,11 +16,11 @@ class Figure {
   }
 
   animate(time: number) {
-    // Время с начало рендера (не используется)
-    const dtime = (time - this.time);
+    // Время "жизни" фигуры
+    const t = (time - this.time);
 
     // Изменение угла без укореняем
-    // this.angle += 5;
+    this.angle += 5;
     if (this.angle > 360 || this.angle < -360) this.angle = 0;
   }
 
