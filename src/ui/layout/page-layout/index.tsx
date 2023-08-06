@@ -4,26 +4,20 @@ import './style.less';
 
 interface Props {
   children?: React.ReactNode;
-  head?: React.ReactNode;
-  footer?: React.ReactNode;
 }
 
-function PageLayout({head, footer, children}: Props) {
-
+/**
+ * Определяет границы страницы, ширину и центрирование по горизонтали.
+ * Вложенные элементы выводятся в блочном потоке (сверху вниз).
+ * Для создания области шапки и футера используются отдельные компоненты.
+ * Для создания боковых областей используются вложенная разметка отдельным компонентом.
+ */
+function PageLayout({children}: Props) {
   const cn = bem('PageLayout');
-
   return (
     <div className={cn()}>
-      <div className={cn('wrap')}>
-        <div className={cn('head')}>
-          {head}
-        </div>
-        <div className={cn('center')}>
-          {children}
-        </div>
-        <div className={cn('footer')}>
-          {footer}
-        </div>
+      <div className={cn('center')}>
+        {children}
       </div>
     </div>
   );

@@ -10,9 +10,11 @@ function Head({title, children}: Props){
   return (
     <div className='Head'>
       <div className='Head-place'>
-        <h1 >{title}</h1>
+        <h1>{title}</h1>
       </div>
-      <div className='Head-place'>{children}</div>
+      <div className='Head-place'>
+        {children}
+      </div>
     </div>
   );
 }

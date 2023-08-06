@@ -10,6 +10,7 @@ interface Props {
   type?: string,
   placeholder?: string,
   size?: 'big',
+  delay?: number
 }
 
 function Input(props: Props) {
@@ -18,7 +19,7 @@ function Input(props: Props) {
   const [value, setValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce(value => props.onChange(value, props.name), 600),
+    debounce(value => props.onChange(value, props.name), props.delay || 600),
     [props.onChange, props.name]
   );
 

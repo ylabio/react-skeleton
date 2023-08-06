@@ -1,5 +1,5 @@
 import {memo} from 'react';
-import Head from "@src/ui/navigation/head";
+import Head from "@src/ui/layout/head";
 import PageLayout from "@src/ui/layout/page-layout";
 
 /**

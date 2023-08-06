@@ -7,6 +7,7 @@ import {
   TArticleParams
 } from "@src/features/catalog/store/articles/types";
 import {TDataParamsState} from "@src/services/store/data-params/types";
+import {JSONSchemaType} from 'ajv';
 
 /**
  * Модуль товаров
@@ -16,8 +17,13 @@ class ArticlesState extends DataParamsState<TArticleData, TArticleParams> {
 
   override defaultState(): TDataParamsState<TArticleData, TArticleParams> {
     return mc.patch(super.defaultState(), {
+      data: {
+        items: [],
+        count: 0
+      },
       params: {
-        category: ''
+        category: '',
+        query: ''
       },
     });
   }
@@ -25,24 +31,13 @@ class ArticlesState extends DataParamsState<TArticleData, TArticleParams> {
   /**
    * Схема валидации восстановленных параметров
    */
-  override schemaParams() {
-    return mc.patch(super.schemaParams(), {
+  override paramsSchema(): JSONSchemaType<PartialDeep<TArticleParams>> {
+    return mc.patch(super.paramsSchema(), {
       properties: {
-        sort: {enum: ['-date', 'date']},
+        sort: {type: 'string'},
+        query: {type: 'string'},
         //category: {type: 'string'}, Категорию не надо сохранять, так как будет указываться страницей
       },
-    });
-  }
-
-  /**
-   * Параметры для сохранения в url search
-   * @param params
-   * @protected
-   */
-  protected override urlParams(params: TArticleParams): PartialDeep<TArticleParams> {
-    // По умолчанию сохранялись бы все параметры
-    return mc.merge(super.urlParams(params), {
-      $unset: ['category'] //Категорию не надо сохранять, так как будет указываться страницей
     });
   }
 
@@ -54,8 +49,9 @@ class ArticlesState extends DataParamsState<TArticleData, TArticleParams> {
     const apiParams = mc.patch(super.apiParams(params), {
       fields: `items(*,category(title),madeIn(title)), count`,
       filter: {
-        category: params.category
-      }
+        category: params.category,
+        query: params.query
+      },
     });
     return exclude(apiParams, {
       skip: 0,

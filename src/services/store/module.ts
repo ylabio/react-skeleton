@@ -25,7 +25,7 @@ abstract class StoreModule<State, Config = object> {
    * @param name Название модуля
    */
   constructor(
-    config: PartialDeep<Config>,
+    config: Patch<Config>,
     services: TServices,
     env: ImportMetaEnv,
     name: TStoreModuleKey<TStoreModuleName>,

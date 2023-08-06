@@ -1,6 +1,12 @@
+export type TCategoryItem = {
+  _id: string,
+  title: string,
+  children?: TCategoryItem[]
+}
+
 export type TCategoriesState = {
-  items: any[],
-  roots: any[],
+  items: TCategoryItem[],
+  roots: TCategoryItem[],
   wait: boolean,
   errors: any,
 }

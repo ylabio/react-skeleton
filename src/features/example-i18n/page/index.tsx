@@ -1,5 +1,5 @@
 import {memo} from 'react';
-import Head from "@src/ui/navigation/head";
+import Head from "@src/ui/layout/head";
 import MainMenu from "@src/features/navigation/components/main-menu";
 import PageLayout from "@src/ui/layout/page-layout";
 import LocaleSelect from "@src/features/example-i18n/components/locale-select";

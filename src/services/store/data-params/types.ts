@@ -11,7 +11,7 @@ export interface DefaultParams {
   // Сортировка
   sort: string,
   // Поисковый запрос (фильтр по строке)
-  query: string
+  // query: string
 }
 
 export type TDataParamsState<Data, Params> = {

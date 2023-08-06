@@ -6,13 +6,13 @@ import {IApiService, TEndpointsNames} from "./types";
 /**
  * Базовый (абстрактный) класс точки доступа к АПИ
  */
-abstract class Endpoint<Config = AxiosRequestConfig> {
+abstract class Endpoint<Config extends AxiosRequestConfig = AxiosRequestConfig> {
   services: TServices;
   api: IApiService;
   config: Config;
   name: TEndpointsNames;
 
-  constructor(config: Config | unknown, services: TServices, name: TEndpointsNames) {
+  constructor(config: Patch<Config>, services: TServices, name: TEndpointsNames) {
     this.services = services;
     this.api = this.services.api;
     this.config = mc.patch(this.defaultConfig(), config);
@@ -30,22 +30,22 @@ abstract class Endpoint<Config = AxiosRequestConfig> {
    * Конфигурация по умолчанию.
    * Переопределяется общими параметрами сервиса api и параметрами из конфига экземпляра
    */
-  defaultConfig(): Config | AxiosRequestConfig {
+  defaultConfig(): Config {
     return {
       url: `/api/v1/${this.name}`,
       //baseURL: '',
       //headers: {},
       //auth:{} base auth
-    };
+    } as Config;
   }
 
   /**
    * Запрос
    * @return {*}
    */
-  request(options: Config | AxiosRequestConfig) {
+  request(options: Config) {
     // Учитываются опции модуля и переданные в аргументах
-    return this.api.request(mc.merge(this.config, options));
+    return this.api.request(mc.merge(this.config, options as Patch<Config>));
   }
 }
 

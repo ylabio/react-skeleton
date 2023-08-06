@@ -1,6 +1,6 @@
-import {TServicesConfig} from "@src/services/types";
+import { TServicesConfigPatches} from "@src/services/types";
 
-export default (env : ImportMetaEnv): TServicesConfig => ({
+export default (env : ImportMetaEnv): TServicesConfigPatches => ({
   api: {
     default: {
       // Обычно хост на апи относительный и используется прокси для устранения CORS
@@ -13,7 +13,7 @@ export default (env : ImportMetaEnv): TServicesConfig => ({
     endpoints: {}
   },
   store: {
-    //log: false,
+    log: false,
     // Настройки для конкретных модулей состояния по их названиям
     modules: {
       session: {

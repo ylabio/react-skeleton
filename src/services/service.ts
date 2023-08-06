@@ -14,7 +14,7 @@ abstract class Service<Config = object, Dump = undefined> {
    * @param services Менеджер сервисов
    * @param env
    */
-  constructor(config: Config | unknown, services: TServices, env: ImportMetaEnv) {
+  constructor(config: Patch<Config>, services: TServices, env: ImportMetaEnv) {
     this.services = services;
     this.env = env;
     this.config = mc.patch(this.defaultConfig(env), config) as Config;

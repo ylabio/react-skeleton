@@ -1,5 +1,8 @@
 {
-  "title": "List & filter"
+  "title": "List & filter",
+  "filter": {
+    "reset": "Reset"
+  }
 }
 
 

@@ -5,21 +5,21 @@ import {
   TServicesImports,
   TServicesConstructors,
   TServices,
-  TServicesConfig
+  TServicesConfigPatches, TServicesConfig
 } from './types';
 
 export const services: TServicesImports = allServices;
 
 class Services {
   private list: TServices;
-  private configs: TServicesConfig;
+  private configs: TServicesConfigPatches;
   private classes: TServicesConstructors;
   private proxy: TServices;
   private initialState: Map<TServiceName, unknown>;
   private env: ImportMetaEnv;
 
   constructor(env : ImportMetaEnv) {
-    this.configs = {} as TServicesConfig;
+    this.configs = {} as TServicesConfigPatches;
     this.list = {} as TServices;
     this.classes = {} as TServicesConstructors;
     this.env = env;
@@ -43,7 +43,7 @@ class Services {
    * @param configs Общая конфигурация на все сервисы
    * @returns {Services} Возвращается прокси на доступ к сервисам по их названию
    */
-  async init(configs: TServicesConfig | TServicesConfig[]) {
+  async init(configs: TServicesConfigPatches | TServicesConfigPatches[]) {
     this.configure(configs);
     // Подготовка начального состояния сервисов, если оно есть
     await this.initInitialState();
@@ -67,7 +67,7 @@ class Services {
    * @param configs {Object|Array<Object>} Массив с объектами опций.
    * @returns {Services}
    */
-  configure(configs: TServicesConfig | TServicesConfig[]) {
+  configure(configs: TServicesConfigPatches | TServicesConfigPatches[]) {
     if (!Array.isArray(configs)) configs = [configs];
     for (let i = 0; i < configs.length; i++) {
       this.configs = mc.merge(this.configs, configs[i]);
@@ -80,13 +80,14 @@ class Services {
    * Сервис создаётся в единственном экземпляре и при первом обращении инициализируется
    * @return {*}
    */
-  get<T extends keyof TServices>(name: T, params = {}): TServices[T] {
+  get<T extends keyof TServices>(name: T): TServices[T] {
     if (!this.list[name]) {
       if (!this.classes[name]) {
         throw new Error(`Unknown service name "${name}"`);
       }
       const Constructor = this.classes[name];
-      this.list[name] = new Constructor(mc.merge(this.configs[name], params), this.proxy, this.env) as TServices[T];
+      const config = this.configs[name];
+      this.list[name] = new Constructor(config as any, this.proxy, this.env) as TServices[T];
       const dump = this.initialState.get(name);
       this.list[name].init(dump);
     }

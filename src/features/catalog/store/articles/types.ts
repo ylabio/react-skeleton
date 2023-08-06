@@ -20,5 +20,6 @@ export interface TArticleData {
 
 export interface TArticleParams extends DefaultParams{
   // Фильтр по категории (идентификатору)
-  category: string
+  category: string,
+  query: string
 }

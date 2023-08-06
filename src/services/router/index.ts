@@ -1,7 +1,7 @@
-import { BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory } from 'history';
+import {BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory} from 'history';
 import qs from 'qs';
 import mc from 'merge-change';
-import { TServices} from '@src/services/types';
+import {TServices} from '@src/services/types';
 import Service from "@src/services/service";
 import {TRouterConfig} from "@src/services/router/types";
 
@@ -10,7 +10,7 @@ import {TRouterConfig} from "@src/services/router/types";
  * Определят вспомогательные методы для создания ссылок и изменениям query параметров адреса.
  * Создаёт объект навигации для React Router с учётом режима рендера (браузер/сервер)
  */
-class RouterService extends Service<TRouterConfig, undefined> {
+class RouterService extends Service<TRouterConfig> {
   readonly history: MemoryHistory | BrowserHistory;
 
   constructor(config: TRouterConfig, services: TServices, env: ImportMetaEnv) {
@@ -39,25 +39,26 @@ class RouterService extends Service<TRouterConfig, undefined> {
     return this.config.basename;
   }
 
-  /**
-   * Создание ссылки с учётом текущего пути и search (query) параметров
-   * @param path Новый путь. Если не указан, то используется текущий
-   * @param searchParams Объект с search параметарами. Обрабтываются также операторы $set, $unset, $leave, $pull, $push при слиянии новых параметров с текущими
-   * @param clearSearch Удалить все текущие search параметры
-   * @returns {string} Итоговая строка для href ссылки
-   */
-  makeHref(path: string, searchParams = {}, clearSearch = false) {
+  makeSearch(search: object, clear = false, prefix = false) {
     const currentParams = this.getSearchParams();
-    const newParams = clearSearch ? searchParams : mc.update(currentParams, searchParams);
-    const search = qs.stringify(newParams, {
-      addQueryPrefix: true,
+    const newParams = clear ? search : {...currentParams, ...search};
+    return qs.stringify(newParams, {
+      addQueryPrefix: prefix,
       arrayFormat: 'comma',
       encode: false,
     });
-    if (!path) {
-      path = this.getPath();
-    }
-    return path + search;
+  }
+
+  /**
+   * Создание ссылки с учётом текущего пути и search (query) параметров
+   * @param search Объект с search параметрами.
+   * @param path Новый путь. Если не указан, то используется текущий
+   * @param clear Удалить все текущие search параметры
+   * @returns Итоговая строка для href ссылки
+   */
+  makeHref(search: object, path?: string, clear = false): string {
+    const newSearch = this.makeSearch(search, clear, true);
+    return (path || this.getPath()) + newSearch + window.location.hash;
   }
 
   /**
@@ -69,11 +70,11 @@ class RouterService extends Service<TRouterConfig, undefined> {
   }
 
   /**
-   * Текущие search параметры, распарсенные из строки
+   * Текущие search параметры, распаренные из строки
    * @returns {*}
    */
   getSearchParams(): any {
-    return qs.parse(this.history.location.search, { ignoreQueryPrefix: true, comma: true }) || {};
+    return qs.parse(this.history.location.search, {ignoreQueryPrefix: true, comma: true}) || {};
   }
 
   /**
@@ -83,15 +84,8 @@ class RouterService extends Service<TRouterConfig, undefined> {
    * @param clear Удалить текущие параметры
    * @param path Новый путь. Если не указан, то используется текущий
    */
-  setSearchParams(params: unknown, push = true, clear = false, path?: string) {
-    const currentParams = this.getSearchParams();
-    const newParams = clear ? params : mc.update(currentParams, params);
-    const newSearch = qs.stringify(newParams, {
-      addQueryPrefix: true,
-      arrayFormat: 'comma',
-      encode: false,
-    });
-    const url = (path || window.location.pathname) + newSearch + window.location.hash;
+  setSearchParams(params: object, push = true, clear = false, path?: string) {
+    const url = this.makeHref(params, path, clear);
     if (push) {
       window.history.pushState({}, '', url);
     } else {

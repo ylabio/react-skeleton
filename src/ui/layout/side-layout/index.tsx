@@ -5,19 +5,29 @@ import './style.less';
 interface Props {
   children?: React.ReactNode;
   side?: 'start' | 'end' | 'between';
+  align?: 'top' | 'middle' | 'baseline' | 'bottom';
   padding?: 'small' | 'medium' | 'none';
+  wrap?: boolean
 }
 
-function SideLayout({children, side, padding}: Props) {
+function SideLayout({children, side = 'start', padding = 'none', align = 'middle', wrap=true}: Props) {
   const cn = bem('SideLayout');
-  return (
-    <div className={cn({side, padding})}>
-      {React.Children.map(children, (child, index) => {
-        const key = isChildWithKey(child) ? child.key : index;
-        return <div key={key} className={cn('item')}>{child}</div>;
-      })}
-    </div>
-  );
+  if (wrap) {
+    return (
+      <div className={cn({side, padding, align})}>
+        {React.Children.map(children, (child, index) => {
+          const key = isChildWithKey(child) ? child.key : index;
+          return <div key={key} className={cn('item')}>{child}</div>;
+        })}
+      </div>
+    );
+  } else {
+    return (
+      <div className={cn({side, padding, align})}>
+        {children}
+      </div>
+    );
+  }
 }
 
 interface ChildWithKey {

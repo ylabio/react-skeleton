@@ -8,11 +8,11 @@ declare module '*.html' {
 declare module 'merge-change' {
   interface MergeChange {
     // Патч первого объекта с его мутацией
-    patch<A>(first: A, ...values: (A | Partial<A> | PartialRecursive<A> | Patch<A>)[]): any;
+    patch<A>(first: A, ...values: Patch<A>[]): A;
     // Создание нового объекта на основе первого слиянием в глубину остальных
-    merge<A>(first: A, ...values: (A | Partial<A> | PartialRecursive<A> | Patch<A>)[]): any;
+    merge<A>(first: A, ...values: Patch<A>[]): A;
     // Создание нового объекта, если есть изменениям после слиянием в глубину остальных объектов
-    update<A>(first: A, ...values: (A | Partial<A> | PartialRecursive<A> | Patch<A>)[]): any;
+    update<A>(first: A, ...values: Patch<A>[]): A;
   }
 
   const mc: MergeChange;

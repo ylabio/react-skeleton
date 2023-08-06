@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import './style.less';
 
-interface Props<Value extends string | number> {
+interface Props<Value extends string> {
   options: {
     value: Value,
     title: string,
@@ -10,7 +10,7 @@ interface Props<Value extends string | number> {
   onChange?: (value: Value) => void
 }
 
-function Select<Value extends string | number>(props: Props<Value>) {
+function Select<Value extends string>(props: Props<Value>) {
 
   const onSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
     if (props.onChange) props.onChange(e.target.value as Value);

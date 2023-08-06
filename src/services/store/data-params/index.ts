@@ -9,7 +9,8 @@ import {
 import StoreModule from "@src/services/store/module";
 import {TServices} from "@src/services/types";
 import {TStoreModuleKey, TStoreModuleName} from "@src/services/store/types";
-import {ValidateFunction, SchemaObject} from "ajv";
+import {JSONSchemaType, ValidateFunction} from 'ajv';
+import {PartialDeep} from 'type-fest';
 
 /**
  * Данные и параметры, от которых напрямую зависят данные.
@@ -24,17 +25,19 @@ abstract class DataParamsState<
   Params extends DefaultParams = DefaultParams,
   Config extends DefaultConfig = DefaultConfig
 > extends StoreModule<TDataParamsState<Data, Params>, Config> {
-
-  protected validator: ValidateFunction;
+  /**
+   * Валидация параметров
+   */
+  readonly validateParams: ValidateFunction<PartialDeep<Params>>;
 
   constructor(
-    config: PartialDeep<Config>,
+    config: Patch<Config>,
     services: TServices,
     env: ImportMetaEnv,
     name: TStoreModuleKey<TStoreModuleName>
   ) {
     super(config, services, env, name);
-    this.validator = this.services.validator.make(this.schemaParams());
+    this.validateParams = this.services.validator.make(this.paramsSchema());
   }
 
   override defaultConfig(env: ImportMetaEnv): Config {
@@ -58,15 +61,31 @@ abstract class DataParamsState<
   }
 
   /**
+   * Схема валидации сохраняемых (экспортируемых) параметров
+   */
+  paramsSchema(): JSONSchemaType<PartialDeep<Params>> {
+    return {
+      type: 'object',
+      properties: {
+        limit: {type: 'integer', minimum: 1},
+        page: {type: 'integer', minimum: 1},
+        sort: {type: 'string'},
+      },
+      required: [],
+      additionalProperties: false
+    } as JSONSchemaType<Params>;
+  }
+
+  /**
    * Инициализация и восстановление параметров
    * @param newParams Корректировка параметров по-умолчанию и восстановленных из адреса
    * @param options Опции, влияющие на логику смены параметров и загрузку новых данных
    */
-  async initParams(newParams: PartialDeep<Params>, options: SetParamsOptions = {}) {
+  async initParams(newParams: Patch<Params>, options: SetParamsOptions = {}) {
     // Параметры из URL (query string)
-    const restoreParams = this.restoreParams();
+    const restoreParams = this.restoreParams() as Patch<Params>;
     // Сливаем все параметры
-    const params = mc.merge(this.defaultState().params, restoreParams, newParams);
+    const params = mc.merge(this.defaultState().params, restoreParams, newParams) as Patch<Params>;
     // Установка параметров и загрузка данных по ним
     return this.setParams(params, {push: false, load: true, ...options});
   }
@@ -76,7 +95,7 @@ abstract class DataParamsState<
    * @param newParams Корректировка параметров по-умолчанию
    * @param options Опции, влияющие на логику смены параметров и загрузку новых данных
    */
-  async resetParams(newParams: PartialDeep<Params>, options: SetParamsOptions = {}) {
+  async resetParams(newParams: Patch<Params>, options: SetParamsOptions = {}) {
     // Сливаем с параметрами по умолчанию
     const params = {...this.defaultState().params, ...newParams};
     // Установка параметров и загрузка данных по ним
@@ -111,7 +130,7 @@ abstract class DataParamsState<
         }, 'Установка параметров и статуса ожидания');
       }
       //  Сохранить параметры
-      if (this.config.rememberParams) this.saveParams(this.urlParams(params), {push: options.push});
+      if (this.config.rememberParams) this.saveParams(options.push);
 
       // Загрузка данные по новым параметрам
       if (options.load) {
@@ -137,46 +156,42 @@ abstract class DataParamsState<
   }
 
   /**
-   * Схема валидации восстановленных параметров
+   * Экспортирование параметров, например для сохранения или использования в URL
+   * Результатом являются параметры скорректированные/отфильтрованные валидатором по схеме
+   * и сгруппированные под именем модуля состояния.
+   * @param params
+   * @param mergeWithCurrent
    */
-  protected schemaParams(): SchemaObject {
-    return {
-      type: 'object',
-      properties: {
-        limit: {type: 'integer', minimum: 1},
-        page: {type: 'integer', minimum: 1},
-        sort: {type: 'string'},
-      },
-    };
+  exportParams(params: Params | Patch<Params>, mergeWithCurrent = false){
+    if (mergeWithCurrent) params = mc.merge(this.state.params, params as Patch<Params>) as Params;
+    // Исключение параметров, у которых значение по умолчанию
+    let searchParams = exclude(params, this.defaultState().params) as PartialDeep<Params>;
+    if (!this.validateParams(searchParams)) searchParams = {} as PartialDeep<Params>;
+    // Если валидация пройдена, то searchParams скорректирован по схеме
+    // Параметры группируются под именем модуля
+    return {[this.name]: searchParams};
   }
 
   /**
-   * Параметры для сохранения в url search
-   * @param params Исходные параметры из состояния
-   */
-  protected urlParams(params: Params): PartialDeep<Params> {
-    return params as PartialDeep<Params>;
-  }
-
-  /**
-   * Сохранение параметров
-   * @param urlParams Параметры для сохранения
+   * Сохранение текущих параметров в history api (в search параметр адреса)
    * @param push
    */
-  protected saveParams(urlParams: PartialDeep<Params>, {push = true}) {
-    const savedParams = exclude(urlParams, this.defaultState().params);
-    this.services.router.setSearchParams({[this.name]: savedParams}, push);
+  protected saveParams(push = true) {
+    const savedParams = this.exportParams(this.state.params, false);
+    this.services.router.setSearchParams(savedParams, push);
   }
 
   /**
-   * Восстановление параметров
+   * Восстановление параметров из адреса страницы (из search параметра адреса)
    */
   protected restoreParams(): PartialDeep<Params> {
+    // Распарсенные параметры берутся по названию модуля состояния, так группировались по его имени
     const searchParams = this.services.router.getSearchParams()[this.name];
-    if (!searchParams || !this.validator(searchParams)) {
-      return this.defaultState().params as PartialDeep<Params>;
+    // После успешной валидации в searchParams останутся только допустимые параметры
+    if (searchParams && this.validateParams(searchParams)) {
+      return searchParams;
     }
-    return (searchParams || {}) as PartialDeep<Params>;
+    return {} as PartialDeep<Params>;
   }
 
   /**
@@ -188,9 +203,6 @@ abstract class DataParamsState<
       limit: params.limit,
       skip: (params.page - 1) * params.limit,
       sort: params.sort,
-      filter: {
-        query: params.query
-      }
     };
   }
 

@@ -25,5 +25,9 @@ export type TServices = {
  * Настройки всех сервисов
  */
 export type TServicesConfig = {
-  [P in TServiceName]?: ReturnType<TServices[P]['defaultConfig']>
+  [P in TServiceName]: ReturnType<TServices[P]['defaultConfig']>
+}
+
+export type TServicesConfigPatches = {
+  [P in TServiceName]?: Patch<TServicesConfig[P]>
 }

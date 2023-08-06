@@ -19,15 +19,17 @@ export type TEndpoints = {
   [P in TEndpointsNames]: InstanceType<TEndpointsContructors[P]>
 }
 
+export type TEndpointsConfigs = {
+  [P in TEndpointsNames]: ReturnType<TEndpoints[P]['defaultConfig']>
+}
+
 /**
  * Настройки сервиса АПИ и его модулей
  */
 export type TApiConfig = {
   default: AxiosRequestConfig,
   // Настройки для конкретных модулей api по их названию
-  endpoints: {
-    [P in TEndpointsNames]?: ReturnType<TEndpoints[P]['defaultConfig']>
-  }
+  endpoints: TEndpointsConfigs
 }
 
 /**

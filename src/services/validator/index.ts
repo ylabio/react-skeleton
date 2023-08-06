@@ -1,14 +1,14 @@
-import Ajv, {SchemaObject} from "ajv";
+import Ajv, {JSONSchemaType, ValidateFunction} from "ajv";
 import {TServices} from "@src/services/types";
 import Service from "@src/services/service";
 
 /**
  * Сервис для валидации по схеме
  */
-class ValidatorService extends Service<unknown, undefined>{
+class ValidatorService extends Service{
   private ajv: Ajv;
 
-  constructor(config: unknown, services: TServices, env: ImportMetaEnv) {
+  constructor(config: object, services: TServices, env: ImportMetaEnv) {
     super(config, services, env);
     this.ajv = new Ajv({
       //strict: false,
@@ -24,11 +24,12 @@ class ValidatorService extends Service<unknown, undefined>{
 
   /**
    * Создание функции валидации по JSONSchema
-   * @param schema JSONSchema
+   * @param schema JSON схема
    */
-  make(schema: SchemaObject){
+  make<T>(schema: JSONSchemaType<T>): ValidateFunction<T>{
     return this.ajv.compile(schema);
   }
 }
 
 export default ValidatorService;
+

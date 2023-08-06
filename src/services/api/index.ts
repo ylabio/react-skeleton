@@ -12,7 +12,7 @@ import {
  * Обертка над библиотекой axios для осуществления http запросов
  * Позволяет разнести слой АПИ на модули (endpoints)
  */
-class ApiService extends Service<TApiConfig, undefined> {
+class ApiService extends Service<TApiConfig> {
   private _endpoints: TEndpoints;
   private _axios: AxiosInstance;
 
@@ -66,7 +66,7 @@ class ApiService extends Service<TApiConfig, undefined> {
   /**
    * Запрос
    */
-  request(options: AxiosRequestConfig) {
+  request<R extends AxiosRequestConfig>(options: R) {
     // Учитываются опции модуля и переданные в аргументах
     return this.axios.request(options);
   }
