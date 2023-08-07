@@ -1,8 +1,8 @@
 import React, {memo, useCallback, useMemo} from "react";
+import {Link, useLocation} from "react-router-dom";
 import {MenuItem} from "@src/ui/navigation/menu/types";
 import SideLayout from "@src/ui/layout/side-layout";
 import Menu from "@src/ui/navigation/menu";
-import {Link, useLocation} from "react-router-dom";
 import detectActive from "@src/features/navigation/detect-active";
 import {useTranslate} from "@src/services/i18n/use-i18n";
 

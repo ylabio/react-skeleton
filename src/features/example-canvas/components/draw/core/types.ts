@@ -1,3 +1,5 @@
+import Figure from "@src/features/example-canvas/components/draw/core/elements/figure";
+
 export type ScrollParams = {
   x?: number,
   y?: number,
@@ -27,6 +29,7 @@ export type Action = {
   name: string,
   x: number,
   y: number,
-  scrollX: number,
-  scrollY: number
+  targetX: number,
+  targetY: number,
+  element?: Figure
 };

@@ -1,5 +1,6 @@
 import {Action, ScrollParams, ZoomParams} from "@src/features/example-canvas/components/draw/core/types";
 import Figure from "@src/features/example-canvas/components/draw/core/elements/figure";
+import Leaf from "@src/features/example-canvas/components/draw/core/elements/leaf";
 
 class Core {
   // DOM элемент, в котором будет создана канва
@@ -25,7 +26,9 @@ class Core {
   action: Action | null = null;
 
   constructor() {
-    this.elements.push(new Figure(100,100, 200, 300));
+    for (let i=0; i <70; i++){
+      this.elements.push(new Leaf());
+    }
   }
 
   /**
@@ -143,34 +146,91 @@ class Core {
     });
   }
 
+  /**
+   * Поиск элемента по точке
+   * @param x
+   * @param y
+   */
+  findElementByPont({x, y}: {x: number, y: number}){
+    const sorted = this.elements.sort((a,b)=>{
+      if (a.zIndex < b.zIndex) return 1;
+      if (a.zIndex > b.zIndex) return -1;
+      return 0;
+    });
+    for (const element of sorted){
+      if (element.isIntersectRect({x1: x-1, y1: y-1, x2: x+1, y2: y+2})){
+        return element;
+      }
+    }
+    return null;
+  }
+
   onMouseDown = (e: MouseEvent) => {
-    // Активация действия scroll
-    // @todo Если проверяем попадание курсора в фигуру, то при успехе активация действия перемещения конкретной фигуры
-    this.action = {
-      name: 'scroll',
-      // Координата, с которой начинаем расчёт смещения
-      x: e.clientX - this.metrics.left,
-      y: e.clientY - this.metrics.top,
-      // Запоминаем исходное смещение, чтобы к нему добавлять расчётное
-      scrollX: this.metrics.scrollX,
-      scrollY: this.metrics.scrollY
+    // Курсор с учётом масштабирования и скролла
+    const point = {
+      x: ((e.clientX - this.metrics.left) + this.metrics.scrollX) / this.metrics.zoom,
+      y: ((e.clientY - this.metrics.top) + this.metrics.scrollY) / this.metrics.zoom,
     };
+    // Поиск фигуры по точке
+    const element = this.findElementByPont(point);
+
+    if (element){
+      // Перемещение фигуры (drag&drop)
+      this.action = {
+        name: 'drag',
+        element,
+        // Координата, с которой начинаем расчёт смещения
+        x: point.x,
+        y: point.y,
+        // Координаты фигуры
+        targetX: element.x,
+        targetY: element.y
+      };
+      element.setPause(true);
+    } else {
+      // Перемещение канвы (scroll)
+      this.action = {
+        name: 'scroll',
+        // Координата, с которой начинаем расчёт смещения (учитывать зум не нужно)
+        x: e.clientX - this.metrics.left,
+        y: e.clientY - this.metrics.top,
+        // Запоминаем исходное смещение, чтобы к нему добавлять расчётное
+        targetX: this.metrics.scrollX,
+        targetY: this.metrics.scrollY
+      };
+    }
   };
 
   onMouseMove = (e: MouseEvent) => {
-    // Обработка действия scroll
-    if (this.action && this.action.name === 'scroll') {
-      // можно e.offsetY вместо e.clientY - this.metrics.top, но если курсор окажется вне канвы, то будет глюк
-      const dx = e.clientX - this.metrics.left - this.action.x;
-      const dy = e.clientY - this.metrics.top - this.action.y;
-      this.scroll({
-        x: this.action.scrollX - dx,
-        y: this.action.scrollY - dy,
-      });
+    // Курсор с учётом масштабирования и скролла
+    const point = {
+      x: ((e.clientX - this.metrics.left) + this.metrics.scrollX) / this.metrics.zoom,
+      y: ((e.clientY - this.metrics.top) + this.metrics.scrollY) / this.metrics.zoom,
+    };
+    if (this.action) {
+      if (this.action.name === 'drag' && this.action.element) {
+        this.action.element.setPosition({
+          x: this.action.targetX + point.x - this.action.x,
+          y: this.action.targetY + point.y - this.action.y,
+        });
+      }
+      // Обработка действия scroll
+      if (this.action.name === 'scroll') {
+        // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
+        this.scroll({
+          x: this.action.targetX - ((e.clientX - this.metrics.left) - this.action.x),
+          y: this.action.targetY - ((e.clientY - this.metrics.top) - this.action.y),
+        });
+      }
     }
   };
 
   onMouseUp = (e: MouseEvent) => {
+    if (this.action) {
+      if (this.action.name === 'drag' && this.action.element) {
+        this.action.element.setPause(false);
+      }
+    }
     // Сброс активного действия
     this.action = null;
   };
@@ -211,8 +271,14 @@ class Core {
 
       // Метка времени, чтобы все элементы рассчитали анимацию относительно неё
       const time = performance.now();
+      // Сортировка для рендера в порядке zIndex (todo нужно заранее готовить что рендерить и в каком порядке)
+      const sorted = this.elements.sort((a,b)=>{
+        if (a.zIndex > b.zIndex) return 1;
+        if (a.zIndex < b.zIndex) return -1;
+        return 0;
+      });
 
-      for (const element of this.elements) {
+      for (const element of sorted) {
         // Анимация элемента
         element.animate(time);
         // Рисование элемента, если попадает в видимую область

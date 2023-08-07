@@ -42,6 +42,7 @@
     "react-router-dom": "^6.14.2",
     "replacestream": "^4.0.3",
     "shallowequal": "^1.1.0",
+    "simplex-noise": "^4.0.1",
     "type-fest": "^4.1.0",
     "uniqid": "^5.4.0"
   },

@@ -1,7 +1,7 @@
 import {memo} from 'react';
+import {useParams} from 'react-router-dom';
 import useI18n from "@src/services/i18n/use-i18n";
 import useInit from '@src/services/use-init';
-import {useParams} from 'react-router-dom';
 import useServices from '@src/services/use-services';
 import useRefreshKey from "@src/services/router/use-refresh-key";
 import Head from "@src/ui/layout/head";
@@ -25,12 +25,12 @@ function CatalogPage() {
   const refreshKey = useRefreshKey('refreshArticles');
 
   useInit(async () => {
-    // Инициализация параметров для начально выборки по ним
+    // Инициализация параметров каталога
     await store.modules.articles.initParams({category: categoryId, page: 1});
   }, [categoryId, locale, refreshKey], {ssr: 'articles.init'});
 
   useInit(async () => {
-    // await services.store.modules.categories.load({fields: '*', limit: 1000});
+    // Загрузка списка категорий
     await store.modules.categories.load({fields: '*', limit: 1000});
   }, [locale], {ssr: 'categories.load'});
 

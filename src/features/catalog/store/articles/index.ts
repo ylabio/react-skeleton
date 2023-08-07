@@ -2,10 +2,7 @@ import mc from 'merge-change';
 import exclude from "@src/utils/exclude";
 import DataParamsState from "@src/services/store/data-params";
 import {FindQuery} from "@src/services/api/crud/types";
-import {
-  TArticleData,
-  TArticleParams
-} from "@src/features/catalog/store/articles/types";
+import {TArticleData, TArticleParams} from "@src/features/catalog/store/articles/types";
 import {TDataParamsState} from "@src/services/store/data-params/types";
 import {JSONSchemaType} from 'ajv';
 
@@ -43,7 +40,7 @@ class ArticlesState extends DataParamsState<TArticleData, TArticleParams> {
 
   /**
    * Параметры для АПИ запроса
-   * @param params Параметры состония
+   * @param params Параметры состояния
    */
   protected override apiParams(params: TArticleParams): FindQuery {
     const apiParams = mc.patch(super.apiParams(params), {

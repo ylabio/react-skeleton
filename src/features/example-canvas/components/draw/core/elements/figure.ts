@@ -7,8 +7,9 @@ class Figure {
   height: number = 10;
   angle: number = 10;
   time: number = performance.now();
+  pause: boolean = false;
 
-  constructor(x: number, y: number, width: number, height: number) {
+  constructor(x: number = 0, y: number = 0, width: number = 10, height: number = 10) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -22,6 +23,16 @@ class Figure {
     // Изменение угла без укореняем
     this.angle += 5;
     if (this.angle > 360 || this.angle < -360) this.angle = 0;
+  }
+
+  setPause(pause = true){
+    this.pause = pause;
+    this.time = performance.now();
+  };
+
+  setPosition({x, y}: {x: number, y: number}){
+    this.x = x;
+    this.y = y;
   }
 
   /**
@@ -46,6 +57,10 @@ class Figure {
       bound.x1 <= rect.x2 && bound.x2 >= rect.x1 &&
       bound.y1 <= rect.y2 && bound.y2 >= rect.y1
     );
+  }
+
+  get zIndex(){
+    return 0;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
