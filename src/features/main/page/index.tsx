@@ -13,13 +13,6 @@ function Main() {
       <MainMenu/>
       <h2>{t('main.page.title')}</h2>
       <p>{t('main.page.content')}</p>
-      {/*<ul>*/}
-      {/*  <li>/app</li>*/}
-      {/*  <li>/features</li>*/}
-      {/*  <li>/services</li>*/}
-      {/*  <li>/ui - библиотека глупых компонент для разметки интерфейса. Часто дополняется сторонними библиотеками - Material Design, And Design или другими</li>*/}
-      {/*  <li>/utils</li>*/}
-      {/*</ul>*/}
     </PageLayout>
   );
 }

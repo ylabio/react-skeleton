@@ -1,5 +1,6 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import './html.less';
 import './style.less';
 
 interface Props {

@@ -4,8 +4,8 @@ import randomItem from "@src/utils/random-item";
 import leafsImages from './img/export';
 import roundRange from "@src/utils/round-range";
 
-const maxX = 1500; // По сути ширина канвы, чтобы случайное число растянуть плавно на размер канвы
-const maxY = 800;
+const maxX = 500; // По сути ширина канвы, чтобы случайное число растянуть плавно на размер канвы
+const maxY = 500;
 const maxH = 100; // Максимальный размер фигуры, чтобы от размера плавно зависела случайность
 
 class Leaf extends Figure {
@@ -54,8 +54,8 @@ class Leaf extends Figure {
     // Новый собственный шум
     this.noise = createNoise2D();
     // Новая начальная координата
-    this.x = Math.random() * maxX;
-    this.y = -(Math.random() * maxY * 100 + maxH * 2);
+    this.x = Math.random() * 1500;
+    this.y = -(Math.random() * 800 + 200);
     this.scale = Math.random() * 0.01;
     this.width = this.image.width * this.scale;
     this.height = this.image.height * this.scale;
@@ -83,7 +83,7 @@ class Leaf extends Figure {
       const randomS = Leaf.noiseS(this.x / maxX, this.y / maxY) * random;
       const randomA = Leaf.noiseA(this.x / maxX, this.y / maxY) * random;
 
-      if (this.y < maxY && this.y > -maxY && this.x > -500 && this.x < maxX + 500) {
+      if (this.y < 1000 && this.y > -800 && this.x > -500 && this.x < 2000) {
         this.aX = randomX * 500;
         this.aY = randomY + 50; /// Сдвиг к положительному, чтобы вверх реже летали
         this.aS = randomS / 600;
