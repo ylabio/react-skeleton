@@ -8,29 +8,38 @@ import clientConfig from '@src/config';
 
 export default async function root(envPartial: Partial<ImportMetaEnv> = {}): Promise<RootFabricResult> {
   const env: ImportMetaEnv = {...import.meta.env, ...envPartial};
-  // Инициализация менеджера сервисов
+  // Менеджер сервисов
   const servicesManager = new Services(env);
   // Через services получаем доступ к store, api, i18n и всем другим сервисам
   const services = await servicesManager.init(clientConfig(env));
-  // Контекст для метаданных html
-  const head = {};
+  // Контекст для Helmet
+  const helmetCtx = {} as { helmet: HelmetServerState };
 
   const Root = () => (
     <ServicesProvider services={services}>
       <RouterProvider router={services.router}>
-        <HelmetProvider context={head}>
+        <HelmetProvider context={helmetCtx}>
           <App/>
         </HelmetProvider>
       </RouterProvider>
     </ServicesProvider>
   );
-  return {Root, servicesManager, head};
-};
 
-export type RootFabricResult = {
-  Root: React.FunctionComponent,
-  servicesManager: Services,
-  head: {
-    hemlet?: HelmetServerState
-  }
-};
+  const ssr: ServerSideRenderInjections = {
+    htmlAttr: () => helmetCtx.helmet.htmlAttributes.toString(),
+    bodyAttr: () => helmetCtx.helmet.bodyAttributes.toString(),
+    titleTag: () => helmetCtx.helmet.title.toString(),
+    insertHead: () => {
+      return helmetCtx.helmet.meta.toString() +
+        helmetCtx.helmet.link.toString() +
+        helmetCtx.helmet.script.toString() +
+        helmetCtx.helmet.noscript.toString() +
+        helmetCtx.helmet.style.toString();
+    },
+    dump: () => {
+      return servicesManager.collectDump();
+    }
+  };
+
+  return {Root, servicesManager, ssr};
+}
