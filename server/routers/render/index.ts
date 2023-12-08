@@ -1,14 +1,13 @@
 import React from "react";
 import {renderToPipeableStream} from "react-dom/server";
 import reactTemplate from "../../utils/react-template";
-import streamHelmet from "../../utils/stream-helmet";
+import streamHtmlReplace from "../../utils/stream-html-replace";
 import {createServer as createViteServer} from "vite";
 import fs from "fs";
 import path from "path";
 import {IRouteContext} from "../../types";
 import {Request, Response} from "express";
 import {fileURLToPath} from "url";
-import {HelmetServerState} from "react-helmet-async";
 
 /**
  * SSR - рендер React приложения в HTML
@@ -32,6 +31,7 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
   // React приложение для ренедра. В режиме разработки импортируются исходники через Vite
   const root = vite
     ? (await vite.ssrLoadModule('../src/root.tsx')).default
+    // @ts-ignore
     : (await import('../../../dist/server/root.js')).default;
 
   // HTML шаблон
@@ -64,20 +64,18 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
       return;
     }
 
-    // @todo Если есть кэш, то отдать его. Предусмотреть, что состояние тоже было запомнено (возможно, отдельно и временно помещается в initialStore)
-
     // Секрет для идентификации дампа от всех сервисов
     const secret = initialStore.makeSecretKey();
 
     // Корневой React компонент, сервис менеджер приложения и контекст с мета-данными html
-    const {Root, servicesManager, head} = await root({
+    const {Root, ssr} = await root({
       ...env,
       req: {
         url: req.originalUrl,
         headers: req.headers,
         cookies: req.cookies
       }
-    });
+    }) as RootFabricResult;
 
     // HTML шаблон конвертирует в ReactNode со вставкой в него компонента приложения.
     // Из шаблона вычленяются скрипты, чтобы отдать их в потоке, но после html разметки.
@@ -98,30 +96,16 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
       bootstrapScriptContent: `window.initialKey="${secret.key}"`,
       bootstrapModules: modules,
       bootstrapScripts: scripts,
-      // Частичный рендер требует отдачи состояния вместе с каждым патчем (не реализовано)
-      // onShellReady() {
-      //   if (config.render.partial) {
-      //     sendHeaders(res);
-      //     pipe(res);
-      //   }
-      // },
-      // onShellError(error) {
-      //   res.writeHead(500, {'Content-Type': 'text/html; charset=utf-8'});
-      //   res.send('<h1>Something went wrong</h1>');
-      //   if (vite) vite.ssrFixStacktrace(error as Error);
-      //   console.error(error);
-      // },
       onAllReady() {
-        // if (!config.render.partial) {
         sendHeaders(res);
-        if ('helmet' in head) {
-          streamHelmet(pipe, head.helmet as HelmetServerState).pipe(res);
+        if (ssr) {
+          // Подмешивание разметки в итоговый рендер
+          streamHtmlReplace(pipe, ssr).pipe(res);
+          // Дамп данных, с которыми выполнен рендер, запоминается в initialStore
+          initialStore.remember(secret, ssr.dump);
+        } else {
+          pipe(res);
         }
-        // @todo Если нужно кэшировать, то понадобится читать поток рендера
-        // @todo Дамп также кэшируется, а не запомианется надолго в initialStore
-        /// }
-        // Дамп всех сервисов запоминается в initialStore
-        initialStore.remember(secret, servicesManager.collectDump());
       },
       onError(error) {
         didError = true;

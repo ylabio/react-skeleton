@@ -58,7 +58,7 @@ class RouterService extends Service<TRouterConfig> {
    */
   makeHref(search: object, path?: string, clear = false): string {
     const newSearch = this.makeSearch(search, clear, true);
-    return (path || this.getPath()) + newSearch + window.location.hash;
+    return (path || this.getPath()) + newSearch + (this.env.SSR ? '' : window.location.hash);
   }
 
   /**
@@ -85,6 +85,7 @@ class RouterService extends Service<TRouterConfig> {
    * @param path Новый путь. Если не указан, то используется текущий
    */
   setSearchParams(params: object, push = true, clear = false, path?: string) {
+    if (this.env.SSR) return;
     const url = this.makeHref(params, path, clear);
     if (push) {
       window.history.pushState({}, '', url);
@@ -98,6 +99,7 @@ class RouterService extends Service<TRouterConfig> {
    * @param push Способ обновления Location.search. Если false, то используется window.history.replaceState()
    */
   clearSearchParams(push = true) {
+    if (this.env.SSR) return;
     const url = window.location.pathname + window.location.hash;
     if (push) {
       window.history.pushState({}, '', url);

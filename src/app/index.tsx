@@ -26,7 +26,7 @@ function App() {
     <>
       <Helmet>
         <html lang="en"/>
-        <title>Example</title>
+        <title>React Skeleton!</title>
         <meta name="description" content="React skeleton example"/>
       </Helmet>
       <Suspense fallback={<Loading/>}>

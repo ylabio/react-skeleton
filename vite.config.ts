@@ -10,8 +10,15 @@ export default defineConfig(params => {
     root: 'src',
     base: env.BASE_URL,
     build: {
-      outDir: params.ssrBuild ? '../dist/server' : '../dist/client',
+      outDir: params.isSsrBuild ? '../dist/server' : '../dist/client',
       emptyOutDir: true,
+      cssCodeSplit: false
+    },
+    ssr: {
+      // Названия пакетов, которые нужно добавить в сборку при SSR вместо импорта из node_modules
+      noExternal: [
+        'react-helmet-async'
+      ]
     },
     resolve: {
       alias: {

@@ -32,7 +32,8 @@ function ArticleList() {
       </ul>
       <Pagination
         count={articles.data.count} page={articles.params.page} limit={articles.params.limit}
-        onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
+        onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}
+      />
     </Spinner>
   );
 }
