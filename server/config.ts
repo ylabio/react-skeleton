@@ -1,4 +1,5 @@
 import {IServerConfig} from "./types";
+import proxyConfig from "../proxy.config";
 
 export default (env: ImportMetaEnv): IServerConfig => {
   const config: IServerConfig = {
@@ -9,13 +10,14 @@ export default (env: ImportMetaEnv): IServerConfig => {
     },
     proxy: {
       enabled: true,//env.PROD, //В dev режиме работает прокси Vite(в режиме middleware), но у него ошибка на POST запросы, поэтому включен свой прокси
-      routes: {}
+      routes: proxyConfig(env)
     },
     render: {
       enabled: true, // Если отключить, то будет отдаваться SPA
       timeout: 5000, // Если долго рендерится, то будет отдаваться SPA
       cache: {
-        lifetime: 5 * 60 * 1000 // Время актуальности кэша в ms
+        lifeTime: 15 * 60 * 1000, // Время актуальности кэша в ms (15 минут) для обновления в фоне
+        trashTime: 24 * 60 * 60 * 1000 // Время очень старого кэша в ms (24 часа)
       }
     },
   };

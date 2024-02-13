@@ -24,7 +24,8 @@
     "noImplicitThis": true
   },
   "files": [
-    "./typings/env.d.ts"
+    "./typings/env.d.ts",
+    "proxy.config.ts"
   ],
   "ts-node": {
     "esm": true,

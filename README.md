@@ -82,6 +82,10 @@ server: {
 - /dist
 - /node_modules
 - /server
+- /typings
+- tsconfig.json
+- package.json
+- proxy.config.ts
 ```
 
 Если сервер рендера (SSR) не нужен, то переносится только `/dist/client`

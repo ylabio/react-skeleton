@@ -109,7 +109,7 @@ export default async ({app, cacheStore, config, env}: IRouteContext) => {
     };
 
     // Если есть кэш, то отдаём его
-    if (cacheStore.isExists(cacheKey)) {
+    if (cacheStore.isExists(cacheKey) && !cacheStore.isWaiting(cacheKey)) {
       send();
     }
 
