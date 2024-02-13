@@ -26,7 +26,7 @@ function CatalogPage() {
 
   useInit(async () => {
     // Инициализация параметров каталога
-    await store.modules.articles.initParams({category: categoryId, page: 1});
+    await store.modules.articles.initParams({category: categoryId});
   }, [categoryId, locale, refreshKey], {ssr: 'articles.init'});
 
   useInit(async () => {

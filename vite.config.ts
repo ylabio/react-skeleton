@@ -3,9 +3,10 @@ import reactPlugin from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import path from "path";
 import typedVariables from 'dotenv-parse-variables';
+import proxyConfig from "./proxy.config";
 
 export default defineConfig(params => {
-  const env = typedVariables(loadEnv(params.mode, process.cwd(), '')) as Env;
+  const env = typedVariables(loadEnv(params.mode, process.cwd(), '')) as ImportMetaEnv;
   return {
     root: 'src',
     base: env.BASE_URL,
@@ -37,14 +38,7 @@ export default defineConfig(params => {
     ],
     server: {
       port: env.PORT,
-      proxy: {
-        [env.API_PATH]: {
-          target: env.API_URL,
-          secure: false,
-          changeOrigin: true,
-          timeout: 2000
-        }
-      },
+      proxy: proxyConfig(env),
       hmr: true
     },
     preview: {

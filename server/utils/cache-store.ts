@@ -4,8 +4,10 @@ import crypto from 'crypto';
 export type TCacheConfig = {
   // @todo Возможность отключить кэш
   enabled?: boolean,
-  // Время актуальности кэша в ms
-  lifetime: number,
+  // Время актуальности кэша в ms (кэш отдаётся и обновляется)
+  lifeTime: number,
+  // Время крайней актуальности (кэш обновляется, клиенту старый не отдаётся)
+  trashTime: number,
 }
 
 export type TCache = {
@@ -39,7 +41,7 @@ export default class CacheStore {
    * Создание ключа на основе массива параметров
    */
   static generateKey(values: (string | number | boolean)[]): string {
-    return crypto.createHash('md5').update(values.join('|')).digest("hex");
+    return crypto.createHash('md5').update(JSON.stringify(values)).digest("hex");
   }
 
   /**
@@ -75,7 +77,12 @@ export default class CacheStore {
 
   isOld(key: string): boolean {
     const cache = this.items.get(key);
-    return Boolean(!cache || cache.time < Date.now() - this.config.lifetime);
+    return Boolean(!cache || cache.time < Date.now() - this.config.lifeTime);
+  }
+
+  isTrash(key: string): boolean {
+    const cache = this.items.get(key);
+    return Boolean(!cache || cache.time < Date.now() - this.config.trashTime);
   }
 
   isWaiting(key: string): boolean {

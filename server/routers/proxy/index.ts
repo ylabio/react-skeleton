@@ -26,7 +26,6 @@ export default async ({app, config}: IRouteContext) => {
             return proxy.web(req, res, config.proxy.routes[path]);
           } catch (e) {
             console.error(e);
-            res.send(500);
           }
         }
       }
