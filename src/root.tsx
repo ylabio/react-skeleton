@@ -25,7 +25,7 @@ export default async function root(envPartial: Partial<ImportMetaEnv> = {}): Pro
     </ServicesProvider>
   );
 
-  const ssr: ServerSideRenderInjections = {
+  const injections: ServerSideRenderInjections = {
     htmlAttr: () => helmetCtx.helmet.htmlAttributes.toString(),
     bodyAttr: () => helmetCtx.helmet.bodyAttributes.toString(),
     title: () => helmetCtx.helmet.title.toString(),
@@ -39,5 +39,5 @@ export default async function root(envPartial: Partial<ImportMetaEnv> = {}): Pro
     dump: () => servicesManager.collectDump()
   };
 
-  return {Root, servicesManager, ssr};
+  return {Root, servicesManager, injections};
 }

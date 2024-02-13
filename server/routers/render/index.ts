@@ -1,22 +1,23 @@
-import React from "react";
-import {renderToPipeableStream} from "react-dom/server";
-import reactTemplate from "../../utils/react-template";
-import streamHtmlReplace from "../../utils/stream-html-replace";
-import {createServer as createViteServer} from "vite";
 import fs from "fs";
 import path from "path";
-import {IRouteContext} from "../../types";
+import React from "react";
 import {Request, Response} from "express";
+import {renderToPipeableStream} from "react-dom/server";
+import {createServer as createViteServer} from "vite";
 import {fileURLToPath} from "url";
+import {IRouteContext} from "../../types";
+import renderReplace from "../../utils/render-replace";
+import RenderStream from "../../utils/render-stream";
+import CacheStore from "../../utils/cache-store";
 
 /**
  * SSR - рендер React приложения в HTML
  * @param app Express приложение
- * @param initialStore Хранилище для запоминания состояния сервисов
+ * @param cacheStore Хранилище для запоминания рендера
  * @param config Настройки сервера
  * @param env Переменные окружения
  */
-export default async ({app, initialStore, config, env}: IRouteContext) => {
+export default async ({app, cacheStore, config, env}: IRouteContext) => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   // Fix for render;
   React.useLayoutEffect = React.useEffect;
@@ -34,7 +35,7 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
     // @ts-ignore
     : (await import('../../../dist/server/root.js')).default;
 
-  // HTML шаблон
+  // HTML шаблон, куда вставим рендер
   const rootTemplate = fs.readFileSync(
     path.resolve(__dirname, env.DEV
       ? '../../../src/index.html'
@@ -42,7 +43,7 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
     'utf-8',
   );
 
-  // Рендер
+  // Рендер на все запросы
   app.get('/*', async (req: Request, res: Response) => {
     // Запрос на файл, которого нет (чтобы не рендерить приложение из-за этого)
     // Если файл есть, то он бы отправился обработчиком файлов
@@ -64,11 +65,9 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
       return;
     }
 
-    // Секрет для идентификации дампа от всех сервисов
-    const secret = initialStore.makeSecretKey();
-
     // Корневой React компонент, сервис менеджер приложения и контекст с мета-данными html
-    const {Root, ssr} = await root({
+    // Для react приложения передаются параметры запросы, чтобы рендерилась соответсвующая страница
+    const {Root, injections} = await root({
       ...env,
       req: {
         url: req.originalUrl,
@@ -77,43 +76,73 @@ export default async ({app, initialStore, config, env}: IRouteContext) => {
       }
     }) as RootFabricResult;
 
-    // HTML шаблон конвертирует в ReactNode со вставкой в него компонента приложения.
-    // Из шаблона вычленяются скрипты, чтобы отдать их в потоке, но после html разметки.
-    const {jsx, scripts, modules} = reactTemplate(Root, template);
+    // Ключ кэширования страницы
+    const cacheKey = CacheStore.generateKey([
+      req.url,
+      req.cookies['locale'] || req.headers['accept-language'],
+    ]);
 
-    // Признак ошибки
-    let didError = false;
+    // Признак, отправлен ли ответ клиенту
+    let isSend = false;
 
-    const sendHeaders = (res: Response) => {
-      res.cookie('stateSecret', secret.secret, {httpOnly: true/*, maxAge: 100/*, secure: true*/});
-      res.writeHead(didError ? 500 : 200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public,max-age=300,s-maxage=900'
-      });
+    // Отправка ответа клиенту.
+    // Если есть кэш, то отправляется кэш
+    // Если кэш н готов, то отправляется SPA
+    const send = () => {
+      if (!isSend) {
+        isSend = true;
+        const html = cacheStore.getHtml(cacheKey);
+        if (html) {
+          // Отдача кэша (или рендера, если успеет выполниться)
+          res.cookie('stateSecret', cacheStore.getSecret(cacheKey), {httpOnly: true/*, maxAge: 100/*, secure: true*/});
+          res.writeHead(200, {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'public,max-age=300,s-maxage=900'
+          });
+          res.end(html);
+        } else {
+          // Отдача SPA если долго ждали рендер
+          res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+          res.end(template);
+        }
+      }
     };
 
-    const {pipe, abort} = renderToPipeableStream(jsx, {
-      bootstrapScriptContent: `window.initialKey="${secret.key}"`,
-      bootstrapModules: modules,
-      bootstrapScripts: scripts,
-      onAllReady() {
-        sendHeaders(res);
-        if (ssr) {
-          // Подмешивание разметки в итоговый рендер
-          streamHtmlReplace(pipe, ssr).pipe(res);
-          // Дамп данных, с которыми выполнен рендер, запоминается в initialStore
-          initialStore.remember(secret, ssr.dump);
-        } else {
-          pipe(res);
-        }
-      },
-      onError(error) {
-        didError = true;
-        if (vite) vite.ssrFixStacktrace(error as Error);
-        console.error(error);
-      },
-    });
-    // Timeout
-    setTimeout(() => abort(), 10000);
+    // Если есть кэш, то отдаём его
+    if (cacheStore.isExists(cacheKey)) {
+      send();
+    }
+
+    // Обновление кэша если он старый, но ещё не в процессе обновления
+    if (cacheStore.isOld(cacheKey) && !cacheStore.isWaiting(cacheKey)) {
+      // Кэширование также используется, чтобы избежать параллельных рендеров одних и тех же страниц.
+      cacheStore.waiting(cacheKey);
+
+      // Рендер
+      const renderStream = new RenderStream();
+      const {pipe} = renderToPipeableStream(React.createElement(Root), {
+        onAllReady() {
+          pipe(renderStream);
+        },
+        onError(error) {
+          if (vite) vite.ssrFixStacktrace(error as Error);
+          console.error(error);
+        },
+      });
+
+      renderStream.on('finish', () => {
+        const render = renderStream.getRender();
+        // Состояние сервисов, с которым выполнился рендер
+        const dump = injections && injections.dump ? injections.dump() : {};
+        // Итоговый рендер HTML со всеми инъекциями в шаблон
+        const html = renderReplace(template, render, cacheKey, injections);
+        cacheStore.update(cacheKey, html, dump);
+        // Пробуем отправить кэш (возможно уже отправлен)
+        send();
+      });
+    }
+
+    // Таймаут на случай ожидания рендера (если кэш не будет подготовлен или будут ошибки, то отправится SPA)
+    setTimeout(send, config.render.timeout);
   });
 };

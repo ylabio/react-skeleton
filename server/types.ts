@@ -1,6 +1,6 @@
 import {Application} from "express";
-import InitialStore from "./utils/initial-store";
 import {ServerOptions} from "http-proxy";
+import CacheStore, {TCacheConfig} from "./utils/cache-store";
 
 export interface IServerConfig {
   server: {
@@ -18,12 +18,17 @@ export interface IServerConfig {
   render: {
     // SSR или отдать SPA? Можно использовать для включения рендера только для поисковых ботов
     enabled: boolean,
-  }
+    // Время ожидания рендера, если нет кэша. При таймауте или ошибках вернется SPA
+    timeout: number
+    // Параметры кэширования
+    cache: TCacheConfig
+  },
+
 }
 
 export interface IRouteContext {
   app: Application,
-  initialStore: InitialStore,
+  cacheStore: CacheStore,
   config: IServerConfig,
   env: ImportMetaEnv
 }

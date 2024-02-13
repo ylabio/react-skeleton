@@ -12,8 +12,12 @@ export default (env: ImportMetaEnv): IServerConfig => {
       routes: {}
     },
     render: {
-      enabled: true,
-    }
+      enabled: true, // Если отключить, то будет отдаваться SPA
+      timeout: 5000, // Если долго рендерится, то будет отдаваться SPA
+      cache: {
+        lifetime: 5 * 60 * 1000 // Время актуальности кэша в ms
+      }
+    },
   };
   if (env.API_PATH) {
     config.proxy.routes[env.API_PATH] = {

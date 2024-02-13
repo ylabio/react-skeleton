@@ -21,5 +21,5 @@ type RootFabricResult = {
   // Менеджер сервисов
   servicesManager: Services,
   // Опция рендера на сервере
-  ssr?: ServerSideRenderInjections
+  injections?: ServerSideRenderInjections
 };
