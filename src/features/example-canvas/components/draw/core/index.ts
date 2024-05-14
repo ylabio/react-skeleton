@@ -225,7 +225,7 @@ class Core {
     }
   };
 
-  onMouseUp = (e: MouseEvent) => {
+  onMouseUp = () => {
     if (this.action) {
       if (this.action.name === 'drag' && this.action.element) {
         this.action.element.setPause(false);

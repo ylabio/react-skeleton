@@ -6,19 +6,22 @@
   "scripts": {
     "start": "vite serve",
     "build": "vite build",
-    "preview": "vite preview",
-    "start:server": "cross-env NODE_ENV=development node --loader ts-node/esm ./server/index.ts",
+    "preview": "npm run build && vite preview",
+    "start:server": "cross-env NODE_ENV=development npm run node:server",
     "build:server": "npm run build && vite build --ssr root.tsx",
-    "preview:server": "node --loader ts-node/esm ./server/index.ts",
+    "preview:server": "npm run build:server && npm run node:server",
+    "node:server": "cross-env NODE_OPTIONS=\"--import=./server/register.js\" node ./server/index.ts",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "test:eslint": "./node_modules/.bin/eslint ./",
-    "lint": "eslint ./src"
+    "lint:ts": "eslint \"**/*.{ts,tsx}\"",
+    "lint:ts:fix": "eslint \"**/*.{ts,tsx}\" --fix"
   },
   "type": "module",
   "author": "Vladimir Shestakov boolive@yandex.ru",
   "license": "ISC",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "@types/node-gzip": "^1.1.3",
     "accept-language-parser": "^1.5.0",
     "ajv": "^8.12.0",
     "axios": "^1.6.2",
@@ -34,6 +37,7 @@
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "merge-change": "^1.8.1",
+    "node-gzip": "^1.1.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -44,7 +48,9 @@
     "shallowequal": "^1.1.0",
     "simplex-noise": "^4.0.1",
     "type-fest": "^4.8.3",
-    "uniqid": "^5.4.0"
+    "uniqid": "^5.4.0",
+    "urlpattern-polyfill": "^10.0.0",
+    "zipson": "^0.2.12"
   },
   "devDependencies": {
     "@types/accept-language-parser": "^1.5.6",

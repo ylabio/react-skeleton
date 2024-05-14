@@ -28,13 +28,17 @@ export default function useInit(
         // Ожидание инициализации на логике Suspense (ожидание обработкой исключения)
         suspense.throw(options.ssr);
       }
+      if (suspense.error(options.ssr)) {
+        console.log('Ошибка при suspense');
+        throw suspense.error(options.ssr);
+      }
     } else {
       try {
         // Инициализация ещё не выполнялась
         const result = fn();
         if (isPromise(result)) suspense.add(options.ssr, result);
       } catch (e) {
-        console.error(e);
+        throw e;
       }
       suspense.throw(options.ssr);
     }

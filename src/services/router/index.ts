@@ -1,6 +1,5 @@
 import {BrowserHistory, createBrowserHistory, createMemoryHistory, MemoryHistory} from 'history';
 import qs from 'qs';
-import mc from 'merge-change';
 import {TServices} from '@src/services/types';
 import Service from "@src/services/service";
 import {TRouterConfig} from "@src/services/router/types";
@@ -12,6 +11,7 @@ import {TRouterConfig} from "@src/services/router/types";
  */
 class RouterService extends Service<TRouterConfig> {
   readonly history: MemoryHistory | BrowserHistory;
+  protected httpStatus: HTTPStatus[] = [{ status: 200 }];
 
   constructor(config: TRouterConfig, services: TServices, env: ImportMetaEnv) {
     super(config, services, env);
@@ -24,6 +24,7 @@ class RouterService extends Service<TRouterConfig> {
         this.history = createBrowserHistory(this.config);
         break;
     }
+
   }
 
   override defaultConfig(env: ImportMetaEnv): TRouterConfig {
@@ -105,6 +106,21 @@ class RouterService extends Service<TRouterConfig> {
       window.history.pushState({}, '', url);
     } else {
       window.history.replaceState({}, '', url);
+    }
+  }
+
+  setHttpStatus(status: number, location?: string): void {
+    console.log('setHttpStatus', status);
+    this.httpStatus.unshift({ status, location });
+  }
+
+  getHttpStatus(): HTTPStatus {
+    return this.httpStatus[0];
+  }
+
+  resetHttpStatus(): void {
+    if (this.httpStatus.length > 1) {
+      this.httpStatus.shift();
     }
   }
 }

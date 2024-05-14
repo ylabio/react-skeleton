@@ -39,7 +39,7 @@ function App() {
           <Route path="/catalog/:categoryId" element={<Catalog/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/profile" element={<Protected redirect="/login"><Profile/></Protected>}/>
-          <Route path="*" element={<NotFound/>}/>
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </Suspense>
       <Modals/>

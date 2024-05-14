@@ -14,6 +14,10 @@ export type TWaitRecord = {
    * Таймаут для автоматического удаления ожидания
    */
   timeout?: ReturnType<typeof setTimeout>
+  /**
+   * Ошибка в ожидании
+   */
+  error?: Error
 }
 
 /**

@@ -50,7 +50,7 @@ class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
       waiting: _isPromise,
       // При завершении промиса будет сброс признака waiting
       promise: _isPromise
-        ? promise.then(() => this.complete(key)).catch(() => this.complete(key))
+        ? promise.then(() => this.complete(key)).catch(e => this.complete(key, e))
         : undefined,
     });
     return promise;
@@ -60,12 +60,16 @@ class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
    * Завершение ожидания
    * Информация про ожидание остаётся, чтобы помнить про его завершенность
    * @param key
+   * @param error
    */
-  complete(key: string) {
+  complete(key: string, error?: Error) {
     if (this.has(key)) {
-      (this.state.get(key) as TWaitRecord).waiting = false;
+      // Мутируем
+      const item = this.state.get(key) as TWaitRecord;
+      item.waiting = false;
+      item.error = error;
     } else {
-      this.state.set(key, {waiting: false});
+      this.state.set(key, {waiting: false, error});
     }
   }
 
@@ -83,6 +87,10 @@ class SuspenseService extends Service<TSuspenseConfig, TWaitDump> {
    */
   waiting(key: string) {
     return this.state.get(key)?.waiting || false;
+  }
+
+  error(key: string) {
+    return this.state.get(key)?.error;
   }
 
   /**

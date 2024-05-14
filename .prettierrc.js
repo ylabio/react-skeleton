@@ -1,9 +1,10 @@
 module.exports = {
-  printWidth: 80,
-  parser: 'flow',
+  printWidth: 100,
+  endOfLine: 'lf',
   singleQuote: true,
   arrowParens: 'avoid',
   trailingComma: 'all',
+  bracketSpacing: true,
   overrides: [
     {
       files: '*.less',

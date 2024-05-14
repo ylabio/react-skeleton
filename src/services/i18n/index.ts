@@ -211,7 +211,7 @@ class I18nService extends Service<TI18nConfig, TI18nState> {
    */
   detectLocale(){
     const accept = this.env.SSR && this.env.req
-      ? this.env.req.headers['accept-language'] // на сервере
+      ? this.env.req.headers['accept-language'] as string // на сервере
       : navigator.languages.join(','); // в браузере
     return acceptLang.pick(this.state.locales, accept, {loose: true});
   }

@@ -36,7 +36,8 @@ export default async function root(envPartial: Partial<ImportMetaEnv> = {}): Pro
         helmetCtx.helmet.noscript.toString() +
         helmetCtx.helmet.style.toString();
     },
-    dump: () => servicesManager.collectDump()
+    dump: () => servicesManager.collectDump(),
+    httpStatus: () => servicesManager.get('router').getHttpStatus()
   };
 
   return {Root, servicesManager, injections};

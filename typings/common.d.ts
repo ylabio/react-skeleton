@@ -1,4 +1,9 @@
-type Services = import("@src/services").default;
+type Services = import('@src/services').default;
+
+type HTTPStatus = {
+  status: number,
+  location?: string
+}
 
 type ServerSideRenderInjections = {
   // Замена аттрибутов тега <html>
@@ -12,7 +17,9 @@ type ServerSideRenderInjections = {
   // Вставка тегов внутри <body> в конце
   body?: () => string,
   // Данные (состояние) с которыми выполнилось приложение
-  dump?: () => unknown
+  dump?: () => object,
+  // HTTP status страницы
+  httpStatus?: () => HTTPStatus
 }
 
 type RootFabricResult = {
@@ -23,3 +30,5 @@ type RootFabricResult = {
   // Опция рендера на сервере
   injections?: ServerSideRenderInjections
 };
+
+type RootFabric = (envPartial: Partial<ImportMetaEnv>) => Promise<RootFabricResult>

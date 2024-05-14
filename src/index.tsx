@@ -9,7 +9,7 @@ import root from "@src/root";
 (async function () {
   const {Root, servicesManager} = await root();
 
-  const dom = document.getElementById('app');
+  const dom = document.getElementById('root');
   if (!dom) throw new Error('Failed to find the root element');
 
   // Если есть подготовленные данные

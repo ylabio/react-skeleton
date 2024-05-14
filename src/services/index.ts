@@ -1,11 +1,12 @@
 import mc from 'merge-change';
 import allServices from './imports';
+import {parse} from 'zipson';
 import {
   TServiceName,
   TServicesImports,
   TServicesConstructors,
   TServices,
-  TServicesConfigPatches, TServicesConfig
+  TServicesConfigPatches
 } from './types';
 
 export const services: TServicesImports = allServices;
@@ -18,7 +19,7 @@ class Services {
   private initialState: Map<TServiceName, unknown>;
   private env: ImportMetaEnv;
 
-  constructor(env : ImportMetaEnv) {
+  constructor(env: ImportMetaEnv) {
     this.configs = {} as TServicesConfigPatches;
     this.list = {} as TServices;
     this.classes = {} as TServicesConstructors;
@@ -41,7 +42,7 @@ class Services {
    * Инициализация менеджера, погрузка асинхронных сервисов
    * @todo Асинхронный импорт правильней бы сделать при доступе к сервису, но тогда обращение к сервису нужно выполнять с await
    * @param configs Общая конфигурация на все сервисы
-   * @returns {Services} Возвращается прокси на доступ к сервисам по их названию
+   * @returns Возвращается прокси на доступ к сервисам по их названию
    */
   async init(configs: TServicesConfigPatches | TServicesConfigPatches[]) {
     this.configure(configs);
@@ -50,10 +51,13 @@ class Services {
     // Асинхронная загрузка классов сервисов
     const promises = [];
     const names = Object.keys(services) as TServiceName[];
+    const setClass = <Name extends TServiceName>(name: Name, constructor: TServicesConstructors[Name]) => {
+      this.classes[name] = constructor;
+    };
     for (const name of names) {
       promises.push(
-        services[name]().then((module: any) => {
-          this.classes[name] = module.default;
+        services[name]().then((module) => {
+          setClass(name, module.default);
         }),
       );
     }
@@ -64,8 +68,7 @@ class Services {
   /**
    * Подключение конфигураций
    * Объект конфигурации содержит ключи - названия сервисов, значение ключа - объект с опциями для соотв. сервиса
-   * @param configs {Object|Array<Object>} Массив с объектами опций.
-   * @returns {Services}
+   * @param configs Массив с объектами опций.
    */
   configure(configs: TServicesConfigPatches | TServicesConfigPatches[]) {
     if (!Array.isArray(configs)) configs = [configs];
@@ -78,7 +81,6 @@ class Services {
   /**
    * Доступ к сервису по названию
    * Сервис создаётся в единственном экземпляре и при первом обращении инициализируется
-   * @return {*}
    */
   get<T extends keyof TServices>(name: T): TServices[T] {
     if (!this.list[name]) {
@@ -100,9 +102,8 @@ class Services {
    */
   private async initInitialState() {
     if (this.hasInitialState()) {
-      const response = await fetch(`/initial/${window.initialKey}`);
-      const json = await response.json();
-      for (const [key, value] of Object.entries(json)){
+      const json = parse(window.initialData);
+      for (const [key, value] of Object.entries(json)) {
         this.initialState.set(key as TServiceName, value);
       }
     }
@@ -110,17 +111,16 @@ class Services {
 
   /**
    * Имеется ли начальное состояние для сервисов?
-   * Начальное состояние может быть при серверном рендере, обычно передаётся ключ состояния
    */
   hasInitialState() {
-    return !this.env.SSR && window.initialKey;
+    return !this.env.SSR && window.initialData;
   }
 
   /**
    * Сбор состояния с каждого сервиса, у которых есть метод dump
    * Обычно используется на сервере после рендера, чтобы передать состояние клиенту
    */
-  collectDump() {
+  collectDump(): object {
     const result = {} as { [index: string]: unknown };
     const names = Object.keys(this.list) as TServiceName[];
     for (const name of names) {

@@ -28,8 +28,9 @@ interface ImportMetaEnv extends Env{
   // Информация о запросе при SSR (добавит сервер)
   req?: {
     url: string,
-    headers: Record<string, string>,
+    headers: Record<string, string | undefined | string[]>,
     cookies: Record<string, string>,
   },
+  CACHE_SIGNATURE: string;
   // more env variables...
 }

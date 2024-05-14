@@ -6,7 +6,6 @@ import roundRange from "@src/utils/round-range";
 
 const maxX = 500; // По сути ширина канвы, чтобы случайное число растянуть плавно на размер канвы
 const maxY = 500;
-const maxH = 100; // Максимальный размер фигуры, чтобы от размера плавно зависела случайность
 
 class Leaf extends Figure {
   loaded: boolean = false;
