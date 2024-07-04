@@ -1,5 +1,5 @@
 import typedVariables from 'dotenv-parse-variables';
-import {loadEnv as loadEnvVite} from "vite";
+import { loadEnv as loadEnvVite } from 'vite';
 
 export default function loadEnv(){
   return {

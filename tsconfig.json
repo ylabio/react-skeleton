@@ -1,5 +1,5 @@
 {
-  "include": ["typings/**/*", "src/**/*", "server/**/*", "vite.config.ts"],
+  "include": ["typings/**/*", "packages/**/*", "src/**/*", "server/**/*", "vite.config.ts", "server.config.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -21,7 +21,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "noImplicitOverride": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "allowImportingTsExtensions": true
   },
   "files": [
     "./typings/env.d.ts",

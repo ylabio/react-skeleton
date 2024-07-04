@@ -1,8 +1,9 @@
-import { parentPort } from 'worker_threads';
+import { parentPort, workerData } from 'worker_threads';
 import render, { type RenderParams } from './render';
 
 if (parentPort) {
-  const clientAppFile = '../../../dist/server/root.js';
+
+  const clientAppFile = workerData.clientAppFile;
   const clientApp = (await import(clientAppFile)).default;
 
   // Обработка команд от основного потока

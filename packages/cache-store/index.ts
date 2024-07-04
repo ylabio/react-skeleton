@@ -1,31 +1,52 @@
-import uniqid from 'uniqid';
-import path from 'path';
-import { access, mkdir, writeFile, readFile, unlink } from 'fs/promises';
-import type {
-  TCache,
-  ICacheStore,
-  TCacheConfig,
-  TCacheValidateOptions,
-} from '../types';
-import { TCacheReadeCallback } from '../types';
+import { access, mkdir, readFile, unlink, writeFile } from 'fs/promises';
+import mc from 'merge-change';
 import gzip from 'node-gzip';
+import path from 'path';
+import uniqid from 'uniqid';
+import type {
+  ICacheStore,
+  TCache,
+  TCacheConfig,
+  TCacheReadeCallback,
+  TCacheValidateOptions
+} from './types';
 
 /**
  * Хранилище для кэширования рендера и состояния, с которым выполнялся рендер
  */
-export default class CacheStore implements ICacheStore {
-  private items: Map<string, TCache>;
-  private config: TCacheConfig;
+export class CacheStore implements ICacheStore {
+  protected items: Map<string, TCache>;
+  protected config: TCacheConfig;
   // Упорядоченные ключи items, чтобы освобождать память в порядке очереди
-  private itemsOrder: string[];
-  private listeners: Map<string, TCacheReadeCallback[]>;
+  protected itemsOrder: string[];
+  protected listeners: Map<string, TCacheReadeCallback[]>;
 
-  constructor(config: TCacheConfig) {
+  constructor(protected depends: {
+    config: TCacheConfig
+  }) {
+    this.config = mc.merge(this.defaultConfig(), depends.config);
     this.items = new Map();
-    this.config = config;
     this.itemsOrder = [];
     this.listeners = new Map();
   }
+
+  protected defaultConfig(): TCacheConfig {
+    return {
+      // Подпись для валидации кэша после обновления приложения или запуска в разном режиме
+      // При деплое подставляется хэш комита
+      signature: `some`,
+      // Максимальное количество страниц (кэшей) в оперативной памяти
+      // Если кэша нет в пяти, то подгружается в память с диска
+      // При достижении лимита первые (старые) записи освобождаются из памяти.
+      maxItems: 50,
+      // Сжимать кэш в gzip.
+      compress: true,
+      // Директория для файлов кэша
+      dir: './cache'
+    };
+  }
+
+  async init() {}
 
   /**
    * Создание ключа на основе массива параметров
@@ -245,5 +266,12 @@ export default class CacheStore implements ICacheStore {
     const listeners = this.listeners.get(key) || [];
     listeners.push(callback);
     this.listeners.set(key, listeners);
+  }
+}
+
+
+export class CacheStoreExt extends CacheStore {
+  ext(): boolean {
+    return true;
   }
 }

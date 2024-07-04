@@ -1,23 +1,37 @@
 /**
  * HTTP server for render
  */
-import express from 'express';
-import routers from './routers/index';
-import serverConfig from './config';
-import loadEnv from './utils/loadEnv';
-import CacheStore from './utils/cache-store';
+import { Container } from '../packages/container';
+import { APP } from './app/token.ts';
+import { AppInject } from './app/inject.ts';
+import { EnvInject } from '../packages/env/inject.ts';
+import { CacheStoreInject } from '../packages/cache-store/inject.ts';
+import { SsrInject } from '../packages/ssr/inject.ts';
+import { ProxyInject } from '../packages/proxy/inject.ts';
+import { ConfigsInject } from '../packages/configs/inject.ts';
+import { ViteDevInject } from '../packages/vite-dev/inject.ts';
 
-(async () => {
-  const env = loadEnv();
-  const config = serverConfig(env);
-  const cacheStore = new CacheStore(config.render.cache);
-  const app = express();
+try {
+  // Подключение используемых сервисов в контейнер управления зависимостями
+  const container = new Container()
+    // Переменные окружения
+    .set(EnvInject)
+    // Настройки для всех сервисов
+    .set(ConfigsInject)
+    // Сервис проксирования к АПИ (для локальной отладки prod сборки)
+    .set(ProxyInject)
+    // Сервис кэширования SSR
+    .set(CacheStoreInject)
+    // Сборщик Vite для запуска SSR в dev режиме (без сборки)
+    .set(ViteDevInject)
+    // Сервис рендера (SSR)
+    .set(SsrInject)
+    // Приложение, определяющее основной флоу
+    .set(AppInject);
 
-  for (const route of routers) {
-    await route({ app, cacheStore, config, env });
-  }
+  const app = await container.get(APP);
+  await app.start();
 
-  app.listen(config.server.port);
-
-  console.info(`Server run on http://${config.server.host}:${config.server.port}`);
-})();
+} catch (e) {
+  console.error(e);
+}

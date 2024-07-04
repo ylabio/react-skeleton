@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderToPipeableStream } from 'react-dom/server';
 import { stringify } from 'zipson';
-import BufferedStream from '../../utils/buffered-stream';
+import BufferedStream from './buffered-stream';
 
 export type RenderParams = {
   key: string;

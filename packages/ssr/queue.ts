@@ -1,8 +1,8 @@
 import path from 'path';
-import { Worker } from 'worker_threads';
 import { fileURLToPath } from 'url';
-import { RenderError, RenderResult, type RenderParams } from './render';
-import type { ICacheStore } from '../../types';
+import { Worker } from 'worker_threads';
+import { ICacheStore } from '../cache-store/types.ts';
+import { RenderError, type RenderParams, RenderResult } from './render';
 
 type WorkerInfo = {
   worker: Worker;
@@ -14,18 +14,23 @@ class RenderQueue {
   private workers: WorkerInfo[] = [];
   private tasks: RenderParams[] = [];
   private readonly workerFile: string;
+  private clientAppFile: string;
+  private workersCount: number;
 
   /**
    * @param cacheStore Хранилище для результата рендера
+   * @param clientAppFile
    * @param workersCount Количество воркеров для распараллеливания рендера
    */
-  constructor (cacheStore: ICacheStore, workersCount: number = 4) {
+  constructor (cacheStore: ICacheStore, clientAppFile: string, workersCount: number = 4) {
     this.cacheStore = cacheStore;
+    this.clientAppFile = clientAppFile;
+    this.workersCount = workersCount;
     this.workerFile = path.resolve(
       path.dirname(fileURLToPath(import.meta.url)),
       './queue-worker.ts',
     );
-    const cnt = Math.max(1, workersCount);
+    const cnt = Math.max(1, this.workersCount);
     for (let i = 0; i < cnt; i++) {
       this.makeWorker();
     }
@@ -37,7 +42,11 @@ class RenderQueue {
    */
   private makeWorker () {
     const w = {
-      worker: new Worker(this.workerFile),
+      worker: new Worker(this.workerFile, {
+        workerData: {
+          clientAppFile: this.clientAppFile
+        }
+      }),
       busy: false,
     };
     // Сообщения от главного потока

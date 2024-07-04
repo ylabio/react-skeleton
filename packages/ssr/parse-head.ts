@@ -1,4 +1,4 @@
-export function parseControls (control?: string): Map<string, string | number> {
+export function parseControls(control?: string): Map<string, string | number> {
   if (!control) return new Map();
   return new Map(
     control.split(',').map((item): [string, string | number] => {
@@ -15,12 +15,12 @@ export function parseControls (control?: string): Map<string, string | number> {
   );
 }
 
-export function parseAcceptEncoding (value?: string): string[] {
+export function parseAcceptEncoding(value?: string): string[] {
   if (!value) return [];
   return value.split(',').map((item) => item.trim());
 }
 
-export function getHeadersValues (
+export function getHeadersValues(
   headers: { [index: string]: unknown },
   names: string[],
 ) {
@@ -31,5 +31,6 @@ export function getHeadersValues (
       result.push(headers[name] as string);
     }
   });
+
   return result;
 }
