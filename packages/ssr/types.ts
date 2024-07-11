@@ -1,8 +1,7 @@
-
 export type SsrOptions = {
-// SSR или отдать SPA?
+  // SSR или отдать SPA?
   enabled: boolean;
-// Количество воркеров для рендера в фоне
+  // Количество воркеров для рендера в фоне
   workers: number;
 
   template: {
@@ -15,8 +14,7 @@ export type SsrOptions = {
     prod: string,
   }
 
-
-// Параметры рендера и кэширования по отдельным адресам запроса
+  // Параметры рендера и кэширования по отдельным адресам запроса
   rules: TRenderRuleConfig[];
 }
 

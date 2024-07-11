@@ -8,4 +8,4 @@ export const CACHE_STORE = newToken<ICacheStore>('@react-skeleton/cache-store');
 
 // export const CACHE_STORE_EXT = newToken<CacheStoreExt>('cache-store-ext');
 
-export const CACHE_STORE_CFG = newToken<TCacheConfig>('@react-skeleton/cache-store/config');
+export const CACHE_STORE_CFG = newToken<Patch<TCacheConfig>>('@react-skeleton/cache-store/config');

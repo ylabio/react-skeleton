@@ -1,9 +1,9 @@
-import cookieParser from 'cookie-parser';
-import type { Express, Request, Response } from 'express';
 import express from 'express';
 import mc from 'merge-change';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
+import type { Express, Request, Response } from 'express';
 import type { Proxy } from '../../packages/proxy';
 import type { Ssr } from '../../packages/ssr';
 import type { ViteDev } from '../../packages/vite-dev';
@@ -17,7 +17,7 @@ export class App {
   constructor(protected depends: {
     env: ImportMetaEnv,
     proxy: Proxy,
-    config: AppConfig,
+    config: Patch<AppConfig>,
     vite: ViteDev,
     ssr: Ssr
   }) {

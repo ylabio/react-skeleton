@@ -26,8 +26,23 @@ export interface InjectFabric<Type, Deps, ExtType extends Type> {
   fabric: FunctionWithDepends<ExtType, ExtractTokensTypes<Deps>>,
 }
 
-export type Inject<Type, Deps, ExtType extends Type> = InjectClass<Type, Deps, ExtType> | InjectFabric<Type, Deps, ExtType>;
+/**
+ * Инъекция значения сопоставимого с типом токена.
+ */
+export interface InjectValue<Type, ExtType extends Type> {
+  token: Token<Type>,
+  value: ExtType,
+}
 
+export type Inject<Type = any, Deps = any, ExtType extends Type = any> = (
+  | InjectClass<Type, Deps, ExtType>
+  | InjectFabric<Type, Deps, ExtType>
+  | InjectValue<Type, ExtType>
+);
+
+export type Injected<Type = any, Deps = any, ExtType extends Type = any> = Inject<Type, Deps, ExtType> & {
+  value?: ExtType;
+};
 
 /**
  * Конструктор, в первый аргумент которого передаются зависимости из DI

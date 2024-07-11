@@ -2,15 +2,14 @@ import httpProxy from 'http-proxy';
 import Server from 'http-proxy';
 import mc from 'merge-change';
 import * as http from 'node:http';
-import { ProxyOptions } from './types';
+import type { ProxyOptions } from './types';
 
 export class Proxy {
-
   private config: ProxyOptions;
   private proxyServer: Server<http.IncomingMessage, http.ServerResponse>;
 
   constructor(protected depends: {
-    config: ProxyOptions
+    config: Patch<ProxyOptions>
   }) {
     this.config = mc.merge(this.defaultConfig(), depends.config);
     // Прокси на внешний сервер по конфигу (обычно для апи)

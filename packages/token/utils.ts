@@ -1,5 +1,5 @@
 import { Token } from './index.ts';
-import type { TokenNested, TokenOptions } from './types.ts';
+import type { TokenOptions } from './types.ts';
 
 /**
  * Создание токена.
@@ -16,15 +16,15 @@ export function newToken<Type>(name: string, options: TokenOptions<Type> = {}): 
   return new Token<Type>(name, options);
 }
 
-/**
- * Создания вложенных токенов.
- * Воженные токены используются, чтобы сначала выбрать объект из DI, а после значение из объекта по второму токену.
- * @param parent Токен на родительский объект
- * @param target Токен на целевое значение из родительского объекта
- */
-export function nestedToken<Type>(parent: Token, target: Token<Type>): TokenNested<Type> {
-  return { parent, target: target };
-}
+// /**
+//  * Создания вложенных токенов.
+//  * Воженные токены используются, чтобы сначала выбрать объект из DI, а после значение из объекта по второму токену.
+//  * @param parent Токен на родительский объект
+//  * @param target Токен на целевое значение из родительского объекта
+//  */
+// export function nestedToken<Type>(parent: Token, target: Token<Type>): TokenNested<Type> {
+//   return { parent, target: target };
+// }
 
 export function isToken<Type>(
   value: Token<Type> | unknown
@@ -36,15 +36,15 @@ export function isToken<Type>(
   );
 }
 
-export function isTokenNested<Type>(
-  value: TokenNested<Type> | unknown
-): value is TokenNested<Type> {
-  return Boolean(value
-    && typeof value === 'object'
-    && 'parent' in value
-    && 'target' in value
-    && isToken(value.parent)
-    && isToken(value.target)
-  );
-}
+// export function isTokenNested<Type>(
+//   value: TokenNested<Type> | unknown
+// ): value is TokenNested<Type> {
+//   return Boolean(value
+//     && typeof value === 'object'
+//     && 'parent' in value
+//     && 'target' in value
+//     && isToken(value.parent)
+//     && isToken(value.target)
+//   );
+// }
 

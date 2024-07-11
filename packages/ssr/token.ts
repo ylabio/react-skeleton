@@ -6,4 +6,4 @@ export const SSR = newToken<Ssr>('@react-skeleton/ssr', {
   onCreate: 'init'
 });
 
-export const SSR_CGF = newToken<SsrOptions>('@react-skeleton/ssr/config');
+export const SSR_CGF = newToken<Patch<SsrOptions>>('@react-skeleton/ssr/config');

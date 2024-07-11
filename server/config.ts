@@ -5,16 +5,18 @@ import { APP_CFG } from './app/token.ts';
 import { SSR_CGF } from '../packages/ssr/token.ts';
 import { config } from '../packages/configs/utils.ts';
 
-export default (env: ImportMetaEnv) => [
-  config(APP_CFG, {
+export default [
+  config(APP_CFG, ({ env }) => ({
     host: env.HOST || 'localhost',
     port: env.PORT || 8010,
-  }),
-  config(PROXY_CFG, {
+  })),
+
+  config(PROXY_CFG, ({ env }) => ({
     enabled: true,//env.PROD, //В dev режиме работает прокси Vite(в режиме middleware), но у него ошибка на POST запросы, поэтому включен свой прокси
     routes: proxyConfig(env)
-  }),
-  config(CACHE_STORE_CFG, {
+  })),
+
+  config(CACHE_STORE_CFG, ({ env }) => ({
     // Подпись для валидации кэша после обновления приложения или запуска в разном режиме
     // При деплое подставляется хэш комита
     signature: `${env.CACHE_SIGNATURE || 'some2'}${env.PROD ? 'P' : 'D'}`,
@@ -26,8 +28,9 @@ export default (env: ImportMetaEnv) => [
     compress: true,
     // Директория для файлов кэша
     dir: './cache'
-  }),
-  config(SSR_CGF, {
+  })),
+
+  config(SSR_CGF, ({ env }) => ({
     // Если отключить, то будет всегда отдаваться SPA
     enabled: true,
     // Количество потоков при рендере в prod режиме
@@ -60,5 +63,5 @@ export default (env: ImportMetaEnv) => [
         control: `public, max-age=${0}, s-maxage=${0}`,
       },
     ],
-  }),
+  })),
 ];

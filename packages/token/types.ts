@@ -1,4 +1,3 @@
-import type { PartialDeep } from 'type-fest/source/partial-deep';
 import type { ExtractMethodNames } from '../common-types/types.ts';
 import type { Token } from './index.ts';
 
@@ -11,8 +10,6 @@ export type { Token } from './index.ts';
  * Опции токена
  */
 export type TokenOptions<Type> = {
-  // Выбирать из DI ранее созданный экземпляр. По умолчанию true.
-  singleton?: boolean
   // Метод, который нужно автоматически вызывать после создания экземпляра.
   // Используется для асинхронной инициализации так как конструктор не может быть асинхронным.
   onCreate?: ExtractMethodNames<Type>
@@ -26,10 +23,6 @@ export type TokenOptions<Type> = {
  * Тип, с которым ассоциирован токен
  */
 export type ExtractTokenType<T> = T extends TokenAny<infer Type> ? Type : unknown;
-/**
- * Тип, с которым ассоциирован токен с опциональными полям в глубину
- */
-export type ExtractTokenTypePartial<T extends Token> = PartialDeep<ExtractTokenType<T>>;
 
 /**
  * Map типов из map токенов
@@ -50,10 +43,3 @@ export type TokenNested<T> = { parent: Token, target: Token<T> }
  */
 export type TokenAny<T> = Token<T> | TokenNested<T>;
 
-/**
- * Конвертация списка типов в токены.
- * Используется для превращения аргументов функции в токены на соответсвующее типы
- */
-// export type TokensForTypes<Types> = {
-//   [P in keyof Types]: TokenOrPath<Types[P]>;
-// }

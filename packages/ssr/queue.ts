@@ -1,8 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Worker } from 'worker_threads';
-import { ICacheStore } from '../cache-store/types.ts';
-import { RenderError, type RenderParams, RenderResult } from './render';
+import type { ICacheStore } from '../cache-store/types.ts';
+import type { RenderError, RenderParams, RenderResult } from './render';
 
 type WorkerInfo = {
   worker: Worker;

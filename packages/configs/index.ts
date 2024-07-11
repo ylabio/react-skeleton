@@ -1,35 +1,25 @@
 import mc from 'merge-change';
-import path from 'node:path';
-import { fileURLToPath } from 'url';
-import type { ExtractTokenTypePartial, Token } from '../token/types.ts';
-import type { ConfigItem } from './types.ts';
+import type { Container, Inject } from '../container/types.ts';
+import type { ExtractTokenType, Token } from '../token/types.ts';
 
 export class Configs {
-  private data: Map<symbol, any> = new Map();
 
   constructor(protected depends: {
     env: ImportMetaEnv
+    container: Container
   }) {}
 
-  async init() {
-    if (process && typeof process.cwd === 'function') {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      const fileName = path.resolve(process.cwd(), './server/config.ts');
-      const relative = './' + path.relative(__dirname, fileName);
-      const configModule = await import(relative);
-      const configItems = configModule.default(this.depends.env) as ConfigItem[];
-      for (const item of configItems) {
-        this.data.set(item.token.symbol, item.value);
-      }
-    }
+  async load(loader: (env: ImportMetaEnv) => Inject): Promise<void> {
+    const configsItems = loader(this.depends.env);
+    this.depends.container.set(configsItems);
   }
 
-  get<T extends Token, D extends ExtractTokenTypePartial<T> | undefined>(token: T, defaultData?: D): ExtractTokenTypePartial<T> & D {
-    const value = this.data.get(token.symbol);
-    return mc.merge(defaultData, value) as ExtractTokenTypePartial<T> & D;
+  async get<T extends Token, D extends ExtractTokenType<T> | undefined>(token: T, defaultValue?: D): Promise<ExtractTokenType<T> & D> {
+    const value = await this.depends.container.get(token);
+    return mc.merge(defaultValue, value) as ExtractTokenType<T> & D;
   }
 
-  set<T extends Token>(token: T, data: ExtractTokenTypePartial<T>): void {
-    this.data.set(token.symbol, data);
+  set<T extends Token>(token: T, value: ExtractTokenType<T>): void {
+    this.depends.container.set({ token, value });
   }
 }

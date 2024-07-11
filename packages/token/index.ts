@@ -14,7 +14,7 @@ export class Token<Type = any> {
    */
   constructor(name: string, options: TokenOptions<Type> = {}) {
     this.symbol = Symbol.for(name);
-    this.options = { singleton: true, ...options };
+    this.options = options;
   }
 
   /**

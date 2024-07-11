@@ -6,12 +6,12 @@ import path from 'node:path';
 import uniqid from 'uniqid';
 import { fileURLToPath } from 'url';
 import { URLPattern } from 'urlpattern-polyfill';
-import { ICacheStore, TCache } from '../cache-store/types.ts';
-import { ViteDev } from '../vite-dev';
 import { getHeadersValues, parseAcceptEncoding, parseControls } from './parse-head.ts';
 import RenderQueue from './queue.ts';
-import render, { RenderParams } from './render.ts';
-import { SsrOptions, TRenderRule, TSSRResponse } from './types.ts';
+import render, { type RenderParams } from './render.ts';
+import type { ICacheStore, TCache } from '../cache-store/types.ts';
+import type { ViteDev } from '../vite-dev';
+import type { SsrOptions, TRenderRule, TSSRResponse } from './types.ts';
 
 export class Ssr {
   protected data: Record<string, any> = {};
@@ -26,7 +26,7 @@ export class Ssr {
     cacheStore: ICacheStore,
     env: ImportMetaEnv,
     vite: ViteDev,
-    configs: SsrOptions
+    configs: Patch<SsrOptions>
   }) {
     this.config = mc.merge(this.defaultConfig(this.depends.env), this.depends.configs);
 

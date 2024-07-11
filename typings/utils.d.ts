@@ -15,10 +15,13 @@ type PartialDeep<T> =
 
 type Operations = '$set' | '$unset' | '$leave';
 
-type PatchOperation<T> = T | {
+type PatchOperation<T> = T & {
+  // Переустановить значения без слияния с текущим
   $set?: T,
-  $unset?: (keyof T)[],
-  $leave?: (keyof T)[]
+  // Удалить свойства
+  $unset?: (keyof T | string | number | symbol)[],
+  // Оставить только указанные свойства
+  $leave?: (keyof T | string | number | symbol)[]
 };
 
 /**

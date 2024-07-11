@@ -22,7 +22,7 @@ export class CacheStore implements ICacheStore {
   protected listeners: Map<string, TCacheReadeCallback[]>;
 
   constructor(protected depends: {
-    config: TCacheConfig
+    config: Patch<TCacheConfig>
   }) {
     this.config = mc.merge(this.defaultConfig(), depends.config);
     this.items = new Map();
@@ -266,12 +266,5 @@ export class CacheStore implements ICacheStore {
     const listeners = this.listeners.get(key) || [];
     listeners.push(callback);
     this.listeners.set(key, listeners);
-  }
-}
-
-
-export class CacheStoreExt extends CacheStore {
-  ext(): boolean {
-    return true;
   }
 }

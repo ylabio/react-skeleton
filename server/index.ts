@@ -1,36 +1,36 @@
 /**
  * HTTP server for render
  */
-import { Container } from '../packages/container';
 import { APP } from './app/token.ts';
-import { AppInject } from './app/inject.ts';
-import { EnvInject } from '../packages/env/inject.ts';
-import { CacheStoreInject } from '../packages/cache-store/inject.ts';
-import { SsrInject } from '../packages/ssr/inject.ts';
-import { ProxyInject } from '../packages/proxy/inject.ts';
-import { ConfigsInject } from '../packages/configs/inject.ts';
-import { ViteDevInject } from '../packages/vite-dev/inject.ts';
+import { Container } from '../packages/container';
+import { envServer } from '../packages/env/server.ts';
+import { app } from './app/inject.ts';
+import { cacheStore } from '../packages/cache-store/inject.ts';
+import { ssr } from '../packages/ssr/inject.ts';
+import { proxy } from '../packages/proxy/inject.ts';
+import { viteDev } from '../packages/vite-dev/inject.ts';
+import configs from './config.ts';
 
 try {
   // Подключение используемых сервисов в контейнер управления зависимостями
-  const container = new Container()
-    // Переменные окружения
-    .set(EnvInject)
+  const services = new Container()
+    // Переменные окружения для сервера
+    .set(envServer())
     // Настройки для всех сервисов
-    .set(ConfigsInject)
+    .set(configs)
     // Сервис проксирования к АПИ (для локальной отладки prod сборки)
-    .set(ProxyInject)
+    .set(proxy)
     // Сервис кэширования SSR
-    .set(CacheStoreInject)
+    .set(cacheStore)
     // Сборщик Vite для запуска SSR в dev режиме (без сборки)
-    .set(ViteDevInject)
+    .set(viteDev)
     // Сервис рендера (SSR)
-    .set(SsrInject)
-    // Приложение, определяющее основной флоу
-    .set(AppInject);
+    .set(ssr)
+    // Приложение, определяющее основной алгоритм работы
+    .set(app);
 
-  const app = await container.get(APP);
-  await app.start();
+  const appInstance = await services.get(APP);
+  await appInstance.start();
 
 } catch (e) {
   console.error(e);
