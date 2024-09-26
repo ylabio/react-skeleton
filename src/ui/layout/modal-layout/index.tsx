@@ -43,6 +43,10 @@ function ModalLayout(props: Props) {
       // Следим за изменениями размеров layout
       resizeObserver.observe(overlay.current);
     }
+    if (frame.current) {
+      // Следим за изменениями размеров модального окна
+      resizeObserver.observe(frame.current);
+    }
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
